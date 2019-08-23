@@ -1,9 +1,9 @@
 // @flow
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink } from 'apollo-link';
-import { RetryLink } from 'apollo-link-retry';
+// import { RetryLink } from 'apollo-link-retry';
 import { errorHandlerLink } from './links/errorHandlerLink';
 import { setAuthHeaderLink } from './links/setAuthHeaderLink';
 
@@ -14,14 +14,17 @@ export function getApolloClient(uri) {
     return client;
   }
 
+  const httpLink = createHttpLink({
+    uri,
+  });
+
   const cache = new InMemoryCache();
 
   const link = ApolloLink.from([
-    errorHandlerLink,
-    setAuthHeaderLink,
-    new RetryLink(),
-    new HttpLink({ uri }),
-
+    // errorHandlerLink,
+    // setAuthHeaderLink,
+    // new RetryLink(),
+    httpLink,
   ]);
 
   client = new ApolloClient({
