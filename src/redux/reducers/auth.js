@@ -10,7 +10,7 @@ const INITIAL_STATE = {
 export const auth = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case LOGIN_SUCCESS:
-      return { ...state, jwt: payload.jwt };
+      return { ...state, jwt: payload };
     default:
       return state;
   }

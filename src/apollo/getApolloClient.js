@@ -21,8 +21,8 @@ export function getApolloClient(uri) {
   const cache = new InMemoryCache();
 
   const link = ApolloLink.from([
-    // errorHandlerLink,
-    // setAuthHeaderLink,
+    errorHandlerLink,
+    setAuthHeaderLink,
     // new RetryLink(),
     httpLink,
   ]);
@@ -30,8 +30,8 @@ export function getApolloClient(uri) {
   client = new ApolloClient({
     cache,
     link,
-    name: 'ExpenesesWebClient',
-    version: '0.1',
+    // name: 'ExpenesesWebClient',
+    // version: '0.1',
     queryDeduplication: false,
     defaultOptions: {
       watchQuery: {
