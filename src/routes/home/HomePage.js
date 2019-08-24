@@ -19,7 +19,7 @@ export function HomePageComp(props) {
 
 function mapStateToProps(state) {
   return {
-    authed: Boolean(state.auth.jwt),
+    authed: isAuthed(state),
   };
 }
 

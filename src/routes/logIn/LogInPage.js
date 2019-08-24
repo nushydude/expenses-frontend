@@ -108,7 +108,7 @@ export class LogInPageComp extends React.Component<Props, State> {
 
 function mapStateToProps(state) {
   return {
-    authed: Boolean(state.auth.jwt),
+    authed: isAuthed(state),
   };
 }
 
