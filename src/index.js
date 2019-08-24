@@ -12,7 +12,7 @@ import { getStore } from './redux/getStore';
 import { getApolloClient } from './apollo/getApolloClient';
 
 ReactDOM.render(
-  <ApolloProvider client={getApolloClient('https://apollo.nushydude.now.sh/graphql')}>
+  <ApolloProvider client={getApolloClient(process.env.REACT_APP_API_URL)}>
     <Provider store={getStore()}>
       <Router>
         <App />
