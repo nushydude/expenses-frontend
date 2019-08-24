@@ -1,7 +1,7 @@
 // @flow
-import type { AppState } from '../types';
+import type { AppState, AuthState } from '../types';
 
-function getAuthState(state: AppState): ?string {
+function getAuthState(state: AppState): AuthState {
   return state.auth;
 }
 

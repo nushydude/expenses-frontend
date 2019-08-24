@@ -9,7 +9,7 @@ import { setAuthHeaderLink } from './links/setAuthHeaderLink';
 
 let client;
 
-export function getApolloClient(uri) {
+export function getApolloClient(uri: string): ApolloClient {
   if (client) {
     return client;
   }

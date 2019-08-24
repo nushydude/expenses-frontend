@@ -8,4 +8,4 @@ export const ROUTE = Object.freeze({
   AUTH_CHANGE_PWD: '/auth/change_password',
 });
 
-export type Route = $Values<ROUTE>;
+export type Route = $Values<typeof ROUTE>;

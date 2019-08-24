@@ -1,7 +1,9 @@
 // @flow
 import { BrowserRouter } from 'react-router-dom';
 
-export class Router extends BrowserRouter {
+type Props = {};
+
+export class Router extends BrowserRouter<Props> {
   constructor(props){
     super(props);
 

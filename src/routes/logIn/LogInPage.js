@@ -8,6 +8,7 @@ import * as actions from '../../redux/actionCreators/auth';
 import { ROUTE } from '../../configs/route';
 import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../redux/selectors/auth';
+import type { AppState } from '../../redux/types';
 
 const LOGIN_WITH_EMAIL_MUTATION = gql`
   mutation Web_LogInWithEmail($input: LogInWithEmailInput!) {
@@ -21,16 +22,17 @@ const LOGIN_WITH_EMAIL_MUTATION = gql`
 `;
 
 type Props = {
-  authed: boolean
+  authed: boolean,
+  logInSuccess: (jwt: string) => void,
 };
 
 type State = {
   email: string,
   password: string,
-  error: ?String,
+  error: ?string,
 };
 
-type FormFields = 'email' | 'password';
+export type FormFields = 'email' | 'password';
 
 type Data = {
   result: {
@@ -62,15 +64,13 @@ export class LogInPageComp extends React.Component<Props, State> {
     if (jwt && !error) {
       this.props.logInSuccess(result.jwt);
     } else {
-      this.setState({ error: error.message });
+      this.setState({ error: error ? error.message : 'Unknown error' });
     }
   }
 
   onError = (error: Error) => this.setState({ error: error.message });
 
   render() {
-    console.log('LogInPageComp this.props.authed:', this.props.authed)
-
     if (this.props.authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
@@ -92,8 +92,6 @@ export class LogInPageComp extends React.Component<Props, State> {
               const { email, password } = this.state;
               const variables = { input: { email, password } };
 
-              console.log('variables:', variables);
-
               logIn({ variables });
             }}
             handleInputChange={this.handleInputChange}
@@ -106,7 +104,7 @@ export class LogInPageComp extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: AppState) {
   return {
     authed: isAuthed(state),
   };

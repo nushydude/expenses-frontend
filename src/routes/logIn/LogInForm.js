@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
+import type { FormFields } from './LogInPage';
 
 type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (name: string) => (e: SyntheticEvent<HTMLInputElement>) => void,
+  handleInputChange: (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => void,
   submit: (e: SythenticEvent<any>) => Promise<void>,
   email: string,
   password: string,

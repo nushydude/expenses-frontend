@@ -4,20 +4,21 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { ROUTE } from '../../configs/route';
 import { isAuthed } from '../../redux/selectors/auth';
+import type { AppState } from '../../redux/types';
 
-export function HomePageComp(props) {
-  console.log('HomePageComp props.authed:', props.authed);
+type Props = {
+  authed: Boolean,
+};
 
-  return (
-    <>
-      {!props.authed && <Redirect to={ROUTE.AUTH_LOGIN} />}
+export function HomePageComp(props: Props) {
+  if (!props.authed) {
+    return <Redirect to={ROUTE.AUTH_LOGIN} />;
+  }
 
-      <p>HomePage</p>
-    </>
-  );
+  return <p>HomePage</p>;
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: AppState) {
   return {
     authed: isAuthed(state),
   };

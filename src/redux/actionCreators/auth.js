@@ -1,11 +1,9 @@
 // @flow
-import {
-  LOGIN_SUCCESS,
-} from '../actions/auth';
+import { AUTH_ACTIONS } from '../actions/auth';
 
 export function logInSuccess(payload: string) {
   return {
-    type: LOGIN_SUCCESS,
+    type: AUTH_ACTIONS.LOGIN_SUCCESS,
     payload,
   };
 }
