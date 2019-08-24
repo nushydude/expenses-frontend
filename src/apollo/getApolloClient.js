@@ -4,8 +4,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink } from 'apollo-link';
 // import { RetryLink } from 'apollo-link-retry';
-import { errorHandlerLink } from './links/errorHandlerLink';
-import { setAuthHeaderLink } from './links/setAuthHeaderLink';
+// import { errorHandlerLink } from './links/errorHandlerLink';
+// import { setAuthHeaderLink } from './links/setAuthHeaderLink';
 
 let client;
 
@@ -21,8 +21,8 @@ export function getApolloClient(uri) {
   const cache = new InMemoryCache();
 
   const link = ApolloLink.from([
-    errorHandlerLink,
-    setAuthHeaderLink,
+    // errorHandlerLink,
+    // setAuthHeaderLink,
     // new RetryLink(),
     httpLink,
   ]);
