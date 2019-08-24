@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import {  ROUTE } from '../../../configs/route';
 import type { FormFields } from './LogInPage';
 
 type Props = {
@@ -14,13 +16,13 @@ type Props = {
 
 export function LogInForm(props: Props) {
   return (
-    <form onSubmit={props.submit}>
+    <form onSubmit={props.submit} style={{ display: 'flex', flexDirection: 'column'}}>
       <input
         onChange={props.handleInputChange('email')}
         onFocus={props.clearError}
         placeholder='Email'
         type='text'
-        value={props.name}
+        value={props.email}
       />
       <input
         onChange={props.handleInputChange('password')}
@@ -31,6 +33,7 @@ export function LogInForm(props: Props) {
       />
       <button type='submit' disabled={props.isBusy}>Log In</button>
       {props.error && <p>Error: {props.error}</p>}
+      <p>Don't have an account? <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link></p>
     </form>
   )
 }

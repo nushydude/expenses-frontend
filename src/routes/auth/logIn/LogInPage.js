@@ -4,10 +4,10 @@ import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
 import { LogInForm } from './LogInForm';
-import * as actions from '../../redux/actionCreators/auth';
-import { ROUTE } from '../../configs/route';
+import * as actions from '../../../redux/actionCreators/auth';
+import { ROUTE } from '../../../configs/route';
 import { Redirect } from 'react-router-dom';
-import { isAuthed } from '../../redux/selectors/auth';
+import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../redux/types';
 
 const LOGIN_WITH_EMAIL_MUTATION = gql`
@@ -82,22 +82,24 @@ export class LogInPageComp extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(logIn, { loading }) => (
-          <LogInForm
-            isBusy={loading}
-            clearError={this.clearError}
-            error={this.state.error}
-            submit={(e: SyntheticEvent<any>) => {
-              e.preventDefault();
+          <div style={{width: '400px'}}>
+            <LogInForm
+              isBusy={loading}
+              clearError={this.clearError}
+              error={this.state.error}
+              submit={(e: SyntheticEvent<any>) => {
+                e.preventDefault();
 
-              const { email, password } = this.state;
-              const variables = { input: { email, password } };
+                const { email, password } = this.state;
+                const variables = { input: { email, password } };
 
-              logIn({ variables });
-            }}
-            handleInputChange={this.handleInputChange}
-            email={this.state.email}
-            password={this.state.password}
-          />
+                logIn({ variables });
+              }}
+              handleInputChange={this.handleInputChange}
+              email={this.state.email}
+              password={this.state.password}
+            />
+          </div>
         )}
       </Mutation>
     );

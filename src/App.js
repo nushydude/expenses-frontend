@@ -2,7 +2,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { ROUTE } from './configs/route';
-import { LogInPage } from './routes/logIn/LogInPage';
+import { LogInPage } from './routes/auth/logIn/LogInPage';
+import { SignUpPage } from './routes/auth/signUp/SignUpPage';
 import { HomePage } from './routes/home/HomePage';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
 
       <Switch>
         <Route exact path={ROUTE.AUTH_LOGIN} component={LogInPage} />
+        <Route exact path={ROUTE.AUTH_SIGNUP} component={SignUpPage} />
         <Route path={ROUTE.HOME} component={HomePage} />
       </Switch>
     </div>
