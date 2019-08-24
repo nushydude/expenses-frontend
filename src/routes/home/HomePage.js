@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { ROUTE } from '../../configs/route';
+import { isAuthed } from '../../redux/selectors/auth';
 
 export function HomePageComp(props) {
   return (
@@ -16,7 +17,7 @@ export function HomePageComp(props) {
 
 function mapStateToProps(state) {
   return {
-    authed: Boolean(state.auth.jwt),
+    authed: isAuthed(state),
   };
 }
 

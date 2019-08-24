@@ -15,7 +15,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['flowtype', 'prettier', 'react'],
   rules: {
     'prettier/prettier': 'error',
     'linebreak-style': 0,
