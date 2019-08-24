@@ -6,9 +6,11 @@ import { ROUTE } from '../../configs/route';
 import { isAuthed } from '../../redux/selectors/auth';
 
 export function HomePageComp(props) {
+  console.log('HomePageComp props.authed:', props.authed);
+
   return (
     <>
-      {!props.authed && <Redirect to={ROUTE.LOGIN} />}
+      {!props.authed && <Redirect to={ROUTE.AUTH_LOGIN} />}
 
       <p>HomePage</p>
     </>
@@ -17,7 +19,7 @@ export function HomePageComp(props) {
 
 function mapStateToProps(state) {
   return {
-    authed: isAuthed(state),
+    authed: Boolean(state.auth.jwt),
   };
 }
 

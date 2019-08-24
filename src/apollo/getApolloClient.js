@@ -5,7 +5,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink } from 'apollo-link';
 // import { RetryLink } from 'apollo-link-retry';
 // import { errorHandlerLink } from './links/errorHandlerLink';
-// import { setAuthHeaderLink } from './links/setAuthHeaderLink';
+import { setAuthHeaderLink } from './links/setAuthHeaderLink';
 
 let client;
 
@@ -14,15 +14,16 @@ export function getApolloClient(uri) {
     return client;
   }
 
+  
   const httpLink = createHttpLink({
     uri,
   });
-
+  
   const cache = new InMemoryCache();
-
+  
   const link = ApolloLink.from([
     // errorHandlerLink,
-    // setAuthHeaderLink,
+    setAuthHeaderLink,
     // new RetryLink(),
     httpLink,
   ]);

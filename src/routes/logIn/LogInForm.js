@@ -1,44 +1,35 @@
 // @flow
 import * as React from 'react';
 
-export class LogInForm extends React.Component {
-  constructor(props) {
-    super(props);
+type Props = {
+  clearError: () => void,
+  error: ?string,
+  isBusy: boolean,
+  handleInputChange: (name: string) => (e: SyntheticEvent<HTMLInputElement>) => void,
+  submit: (e: SythenticEvent<any>) => Promise<void>,
+  email: string,
+  password: string,
+};
 
-    this.state = { email: '', password: '' };
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    const variables = {
-      input: this.state,
-    };
-
-    console.log('variables:', variables);
-
-    this.props.logIn({ variables });
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          value={this.state.name}
-          onChange={(e) => this.setState({ email: e.target.value })}
-          placeholder='Email'
-          name='email'
-          type='text'
-        />
-        <input
-          value={this.state.password}
-          onChange={(e) => this.setState({ password: e.target.value })}
-          placeholder='Password'
-          name='password'
-          type='password'
-        />
-        <button type='submit' disabled={this.props.loading}>Log In</button>
-      </form>
-    )
-  }
+export function LogInForm(props: Props) {
+  return (
+    <form onSubmit={props.submit}>
+      <input
+        onChange={props.handleInputChange('email')}
+        onFocus={props.clearError}
+        placeholder='Email'
+        type='text'
+        value={props.name}
+      />
+      <input
+        onChange={props.handleInputChange('password')}
+        onFocus={props.clearError}
+        placeholder='Password'
+        type='password'
+        value={props.password}
+      />
+      <button type='submit' disabled={props.isBusy}>Log In</button>
+      {props.error && <p>Error: {props.error}</p>}
+    </form>
+  )
 }
