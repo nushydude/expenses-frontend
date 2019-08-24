@@ -11,10 +11,9 @@ type Props = {
   handleInputChange: (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => void,
   submit: (e: SythenticEvent<any>) => Promise<void>,
   email: string,
-  password: string,
 };
 
-export function LogInForm(props: Props) {
+export function RecoverForm(props: Props) {
   return (
     <form onSubmit={props.submit} style={{ display: 'flex', flexDirection: 'column'}}>
       <input
@@ -24,17 +23,9 @@ export function LogInForm(props: Props) {
         type='text'
         value={props.email}
       />
-      <input
-        onChange={props.handleInputChange('password')}
-        onFocus={props.clearError}
-        placeholder='Password'
-        type='password'
-        value={props.password}
-      />
-      <button type='submit' disabled={props.isBusy}>Log In</button>
+      <button type='submit' disabled={props.isBusy}>Send Password Reset Email</button>
       {props.error && <p>Error: {props.error}</p>}
-      <p>Don't have an account? <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link></p>
-      <p><Link to={ROUTE.AUTH_RECOVER}>Forgot Password</Link></p>
+      <p>Don't want to recover password? <Link to={ROUTE.AUTH_LOGIN}>Log In</Link></p>
     </form>
   )
 }
