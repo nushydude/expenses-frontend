@@ -5,11 +5,11 @@ import { rootReducer } from './rootReducer';
 
 const logger = createLogger();
 
-const middlware = [
-  process.env.NODE_ENV !== 'production' && logger,
-].filter(Boolean);
+const middlware = [process.env.NODE_ENV !== 'production' && logger].filter(
+  Boolean,
+);
 
-const store = createStore(rootReducer, applyMiddleware(middlware));
+const store = createStore(rootReducer, applyMiddleware(...middlware));
 
 export function getStore() {
   return store;
