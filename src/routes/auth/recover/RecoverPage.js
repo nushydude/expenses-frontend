@@ -27,6 +27,7 @@ type Props = {
 type State = {
   email: string,
   error: ?string,
+  success: Boolean,
 };
 
 export type FormFields = 'email';
@@ -44,6 +45,7 @@ export class RecoverPageComp extends React.Component<Props, State> {
   state = {
     email: '',
     error: null,
+    success: false,
   };
 
   clearError = () => {
@@ -58,7 +60,7 @@ export class RecoverPageComp extends React.Component<Props, State> {
     const { sent, error } = result;
 
     if (sent && !error) {
-      this.props.history.push(ROUTE.AUTH_RECOVER_SUCCESS);
+      this.setState({ success: true });
     } else {
       this.setState({ error: error ? error.message : 'Unknown error' });
     }
@@ -69,6 +71,10 @@ export class RecoverPageComp extends React.Component<Props, State> {
   render() {
     if (this.props.authed) {
       return <Redirect to={ROUTE.HOME} />;
+    }
+
+    if (this.state.success) {
+      return <p>Recovery email successfully sent. Follow instructions in the email to recover your password.</p>
     }
 
     return (

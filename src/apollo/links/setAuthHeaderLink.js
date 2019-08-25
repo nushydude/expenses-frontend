@@ -8,18 +8,21 @@ export const setAuthHeaderLink = setContext((request, previousContext) => {
   const { jwt } = state.auth;
 
   if (jwt) {
-    return ({
+    return {
       ...previousContext,
       headers: {
         ...previousContext.headers,
         authorization: jwt,
       },
-    });
+    };
   }
 
   const updatedPreviousContext = { ...previousContext };
 
-  if (updatedPreviousContext.headers && updatedPreviousContext.headers.authorization) {
+  if (
+    updatedPreviousContext.headers
+    && updatedPreviousContext.headers.authorization
+  ) {
     delete updatedPreviousContext.headers.authorization;
   }
 

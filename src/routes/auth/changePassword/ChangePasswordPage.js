@@ -3,17 +3,18 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
-import { SignUpForm } from './SignUpForm';
+import { ChangePasswordForm } from './ChangePasswordForm';
 import { ROUTE } from '../../../configs/route';
 import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
-import { isEmail } from 'validator';
+import queryString from 'query-string';
 
-const SIGNUP_WITH_EMAIL_MUTATION = gql`
-  mutation Web_SignUpWithEmail($input: SignUpWithEmailInput!) {
-    result: signUpWithEmail(input: $input) {
-      created
+
+const CHANGE_PASSWORD_MUTATION = gql`
+  mutation Web_ChangePassword($input: ChangePasswordInput!) {
+    result: changePassword(input: $input) {
+      passwordChanged
       error {
         message
       }
@@ -26,11 +27,14 @@ type Props = {
 };
 
 type FormInputs =  {
-  email: string,
-  name: string,
   password: string,
   confirmPassword: string,
 }
+
+type ValidateFields = {
+  ...FormInput,
+  secret: ?string,
+};
 
 type State = {
   ...FormInputs,
@@ -38,21 +42,19 @@ type State = {
   success: boolean,
 };
 
-export type FormFields = 'email' | 'password' | 'name' | 'confirmPassword';
+export type FormFields = 'password' | 'confirmPassword';
 
 type Data = {
   result: {
-    created: boolean,
+    passwordChanged: boolean,
     error: ?{
       message: string,
     },
   },
 };
 
-export class SignUpPageComp extends React.Component<Props, State> {
+export class ChangePasswordComp extends React.Component<Props, State> {
   state = {
-    email: '',
-    name: '',
     confirmPassword: '',
     password: '',
     error: null,
@@ -68,16 +70,38 @@ export class SignUpPageComp extends React.Component<Props, State> {
   }
 
   onCompleted = ({ result }: Data) => {
-    const { created, error } = result;
+    const { passwordChanged, error } = result;
 
-    if (error || !created) {
+    if (error || !passwordChanged) {
       this.setState({ error: error ? error.message : 'Unknown error' });
-    } else if (created) {
+    } else if (passwordChanged) {
       this.setState({ success: true });
     }
   }
 
   onError = (error: Error) => this.setState({ error: error.message });
+
+  signUp = (signUpMutation) => {
+    const { password, confirmPassword } = this.state;
+
+    const { secret } = queryString.parse(props.location.search);
+
+    const error = validateInputs({ password, confirmPassword, secret });
+
+    if (error) {
+      return this.setState({ error });
+    }
+
+    const variables = {
+      input: {
+        confirmPassword,
+        password,
+        resetPasswordSecret: secret,
+      },
+    };
+
+    signUpMutation({ variables });
+  }
 
   render() {
     if (this.props.authed) {
@@ -85,39 +109,27 @@ export class SignUpPageComp extends React.Component<Props, State> {
     }
 
     if (this.state.success) {
-      return <p>Sign up successful. Your account needs to be verified before you can log in. Check your email.</p>
+      return <p>Password changed successfully</p>;
     }
 
     return (
       <Mutation
-        mutation={SIGNUP_WITH_EMAIL_MUTATION}
+        mutation={CHANGE_PASSWORD_MUTATION}
         onCompleted={this.onCompleted}
         onError={this.onError}
       >
         {(signUp, { loading }) => (
           <div style={{width: '400px'}}>
-            <SignUpForm
+            <ChangePasswordForm
               isBusy={loading}
               clearError={this.clearError}
               error={this.state.error}
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                const { email, name, password, confirmPassword } = this.state;
-
-                const error = validateInputs({ email, name, password, confirmPassword });
-
-                if (error) {
-                  return this.setState({ error });
-                }
-
-                const variables = { input: { email, name, password } };
-
-                signUp({ variables });
+                this.signUp(signUp);
               }}
               handleInputChange={this.handleInputChange}
-              email={this.state.email}
-              name={this.state.name}
               password={this.state.password}
               confirmPassword={this.state.confirmPassword}
             />
@@ -134,23 +146,19 @@ function mapStateToProps(state: AppState) {
   };
 }
 
-export const SignUpPage = connect(mapStateToProps)(SignUpPageComp);
+export const ChangePassword = connect(mapStateToProps)(ChangePasswordComp);
 
-function validateInputs({ email, name,  password, confirmPassword }: FormInputs): ?string {
-  if (!isEmail(email)) {
-    return 'Email is not a valid email';
-  }
-
-  if (name.length === 0) {
-    return 'Please fill the name';
-  }
-
+function validateInputs({ password, confirmPassword }: FormInputs): ?string {
   if (password.length < 6) {
     return 'Password is too short';
   }
 
   if (password !== confirmPassword) {
     return 'Password and confirm password fields do not match';
+  }
+
+  if (!secret) {
+    return 'Please use the link provided in your email';
   }
 
   return null;
