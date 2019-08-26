@@ -12,11 +12,14 @@ type Action = {
   payload: any,
 };
 
-export function auth(state: AuthState = INITIAL_STATE, { type, payload }: Action): AuthState {
+export function auth(
+  state: AuthState = INITIAL_STATE,
+  { type, payload }: Action,
+): AuthState {
   switch (type) {
     case AUTH_ACTIONS.LOGIN_SUCCESS:
       return { ...state, jwt: payload };
     default:
       return state;
   }
-};
+}

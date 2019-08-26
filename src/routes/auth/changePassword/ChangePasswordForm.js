@@ -1,39 +1,57 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {  ROUTE } from '../../../configs/route';
-import type { FormFields } from './SignUpPage';
+import { ROUTE } from '../../../configs/route';
+import type { FormFields } from './ChangePasswordPage';
 
 type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => void,
+  handleInputChange: (
+    name: FormFields,
+  ) => (e: SyntheticEvent<HTMLInputElement>) => void,
   submit: (e: SythenticEvent<any>) => Promise<void>,
   password: string,
   confirmPassword: string,
 };
 
-export function ChangePasswordForm(props: Props) {
+export function ChangePasswordForm({
+  clearError,
+  error,
+  isBusy,
+  handleInputChange,
+  submit,
+  password,
+  confirmPassword,
+}: Props) {
   return (
-    <form onSubmit={props.submit} style={{ display: 'flex', flexDirection: 'column'}}>
+    <form
+      onSubmit={submit}
+      style={{ display: 'flex', flexDirection: 'column' }}
+    >
       <input
-        onChange={props.handleInputChange('password')}
-        onFocus={props.clearError}
-        placeholder='Password'
-        type='password'
-        value={props.password}
+        onChange={handleInputChange('password')}
+        onFocus={clearError}
+        placeholder="Password"
+        type="password"
+        value={password}
       />
       <input
-        onChange={props.handleInputChange('confirmPassword')}
-        onFocus={props.clearError}
-        placeholder='Confirm Password'
-        type='password'
-        value={props.confirmPassword}
+        onChange={handleInputChange('confirmPassword')}
+        onFocus={clearError}
+        placeholder="Confirm Password"
+        type="password"
+        value={confirmPassword}
       />
-      <button type='submit' disabled={props.isBusy || props.error}>Change Password</button>
-      {props.error && <p>Error: {props.error}</p>}
-      <p>Don't want to change password? <Link to={ROUTE.AUTH_LOGIN}>Log In</Link></p>
+      <button type="submit" disabled={isBusy || error}>
+        Change Password
+      </button>
+      {error && <p>Error:{error}</p>}
+      <p>
+        Don't want to change password?
+        <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
+      </p>
     </form>
-  )
+  );
 }

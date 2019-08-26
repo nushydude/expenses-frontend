@@ -3,11 +3,12 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ['airbnb'],
+  extends: ['airbnb', 'plugin:flowtype/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

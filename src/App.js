@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { ROUTE } from './configs/route';
+import { ChangePasswordPage } from './routes/auth/changePassword/ChangePasswordPage';
 import { LogInPage } from './routes/auth/logIn/LogInPage';
 import { SignUpPage } from './routes/auth/signUp/SignUpPage';
 import { RecoverPage } from './routes/auth/recover/RecoverPage';
@@ -18,6 +19,11 @@ function App() {
         <Route exact path={ROUTE.AUTH_SIGNUP} component={SignUpPage} />
         <Route exact path={ROUTE.AUTH_RECOVER} component={RecoverPage} />
         <Route exact path={ROUTE.AUTH_VERIFY} component={VerifyAccountPage} />
+        <Route
+          exact
+          path={ROUTE.AUTH_CHANGE_PWD}
+          component={ChangePasswordPage}
+        />
 
         <Route path={ROUTE.HOME} component={HomePage} />
       </Switch>

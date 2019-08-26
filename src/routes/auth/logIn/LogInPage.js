@@ -3,10 +3,10 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { LogInForm } from './LogInForm';
 import * as actions from '../../../redux/actionCreators/auth';
 import { ROUTE } from '../../../configs/route';
-import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../redux/types';
 
@@ -52,11 +52,13 @@ export class LogInPageComp extends React.Component<Props, State> {
 
   clearError = () => {
     this.setState({ error: null });
-  }
+  };
 
-  handleInputChange = (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => {
+  handleInputChange = (name: FormFields) => (
+    e: SyntheticEvent<HTMLInputElement>,
+  ) => {
     this.setState({ [name]: e.target.value });
-  }
+  };
 
   onCompleted = ({ result }: Data) => {
     const { jwt, error } = result;
@@ -66,7 +68,7 @@ export class LogInPageComp extends React.Component<Props, State> {
     } else {
       this.setState({ error: error ? error.message : 'Unknown error' });
     }
-  }
+  };
 
   onError = (error: Error) => this.setState({ error: error.message });
 
@@ -82,7 +84,7 @@ export class LogInPageComp extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(logIn, { loading }) => (
-          <div style={{width: '400px'}}>
+          <div style={{ width: '400px' }}>
             <LogInForm
               isBusy={loading}
               clearError={this.clearError}
@@ -112,4 +114,7 @@ function mapStateToProps(state: AppState) {
   };
 }
 
-export const LogInPage = connect(mapStateToProps, actions)(LogInPageComp);
+export const LogInPage = connect(
+  mapStateToProps,
+  actions,
+)(LogInPageComp);

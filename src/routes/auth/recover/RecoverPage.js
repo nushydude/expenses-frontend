@@ -3,11 +3,11 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { RecoverForm } from './RecoverForm';
 import { ROUTE } from '../../../configs/route';
-import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../../redux/selectors/auth';
-import type { AppState } from '../../redux/types';
+import type { AppState } from '../../../redux/types';
 
 const SEND_RESET_PASSWORD_LINK_MUTATION = gql`
   mutation Web_SendResetPasswordLink($input: SendResetPasswordLinkInput!) {
@@ -42,19 +42,25 @@ type Data = {
 };
 
 export class RecoverPageComp extends React.Component<Props, State> {
-  state = {
-    email: '',
-    error: null,
-    success: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      error: null,
+      success: false,
+    };
+  }
 
   clearError = () => {
     this.setState({ error: null });
-  }
+  };
 
-  handleInputChange = (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => {
+  handleInputChange = (name: FormFields) => (
+    e: SyntheticEvent<HTMLInputElement>,
+  ) => {
     this.setState({ [name]: e.target.value });
-  }
+  };
 
   onCompleted = ({ result }: Data) => {
     const { sent, error } = result;
@@ -64,17 +70,25 @@ export class RecoverPageComp extends React.Component<Props, State> {
     } else {
       this.setState({ error: error ? error.message : 'Unknown error' });
     }
-  }
+  };
 
   onError = (error: Error) => this.setState({ error: error.message });
 
   render() {
-    if (this.props.authed) {
+    const { authed } = this.props;
+    const { email, success } = this.state;
+
+    if (authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
 
-    if (this.state.success) {
-      return <p>Recovery email successfully sent. Follow instructions in the email to recover your password.</p>
+    if (success) {
+      return (
+        <p>
+          Recovery email successfully sent. Follow instructions in the email to
+          recover your password.
+        </p>
+      );
     }
 
     return (
@@ -84,7 +98,7 @@ export class RecoverPageComp extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(logIn, { loading }) => (
-          <div style={{width: '400px'}}>
+          <div style={{ width: '400px' }}>
             <RecoverForm
               isBusy={loading}
               clearError={this.clearError}
@@ -92,13 +106,12 @@ export class RecoverPageComp extends React.Component<Props, State> {
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                const { email } = this.state;
                 const variables = { input: { email } };
 
                 logIn({ variables });
               }}
               handleInputChange={this.handleInputChange}
-              email={this.state.email}
+              email={email}
             />
           </div>
         )}

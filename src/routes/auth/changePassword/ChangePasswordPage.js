@@ -3,13 +3,13 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import type { Location } from 'react-router-dom';
+import queryString from 'query-string';
 import { ChangePasswordForm } from './ChangePasswordForm';
 import { ROUTE } from '../../../configs/route';
-import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
-import queryString from 'query-string';
-
 
 const CHANGE_PASSWORD_MUTATION = gql`
   mutation Web_ChangePassword($input: ChangePasswordInput!) {
@@ -24,12 +24,13 @@ const CHANGE_PASSWORD_MUTATION = gql`
 
 type Props = {
   authed: boolean,
+  location: Location,
 };
 
-type FormInputs =  {
+type FormInputs = {
   password: string,
   confirmPassword: string,
-}
+};
 
 type ValidateFields = {
   ...FormInput,
@@ -63,11 +64,13 @@ export class ChangePasswordComp extends React.Component<Props, State> {
 
   clearError = () => {
     this.setState({ error: null });
-  }
+  };
 
-  handleInputChange = (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => {
+  handleInputChange = (name: FormFields) => (
+    e: SyntheticEvent<HTMLInputElement>,
+  ) => {
     this.setState({ [name]: e.target.value });
-  }
+  };
 
   onCompleted = ({ result }: Data) => {
     const { passwordChanged, error } = result;
@@ -77,14 +80,15 @@ export class ChangePasswordComp extends React.Component<Props, State> {
     } else if (passwordChanged) {
       this.setState({ success: true });
     }
-  }
+  };
 
   onError = (error: Error) => this.setState({ error: error.message });
 
-  signUp = (signUpMutation) => {
+  changePassword = (changePasswordMutation) => {
+    const { location } = this.props;
     const { password, confirmPassword } = this.state;
 
-    const { secret } = queryString.parse(props.location.search);
+    const { secret } = queryString.parse(location.search);
 
     const error = validateInputs({ password, confirmPassword, secret });
 
@@ -100,15 +104,18 @@ export class ChangePasswordComp extends React.Component<Props, State> {
       },
     };
 
-    signUpMutation({ variables });
-  }
+    changePasswordMutation({ variables });
+  };
 
   render() {
-    if (this.props.authed) {
+    const { authed } = this.props;
+    const { error, password, confirmPassword, success } = this.state;
+
+    if (authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
 
-    if (this.state.success) {
+    if (success) {
       return <p>Password changed successfully</p>;
     }
 
@@ -118,20 +125,20 @@ export class ChangePasswordComp extends React.Component<Props, State> {
         onCompleted={this.onCompleted}
         onError={this.onError}
       >
-        {(signUp, { loading }) => (
-          <div style={{width: '400px'}}>
+        {(changePassword, { loading }) => (
+          <div style={{ width: '400px' }}>
             <ChangePasswordForm
               isBusy={loading}
               clearError={this.clearError}
-              error={this.state.error}
+              error={error}
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                this.signUp(signUp);
+                this.changePassword(changePassword);
               }}
               handleInputChange={this.handleInputChange}
-              password={this.state.password}
-              confirmPassword={this.state.confirmPassword}
+              password={password}
+              confirmPassword={confirmPassword}
             />
           </div>
         )}
@@ -146,9 +153,9 @@ function mapStateToProps(state: AppState) {
   };
 }
 
-export const ChangePassword = connect(mapStateToProps)(ChangePasswordComp);
+export const ChangePasswordPage = connect(mapStateToProps)(ChangePasswordComp);
 
-function validateInputs({ password, confirmPassword }: FormInputs): ?string {
+function validateInputs({ password, confirmPassword, secret }: ValidateFields): ?string {
   if (password.length < 6) {
     return 'Password is too short';
   }
@@ -158,7 +165,7 @@ function validateInputs({ password, confirmPassword }: FormInputs): ?string {
   }
 
   if (!secret) {
-    return 'Please use the link provided in your email';
+    return 'Unable to validate user. Please use the link provided in your email';
   }
 
   return null;

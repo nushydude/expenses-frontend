@@ -10,8 +10,8 @@ type Props = {
   authed: Boolean,
 };
 
-export function HomePageComp(props: Props) {
-  if (!props.authed) {
+export function HomePageComp({ authed }: Props) {
+  if (!authed) {
     return <Redirect to={ROUTE.AUTH_LOGIN} />;
   }
 

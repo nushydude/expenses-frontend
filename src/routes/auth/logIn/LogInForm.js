@@ -1,40 +1,60 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {  ROUTE } from '../../../configs/route';
+import { ROUTE } from '../../../configs/route';
 import type { FormFields } from './LogInPage';
 
 type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => void,
+  handleInputChange: (
+    name: FormFields,
+  ) => (e: SyntheticEvent<HTMLInputElement>) => void,
   submit: (e: SythenticEvent<any>) => Promise<void>,
   email: string,
   password: string,
 };
 
-export function LogInForm(props: Props) {
+export function LogInForm({
+  clearError,
+  error,
+  isBusy,
+  handleInputChange,
+  submit,
+  email,
+  password,
+}: Props) {
   return (
-    <form onSubmit={props.submit} style={{ display: 'flex', flexDirection: 'column'}}>
+    <form
+      onSubmit={submit}
+      style={{ display: 'flex', flexDirection: 'column' }}
+    >
       <input
-        onChange={props.handleInputChange('email')}
-        onFocus={props.clearError}
-        placeholder='Email'
-        type='text'
-        value={props.email}
+        onChange={handleInputChange('email')}
+        onFocus={clearError}
+        placeholder="Email"
+        type="text"
+        value={email}
       />
       <input
-        onChange={props.handleInputChange('password')}
-        onFocus={props.clearError}
-        placeholder='Password'
-        type='password'
-        value={props.password}
+        onChange={handleInputChange('password')}
+        onFocus={clearError}
+        placeholder="Password"
+        type="password"
+        value={password}
       />
-      <button type='submit' disabled={props.isBusy}>Log In</button>
-      {props.error && <p>Error: {props.error}</p>}
-      <p>Don't have an account? <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link></p>
-      <p><Link to={ROUTE.AUTH_RECOVER}>Forgot Password</Link></p>
+      <button type="submit" disabled={isBusy}>
+        Log In
+      </button>
+      {error && <p>Error:{error}</p>}
+      <p>
+        Don't have an account?
+        <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>
+      </p>
+      <p>
+        <Link to={ROUTE.AUTH_RECOVER}>Forgot Password</Link>
+      </p>
     </form>
-  )
+  );
 }

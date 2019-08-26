@@ -3,12 +3,12 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { isEmail } from 'validator';
 import { SignUpForm } from './SignUpForm';
 import { ROUTE } from '../../../configs/route';
-import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
-import { isEmail } from 'validator';
 
 const SIGNUP_WITH_EMAIL_MUTATION = gql`
   mutation Web_SignUpWithEmail($input: SignUpWithEmailInput!) {
@@ -25,12 +25,12 @@ type Props = {
   authed: boolean,
 };
 
-type FormInputs =  {
+type FormInputs = {
   email: string,
   name: string,
   password: string,
   confirmPassword: string,
-}
+};
 
 type State = {
   ...FormInputs,
@@ -50,22 +50,28 @@ type Data = {
 };
 
 export class SignUpPageComp extends React.Component<Props, State> {
-  state = {
-    email: '',
-    name: '',
-    confirmPassword: '',
-    password: '',
-    error: null,
-    success: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      name: '',
+      confirmPassword: '',
+      password: '',
+      error: null,
+      success: false,
+    };
+  }
 
   clearError = () => {
     this.setState({ error: null });
-  }
+  };
 
-  handleInputChange = (name: FormFields) => (e: SyntheticEvent<HTMLInputElement>) => {
+  handleInputChange = (name: FormFields) => (
+    e: SyntheticEvent<HTMLInputElement>,
+  ) => {
     this.setState({ [name]: e.target.value });
-  }
+  };
 
   onCompleted = ({ result }: Data) => {
     const { created, error } = result;
@@ -75,17 +81,44 @@ export class SignUpPageComp extends React.Component<Props, State> {
     } else if (created) {
       this.setState({ success: true });
     }
-  }
+  };
 
   onError = (error: Error) => this.setState({ error: error.message });
 
+  signUp = (signUpMutation) => {
+    const { email, name, confirmPassword, password } = this.state;
+
+    const error = validateInputs({
+      email,
+      name,
+      password,
+      confirmPassword,
+    });
+
+    if (error) {
+      return this.setState({ error });
+    }
+
+    const variables = { input: { email, name, password } };
+
+    signUpMutation({ variables });
+  }
+
   render() {
-    if (this.props.authed) {
+    const { authed } = this.props;
+    const { email, name, confirmPassword, error, password, success } = this.state;
+
+    if (authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
 
-    if (this.state.success) {
-      return <p>Sign up successful. Your account needs to be verified before you can log in. Check your email.</p>
+    if (success) {
+      return (
+        <p>
+          Sign up successful. Your account needs to be verified before you can
+          log in. Check your email.
+        </p>
+      );
     }
 
     return (
@@ -94,32 +127,22 @@ export class SignUpPageComp extends React.Component<Props, State> {
         onCompleted={this.onCompleted}
         onError={this.onError}
       >
-        {(signUp, { loading }) => (
-          <div style={{width: '400px'}}>
+        {(signUpMutation, { loading }) => (
+          <div style={{ width: '400px' }}>
             <SignUpForm
               isBusy={loading}
               clearError={this.clearError}
-              error={this.state.error}
+              error={error}
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                const { email, name, password, confirmPassword } = this.state;
-
-                const error = validateInputs({ email, name, password, confirmPassword });
-
-                if (error) {
-                  return this.setState({ error });
-                }
-
-                const variables = { input: { email, name, password } };
-
-                signUp({ variables });
+                this.signUp(signUpMutation)
               }}
               handleInputChange={this.handleInputChange}
-              email={this.state.email}
-              name={this.state.name}
-              password={this.state.password}
-              confirmPassword={this.state.confirmPassword}
+              email={email}
+              name={name}
+              password={password}
+              confirmPassword={confirmPassword}
             />
           </div>
         )}
@@ -136,7 +159,12 @@ function mapStateToProps(state: AppState) {
 
 export const SignUpPage = connect(mapStateToProps)(SignUpPageComp);
 
-function validateInputs({ email, name,  password, confirmPassword }: FormInputs): ?string {
+function validateInputs({
+  email,
+  name,
+  password,
+  confirmPassword,
+}: FormInputs): ?string {
   if (!isEmail(email)) {
     return 'Email is not a valid email';
   }

@@ -14,13 +14,12 @@ export function getApolloClient(uri: string): ApolloClient {
     return client;
   }
 
-  
   const httpLink = createHttpLink({
     uri,
   });
-  
+
   const cache = new InMemoryCache();
-  
+
   const link = ApolloLink.from([
     // errorHandlerLink,
     setAuthHeaderLink,

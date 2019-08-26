@@ -3,11 +3,12 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { connect } from 'react-redux';
-import { ROUTE } from '../../../configs/route';
 import { Redirect } from 'react-router-dom';
+import type { Location } from 'react-router-dom';
+import queryString from 'query-string';
+import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
-import queryString from 'query-string';
 
 const VERIFY_ACCOUNT_MUTATION = gql`
   mutation Web_VerifyAccount($input: VerifyAccountInput!) {
@@ -22,6 +23,7 @@ const VERIFY_ACCOUNT_MUTATION = gql`
 
 type Props = {
   authed: boolean,
+  location: Location,
 };
 
 type State = {
@@ -40,18 +42,18 @@ type Data = {
 };
 
 export class VerifyAccountPageComp extends React.Component<Props, State> {
-  state = {
-    error: null,
-    success: false,
-  };
+  constructor(props) {
+    super(props);
 
-  clearError = () => {
-    this.setState({ error: null });
+    this.state = {
+      error: null,
+      success: false,
+    };
   }
 
-  onCompleted = ({ result }: Data) => {
-    console.log('onCompleted result:', result)
 
+
+  onCompleted = ({ result }: Data) => {
     const { verified, error } = result;
 
     if (error || !verified) {
@@ -59,45 +61,55 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
     } else if (verified) {
       this.setState({ success: true });
     }
-  }
+  };
 
   onError = (error: Error) => this.setState({ error: error.message });
 
   verifyAccount = () => {
-    const { secret: verificationSecret } = queryString.parse(this.props.location.search);
+    const { secret: verificationSecret } = queryString.parse(
+      this.props.location.search,
+    );
 
     if (!verificationSecret) {
-      return this.setState({ error: 'Please use the verify link provided in your email' });
+      return this.setState({
+        error: 'Please use the verify link provided in your email',
+      });
     }
 
     const variables = {
       input: { verificationSecret },
     };
 
-    console.log('calling verifyAccountMutation')
+    console.log('calling verifyAccountMutation');
 
     this.verifyAccountMutation({ variables });
-  }
-
-  componentDidMount() {
-    this.verifyAccount()
-  }
-
-  verifyAccountMutation = () => {
-    this.setState({ error: 'Unknown error '});
   };
 
+  componentDidMount() {
+    this.verifyAccount();
+  }
+
+  clearError = () => {
+    this.setState({ error: null });
+  };
+
+  verifyAccountMutation = () => {
+    this.setState({ error: 'Unknown error ' });
+  };
 
   render() {
-    if (this.props.authed) {
+    const { authed } = this.props;
+    const { error, success } = this.state;
+
+    if (authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
 
-    if (this.state.error) {
-      return <p>Error: {this.state.error}</p>;
+    if (error) {
+      return <p>Error:{error}</p>;
     }
 
-    if (this.state.success) {
+    if (success) {
       return <p>Account verified successfully</p>;
     }
 
@@ -111,7 +123,7 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
           this.verifyAccountMutation = verifyAccountMutation;
 
           if (loading) {
-            return <p>Verifying. Please wait...</p>
+            return <p>Verifying. Please wait...</p>;
           }
 
           return null;
@@ -127,4 +139,6 @@ function mapStateToProps(state: AppState) {
   };
 }
 
-export const VerifyAccountPage = connect(mapStateToProps)(VerifyAccountPageComp);
+export const VerifyAccountPage = connect(mapStateToProps)(
+  VerifyAccountPageComp,
+);
