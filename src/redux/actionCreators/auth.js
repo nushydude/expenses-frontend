@@ -10,6 +10,6 @@ export function logInSuccess(payload: string) {
 
 export function logOut() {
   return {
-    type: AUTH_ACTIONS.LOG_OUT,
+    type: AUTH_ACTIONS.LOGOUT,
   };
 }
