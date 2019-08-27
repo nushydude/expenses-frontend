@@ -7,3 +7,9 @@ export function logInSuccess(payload: string) {
     payload,
   };
 }
+
+export function logOut() {
+  return {
+    type: AUTH_ACTIONS.LOG_OUT,
+  };
+}

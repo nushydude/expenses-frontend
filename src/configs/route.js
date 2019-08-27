@@ -1,6 +1,7 @@
 // @flow
 export const ROUTE = Object.freeze({
   HOME: '/',
+  LANDING: '/',
   AUTH_LOGIN: '/auth/login',
   AUTH_SIGNUP: '/auth/signup',
   AUTH_RECOVER: '/auth/recover',

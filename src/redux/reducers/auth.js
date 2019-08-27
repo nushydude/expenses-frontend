@@ -19,6 +19,8 @@ export function auth(
   switch (type) {
     case AUTH_ACTIONS.LOGIN_SUCCESS:
       return { ...state, jwt: payload };
+    case AUTH_ACTIONS.LOGOUT:
+      return { ...state, jwt: null };
     default:
       return state;
   }

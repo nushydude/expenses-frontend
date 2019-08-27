@@ -7,12 +7,13 @@ import { LogInPage } from './routes/auth/logIn/LogInPage';
 import { SignUpPage } from './routes/auth/signUp/SignUpPage';
 import { RecoverPage } from './routes/auth/recover/RecoverPage';
 import { VerifyAccountPage } from './routes/auth/verifyAccount/VerifyAccountPage';
-import { HomePage } from './routes/home/HomePage';
+import { LandingPage } from './routes/landing/LandingPage';
+import { Header } from './components/Header';
 
 function App() {
   return (
     <div className="App">
-      <p>Header</p>
+      <Header />
 
       <Switch>
         <Route exact path={ROUTE.AUTH_LOGIN} component={LogInPage} />
@@ -25,7 +26,7 @@ function App() {
           component={ChangePasswordPage}
         />
 
-        <Route path={ROUTE.HOME} component={HomePage} />
+        <Route path={ROUTE.LANDING} component={LandingPage} />
       </Switch>
     </div>
   );
