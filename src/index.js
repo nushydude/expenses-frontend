@@ -3,19 +3,22 @@ import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 import { Router } from './components/Router';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { getStore } from './redux/getStore';
+import { persistor, store } from './redux/store';
 import { getApolloClient } from './apollo/getApolloClient';
 
 ReactDOM.render(
   <ApolloProvider client={getApolloClient(process.env.REACT_APP_API_URL)}>
-    <Provider store={getStore()}>
-      <Router>
-        <App />
-      </Router>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <App />
+        </Router>
+      </PersistGate>
     </Provider>
   </ApolloProvider>,
   document.getElementById('root'),

@@ -1,9 +1,8 @@
 // @flow
 import { setContext } from 'apollo-link-context';
-import { getStore } from '../../redux/getStore';
+import { store } from '../../redux/store';
 
 export const setAuthHeaderLink = setContext((request, previousContext) => {
-  const store = getStore();
   const state = store.getState();
   const { jwt } = state.auth;
 
