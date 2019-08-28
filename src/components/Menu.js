@@ -21,7 +21,7 @@ const styles = {
     marginTop: '5px',
     background: 'grey',
     textAlign: 'center',
-  }
+  },
 };
 
 type Props = {
@@ -42,15 +42,16 @@ export class MenuComp extends React.Component<Props, State> {
   }
 
   show = () => {
-     this.setState({ visible: true });
-  }
+    this.setState({ visible: true });
+  };
 
   hide = () => {
     this.setState({ visible: false });
-  }
+  };
 
   render() {
-    console.log('props:', this.props);
+    const { visible } = this.state;
+    const { logOut } = this.props;
 
     return (
       <div
@@ -59,16 +60,19 @@ export class MenuComp extends React.Component<Props, State> {
         style={styles.container}
       >
         <div>Account</div>
-        {
-          this.state.visible && (
-            <div style={styles.contents}>
-              <div style={styles.item} onClick={this.props.logOut}>Logout</div>
+        {visible && (
+          <div style={styles.contents}>
+            <div style={styles.item} onClick={logOut}>
+              Logout
             </div>
-          )
-        }
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export const Menu = connect(null, actions)(MenuComp);
+export const Menu = connect(
+  null,
+  actions,
+)(MenuComp);

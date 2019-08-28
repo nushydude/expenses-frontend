@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTE } from '../../../configs/route';
-import type { FormFields } from './LogInPage';
+
+export type FormFields = 'email';
 
 type Props = {
   clearError: () => void,
@@ -38,8 +39,7 @@ export function RecoverForm({
       <button type="submit" disabled={isBusy}>
         Send Password Reset Email
       </button>
-      {error && <p>
-Error:{error}</p>}
+      {error && <p>Error:{error}</p>}
       <p>
         Don't want to recover password?
         <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>

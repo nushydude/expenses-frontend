@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTE } from '../../../configs/route';
-import type { FormFields } from './SignUpPage';
+
+export type FormFields = 'email' | 'password' | 'name' | 'confirmPassword';
 
 type Props = {
   clearError: () => void,

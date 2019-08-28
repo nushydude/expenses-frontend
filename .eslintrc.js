@@ -2,8 +2,13 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    'jest/globals': true,
   },
-  extends: ['airbnb', 'plugin:flowtype/recommended'],
+  extends: [
+    'airbnb',
+    'plugin:flowtype/recommended',
+    'plugin:prettier/recommended',
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -16,11 +21,17 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['flowtype', 'prettier', 'react'],
+  plugins: ['flowtype', 'jest', 'prettier', 'react'],
   rules: {
-    'prettier/prettier': 'error',
-    'linebreak-style': 0,
     'import/prefer-default-export': 0,
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
+    'linebreak-style': 0,
+    'prettier/prettier': 'error',
     'react/jsx-filename-extension': 0,
+    'react/jsx-one-expression-per-line': 0,
   },
 };

@@ -1,6 +1,6 @@
 // @flow
 import { applyMiddleware, createStore } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist'
+import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { rootReducer } from './rootReducer';
 import { middleware } from './middleware';
@@ -12,6 +12,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = createStore(persistedReducer, applyMiddleware(...middleware));
+export const store = createStore(
+  persistedReducer,
+  applyMiddleware(...middleware),
+);
 
 export const persistor = persistStore(store);

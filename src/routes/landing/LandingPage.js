@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { isAuthed } from '../../redux/selectors/auth';
 import { HomePage } from '../home/HomePage';
 import type { AppState } from '../../redux/types';
-import { connect } from 'react-redux';
 
 type Props = {
   authed: boolean,

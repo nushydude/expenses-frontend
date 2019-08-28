@@ -10,6 +10,7 @@ import { ChangePasswordForm } from './ChangePasswordForm';
 import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
+import type { FormFields } from './ChangePasswordForm';
 
 const CHANGE_PASSWORD_MUTATION = gql`
   mutation Web_ChangePassword($input: ChangePasswordInput!) {
@@ -37,13 +38,31 @@ type ValidateFields = {
   secret: ?string,
 };
 
+function validateInputs({
+  password,
+  confirmPassword,
+  secret,
+}: ValidateFields): ?string {
+  if (password.length < 6) {
+    return 'Password is too short';
+  }
+
+  if (password !== confirmPassword) {
+    return 'Password and confirm password fields do not match';
+  }
+
+  if (!secret) {
+    return 'Unable to validate user. Please use the link provided in your email';
+  }
+
+  return null;
+}
+
 type State = {
   ...FormInputs,
   error: ?string,
   success: boolean,
 };
-
-export type FormFields = 'password' | 'confirmPassword';
 
 type Data = {
   result: {
@@ -55,12 +74,16 @@ type Data = {
 };
 
 export class ChangePasswordComp extends React.Component<Props, State> {
-  state = {
-    confirmPassword: '',
-    password: '',
-    error: null,
-    success: false,
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      confirmPassword: '',
+      password: '',
+      error: null,
+      success: false,
+    };
+  }
 
   clearError = () => {
     this.setState({ error: null });
@@ -84,7 +107,7 @@ export class ChangePasswordComp extends React.Component<Props, State> {
 
   onError = (error: Error) => this.setState({ error: error.message });
 
-  changePassword = (changePasswordMutation) => {
+  changePassword = changePasswordMutation => {
     const { location } = this.props;
     const { password, confirmPassword } = this.state;
 
@@ -104,7 +127,7 @@ export class ChangePasswordComp extends React.Component<Props, State> {
       },
     };
 
-    changePasswordMutation({ variables });
+    return changePasswordMutation({ variables });
   };
 
   render() {
@@ -154,19 +177,3 @@ function mapStateToProps(state: AppState) {
 }
 
 export const ChangePasswordPage = connect(mapStateToProps)(ChangePasswordComp);
-
-function validateInputs({ password, confirmPassword, secret }: ValidateFields): ?string {
-  if (password.length < 6) {
-    return 'Password is too short';
-  }
-
-  if (password !== confirmPassword) {
-    return 'Password and confirm password fields do not match';
-  }
-
-  if (!secret) {
-    return 'Unable to validate user. Please use the link provided in your email';
-  }
-
-  return null;
-}

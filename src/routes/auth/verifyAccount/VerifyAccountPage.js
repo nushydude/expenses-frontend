@@ -51,7 +51,9 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
     };
   }
 
-
+  componentDidMount() {
+    this.verifyAccount();
+  }
 
   onCompleted = ({ result }: Data) => {
     const { verified, error } = result;
@@ -65,10 +67,19 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
 
   onError = (error: Error) => this.setState({ error: error.message });
 
+  clearError = () => {
+    this.setState({ error: null });
+  };
+
+  // this is a dummy placeholder.
+  verifyAccountMutation = () => {
+    this.setState({ error: 'Unknown error ' });
+  };
+
   verifyAccount = () => {
-    const { secret: verificationSecret } = queryString.parse(
-      this.props.location.search,
-    );
+    const { location } = this.props;
+
+    const { secret: verificationSecret } = queryString.parse(location.search);
 
     if (!verificationSecret) {
       return this.setState({
@@ -80,21 +91,7 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
       input: { verificationSecret },
     };
 
-    console.log('calling verifyAccountMutation');
-
-    this.verifyAccountMutation({ variables });
-  };
-
-  componentDidMount() {
-    this.verifyAccount();
-  }
-
-  clearError = () => {
-    this.setState({ error: null });
-  };
-
-  verifyAccountMutation = () => {
-    this.setState({ error: 'Unknown error ' });
+    return this.verifyAccountMutation({ variables });
   };
 
   render() {

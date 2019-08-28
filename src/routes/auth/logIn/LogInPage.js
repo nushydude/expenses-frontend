@@ -8,7 +8,8 @@ import { LogInForm } from './LogInForm';
 import * as actions from '../../../redux/actionCreators/auth';
 import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
-import type { AppState } from '../../redux/types';
+import type { AppState } from '../../../redux/types';
+import type { FormFields } from './LogInForm';
 
 const LOGIN_WITH_EMAIL_MUTATION = gql`
   mutation Web_LogInWithEmail($input: LogInWithEmailInput!) {
@@ -32,8 +33,6 @@ type State = {
   error: ?string,
 };
 
-export type FormFields = 'email' | 'password';
-
 type Data = {
   result: {
     jwt: ?string,
@@ -44,11 +43,15 @@ type Data = {
 };
 
 export class LogInPageComp extends React.Component<Props, State> {
-  state = {
-    email: '',
-    password: '',
-    error: null,
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: '',
+      error: null,
+    };
+  }
 
   clearError = () => {
     this.setState({ error: null });
@@ -62,9 +65,10 @@ export class LogInPageComp extends React.Component<Props, State> {
 
   onCompleted = ({ result }: Data) => {
     const { jwt, error } = result;
+    const { logInSuccess } = this.props;
 
     if (jwt && !error) {
-      this.props.logInSuccess(result.jwt);
+      logInSuccess(result.jwt);
     } else {
       this.setState({ error: error ? error.message : 'Unknown error' });
     }
@@ -73,9 +77,13 @@ export class LogInPageComp extends React.Component<Props, State> {
   onError = (error: Error) => this.setState({ error: error.message });
 
   render() {
-    if (this.props.authed) {
+    const { authed } = this.props;
+
+    if (authed) {
       return <Redirect to={ROUTE.HOME} />;
     }
+
+    const { email, error, password } = this.state;
 
     return (
       <Mutation
@@ -88,18 +96,19 @@ export class LogInPageComp extends React.Component<Props, State> {
             <LogInForm
               isBusy={loading}
               clearError={this.clearError}
-              error={this.state.error}
+              error={error}
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                const { email, password } = this.state;
-                const variables = { input: { email, password } };
-
-                logIn({ variables });
+                return logIn({
+                  variables: {
+                    input: { email, password },
+                  },
+                });
               }}
               handleInputChange={this.handleInputChange}
-              email={this.state.email}
-              password={this.state.password}
+              email={email}
+              password={password}
             />
           </div>
         )}

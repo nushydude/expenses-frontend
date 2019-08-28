@@ -19,8 +19,8 @@ export const setAuthHeaderLink = setContext((request, previousContext) => {
   const updatedPreviousContext = { ...previousContext };
 
   if (
-    updatedPreviousContext.headers
-    && updatedPreviousContext.headers.authorization
+    updatedPreviousContext.headers &&
+    updatedPreviousContext.headers.authorization
   ) {
     delete updatedPreviousContext.headers.authorization;
   }

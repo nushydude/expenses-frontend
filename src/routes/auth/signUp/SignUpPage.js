@@ -9,6 +9,7 @@ import { SignUpForm } from './SignUpForm';
 import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
+import type { FormFields } from './SignUpForm';
 
 const SIGNUP_WITH_EMAIL_MUTATION = gql`
   mutation Web_SignUpWithEmail($input: SignUpWithEmailInput!) {
@@ -32,13 +33,36 @@ type FormInputs = {
   confirmPassword: string,
 };
 
+function validateInputs({
+  email,
+  name,
+  password,
+  confirmPassword,
+}: FormInputs): ?string {
+  if (!isEmail(email)) {
+    return 'Email is not a valid email';
+  }
+
+  if (name.length === 0) {
+    return 'Please fill the name';
+  }
+
+  if (password.length < 6) {
+    return 'Password is too short';
+  }
+
+  if (password !== confirmPassword) {
+    return 'Password and confirm password fields do not match';
+  }
+
+  return null;
+}
+
 type State = {
   ...FormInputs,
   error: ?string,
   success: boolean,
 };
-
-export type FormFields = 'email' | 'password' | 'name' | 'confirmPassword';
 
 type Data = {
   result: {
@@ -85,7 +109,7 @@ export class SignUpPageComp extends React.Component<Props, State> {
 
   onError = (error: Error) => this.setState({ error: error.message });
 
-  signUp = (signUpMutation) => {
+  signUp = signUpMutation => {
     const { email, name, confirmPassword, password } = this.state;
 
     const error = validateInputs({
@@ -101,12 +125,19 @@ export class SignUpPageComp extends React.Component<Props, State> {
 
     const variables = { input: { email, name, password } };
 
-    signUpMutation({ variables });
-  }
+    return signUpMutation({ variables });
+  };
 
   render() {
     const { authed } = this.props;
-    const { email, name, confirmPassword, error, password, success } = this.state;
+    const {
+      email,
+      name,
+      confirmPassword,
+      error,
+      password,
+      success,
+    } = this.state;
 
     if (authed) {
       return <Redirect to={ROUTE.HOME} />;
@@ -136,7 +167,7 @@ export class SignUpPageComp extends React.Component<Props, State> {
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
-                this.signUp(signUpMutation)
+                this.signUp(signUpMutation);
               }}
               handleInputChange={this.handleInputChange}
               email={email}
@@ -158,28 +189,3 @@ function mapStateToProps(state: AppState) {
 }
 
 export const SignUpPage = connect(mapStateToProps)(SignUpPageComp);
-
-function validateInputs({
-  email,
-  name,
-  password,
-  confirmPassword,
-}: FormInputs): ?string {
-  if (!isEmail(email)) {
-    return 'Email is not a valid email';
-  }
-
-  if (name.length === 0) {
-    return 'Please fill the name';
-  }
-
-  if (password.length < 6) {
-    return 'Password is too short';
-  }
-
-  if (password !== confirmPassword) {
-    return 'Password and confirm password fields do not match';
-  }
-
-  return null;
-}

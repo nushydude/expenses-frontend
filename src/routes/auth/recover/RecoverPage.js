@@ -8,6 +8,7 @@ import { RecoverForm } from './RecoverForm';
 import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
+import type { FormFields } from './RecoverForm';
 
 const SEND_RESET_PASSWORD_LINK_MUTATION = gql`
   mutation Web_SendResetPasswordLink($input: SendResetPasswordLinkInput!) {
@@ -29,8 +30,6 @@ type State = {
   error: ?string,
   success: Boolean,
 };
-
-export type FormFields = 'email';
 
 type Data = {
   result: {
@@ -76,7 +75,7 @@ export class RecoverPageComp extends React.Component<Props, State> {
 
   render() {
     const { authed } = this.props;
-    const { email, success } = this.state;
+    const { email, error, success } = this.state;
 
     if (authed) {
       return <Redirect to={ROUTE.HOME} />;
@@ -102,7 +101,7 @@ export class RecoverPageComp extends React.Component<Props, State> {
             <RecoverForm
               isBusy={loading}
               clearError={this.clearError}
-              error={this.state.error}
+              error={error}
               submit={(e: SyntheticEvent<any>) => {
                 e.preventDefault();
 
