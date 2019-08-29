@@ -58,7 +58,7 @@ export class LogInPageComp extends React.Component<Props, State> {
   };
 
   handleInputChange = (name: FormFields) => (
-    e: SyntheticEvent<HTMLInputElement>,
+    e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
     this.setState({ [name]: e.target.value });
   };
@@ -68,7 +68,7 @@ export class LogInPageComp extends React.Component<Props, State> {
     const { logInSuccess } = this.props;
 
     if (jwt && !error) {
-      logInSuccess(result.jwt);
+      logInSuccess(jwt);
     } else {
       this.setState({ error: error ? error.message : 'Unknown error' });
     }
@@ -97,7 +97,7 @@ export class LogInPageComp extends React.Component<Props, State> {
               isBusy={loading}
               clearError={this.clearError}
               error={error}
-              submit={(e: SyntheticEvent<any>) => {
+              submit={(e: SyntheticInputEvent<any>) => {
                 e.preventDefault();
 
                 return logIn({

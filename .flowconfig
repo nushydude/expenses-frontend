@@ -10,3 +10,7 @@ flow-typed
 [options]
 
 [strict]
+
+[untyped]
+.*/node_modules/redux-persist/lib/integration/react.js
+.*/node_modules/redux-persist/lib/persistReducer.js

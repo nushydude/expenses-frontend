@@ -11,8 +11,8 @@ type Props = {
   isBusy: boolean,
   handleInputChange: (
     name: FormFields,
-  ) => (e: SyntheticEvent<HTMLInputElement>) => void,
-  submit: (e: SythenticEvent<any>) => Promise<void>,
+  ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   email: string,
   password: string,
 };

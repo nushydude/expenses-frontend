@@ -2,14 +2,9 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import type { Location } from 'react-router-dom';
 import queryString from 'query-string';
 import { ChangePasswordForm } from './ChangePasswordForm';
-import { ROUTE } from '../../../configs/route';
-import { isAuthed } from '../../../redux/selectors/auth';
-import type { AppState } from '../../../redux/types';
 import type { FormFields } from './ChangePasswordForm';
 
 const CHANGE_PASSWORD_MUTATION = gql`
@@ -24,7 +19,6 @@ const CHANGE_PASSWORD_MUTATION = gql`
 `;
 
 type Props = {
-  authed: boolean,
   location: Location,
 };
 
@@ -34,7 +28,7 @@ type FormInputs = {
 };
 
 type ValidateFields = {
-  ...FormInput,
+  ...FormInputs,
   secret: ?string,
 };
 
@@ -73,7 +67,7 @@ type Data = {
   },
 };
 
-export class ChangePasswordComp extends React.Component<Props, State> {
+export class ChangePasswordPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -90,7 +84,7 @@ export class ChangePasswordComp extends React.Component<Props, State> {
   };
 
   handleInputChange = (name: FormFields) => (
-    e: SyntheticEvent<HTMLInputElement>,
+    e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
     this.setState({ [name]: e.target.value });
   };
@@ -107,7 +101,9 @@ export class ChangePasswordComp extends React.Component<Props, State> {
 
   onError = (error: Error) => this.setState({ error: error.message });
 
-  changePassword = changePasswordMutation => {
+  changePassword = async (
+    changePasswordMutation: (options: any) => Promise<void>,
+  ): Promise<void> => {
     const { location } = this.props;
     const { password, confirmPassword } = this.state;
 
@@ -116,7 +112,9 @@ export class ChangePasswordComp extends React.Component<Props, State> {
     const error = validateInputs({ password, confirmPassword, secret });
 
     if (error) {
-      return this.setState({ error });
+      this.setState({ error });
+
+      return;
     }
 
     const variables = {
@@ -131,12 +129,7 @@ export class ChangePasswordComp extends React.Component<Props, State> {
   };
 
   render() {
-    const { authed } = this.props;
     const { error, password, confirmPassword, success } = this.state;
-
-    if (authed) {
-      return <Redirect to={ROUTE.HOME} />;
-    }
 
     if (success) {
       return <p>Password changed successfully</p>;
@@ -154,10 +147,10 @@ export class ChangePasswordComp extends React.Component<Props, State> {
               isBusy={loading}
               clearError={this.clearError}
               error={error}
-              submit={(e: SyntheticEvent<any>) => {
+              submit={(e: SyntheticInputEvent<any>) => {
                 e.preventDefault();
 
-                this.changePassword(changePassword);
+                return this.changePassword(changePassword);
               }}
               handleInputChange={this.handleInputChange}
               password={password}
@@ -169,11 +162,3 @@ export class ChangePasswordComp extends React.Component<Props, State> {
     );
   }
 }
-
-function mapStateToProps(state: AppState) {
-  return {
-    authed: isAuthed(state),
-  };
-}
-
-export const ChangePasswordPage = connect(mapStateToProps)(ChangePasswordComp);

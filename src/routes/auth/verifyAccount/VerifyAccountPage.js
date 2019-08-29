@@ -2,13 +2,8 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import type { Location } from 'react-router-dom';
 import queryString from 'query-string';
-import { ROUTE } from '../../../configs/route';
-import { isAuthed } from '../../../redux/selectors/auth';
-import type { AppState } from '../../../redux/types';
 
 const VERIFY_ACCOUNT_MUTATION = gql`
   mutation Web_VerifyAccount($input: VerifyAccountInput!) {
@@ -22,12 +17,10 @@ const VERIFY_ACCOUNT_MUTATION = gql`
 `;
 
 type Props = {
-  authed: boolean,
   location: Location,
 };
 
 type State = {
-  ...FormInputs,
   error: ?string,
   success: boolean,
 };
@@ -41,8 +34,8 @@ type Data = {
   },
 };
 
-export class VerifyAccountPageComp extends React.Component<Props, State> {
-  constructor(props) {
+export class VerifyAccountPage extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -72,7 +65,7 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
   };
 
   // this is a dummy placeholder.
-  verifyAccountMutation = () => {
+  verifyAccountMutation = async (options: any) => {
     this.setState({ error: 'Unknown error ' });
   };
 
@@ -95,12 +88,7 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
   };
 
   render() {
-    const { authed } = this.props;
     const { error, success } = this.state;
-
-    if (authed) {
-      return <Redirect to={ROUTE.HOME} />;
-    }
 
     if (error) {
       return <p>Error:{error}</p>;
@@ -129,13 +117,3 @@ export class VerifyAccountPageComp extends React.Component<Props, State> {
     );
   }
 }
-
-function mapStateToProps(state: AppState) {
-  return {
-    authed: isAuthed(state),
-  };
-}
-
-export const VerifyAccountPage = connect(mapStateToProps)(
-  VerifyAccountPageComp,
-);

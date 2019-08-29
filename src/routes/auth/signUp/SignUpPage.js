@@ -2,13 +2,8 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { isEmail } from 'validator';
 import { SignUpForm } from './SignUpForm';
-import { ROUTE } from '../../../configs/route';
-import { isAuthed } from '../../../redux/selectors/auth';
-import type { AppState } from '../../../redux/types';
 import type { FormFields } from './SignUpForm';
 
 const SIGNUP_WITH_EMAIL_MUTATION = gql`
@@ -73,8 +68,8 @@ type Data = {
   },
 };
 
-export class SignUpPageComp extends React.Component<Props, State> {
-  constructor(props) {
+export class SignUpPage extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -92,7 +87,7 @@ export class SignUpPageComp extends React.Component<Props, State> {
   };
 
   handleInputChange = (name: FormFields) => (
-    e: SyntheticEvent<HTMLInputElement>,
+    e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
     this.setState({ [name]: e.target.value });
   };
@@ -109,7 +104,9 @@ export class SignUpPageComp extends React.Component<Props, State> {
 
   onError = (error: Error) => this.setState({ error: error.message });
 
-  signUp = signUpMutation => {
+  signUp = async (
+    signUpMutation: (options: any) => Promise<void>,
+  ): Promise<void> => {
     const { email, name, confirmPassword, password } = this.state;
 
     const error = validateInputs({
@@ -120,7 +117,9 @@ export class SignUpPageComp extends React.Component<Props, State> {
     });
 
     if (error) {
-      return this.setState({ error });
+      this.setState({ error });
+
+      return;
     }
 
     const variables = { input: { email, name, password } };
@@ -129,7 +128,6 @@ export class SignUpPageComp extends React.Component<Props, State> {
   };
 
   render() {
-    const { authed } = this.props;
     const {
       email,
       name,
@@ -138,10 +136,6 @@ export class SignUpPageComp extends React.Component<Props, State> {
       password,
       success,
     } = this.state;
-
-    if (authed) {
-      return <Redirect to={ROUTE.HOME} />;
-    }
 
     if (success) {
       return (
@@ -164,10 +158,10 @@ export class SignUpPageComp extends React.Component<Props, State> {
               isBusy={loading}
               clearError={this.clearError}
               error={error}
-              submit={(e: SyntheticEvent<any>) => {
+              submit={(e: SyntheticInputEvent<any>) => {
                 e.preventDefault();
 
-                this.signUp(signUpMutation);
+                return this.signUp(signUpMutation);
               }}
               handleInputChange={this.handleInputChange}
               email={email}
@@ -181,11 +175,3 @@ export class SignUpPageComp extends React.Component<Props, State> {
     );
   }
 }
-
-function mapStateToProps(state: AppState) {
-  return {
-    authed: isAuthed(state),
-  };
-}
-
-export const SignUpPage = connect(mapStateToProps)(SignUpPageComp);
