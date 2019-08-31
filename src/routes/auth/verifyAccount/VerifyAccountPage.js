@@ -1,9 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import * as React from 'react';
-import { Mutation } from 'react-apollo';
 import type { Location } from 'react-router-dom';
 import queryString from 'query-string';
+import { useMutation } from '@apollo/react-hooks';
 
 const VERIFY_ACCOUNT_MUTATION = gql`
   mutation Web_VerifyAccount($input: VerifyAccountInput!) {
@@ -20,9 +20,10 @@ type Props = {
   location: Location,
 };
 
-type State = {
-  error: ?string,
-  success: boolean,
+type Variables = {
+  input: {
+    verificationSecret: string,
+  },
 };
 
 type Data = {
@@ -34,86 +35,41 @@ type Data = {
   },
 };
 
-export class VerifyAccountPage extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+export function VerifyAccountPage(props: Props) {
+  const [verifyAccount, { data, error, loading }] = useMutation<
+    Data,
+    Variables,
+  >(VERIFY_ACCOUNT_MUTATION);
 
-    this.state = {
-      error: null,
-      success: false,
-    };
+  const { location } = props;
+
+  const { secret: verificationSecret } = queryString.parse(location.search);
+
+  if (!verificationSecret) {
+    return <p>Please use the exact verify link provided in your email</p>;
   }
 
-  componentDidMount() {
-    this.verifyAccount();
+  const variables = {
+    input: { verificationSecret },
+  };
+
+  if (loading) {
+    return <p>Verifying. Please wait...</p>;
   }
 
-  onCompleted = ({ result }: Data) => {
-    const { verified, error } = result;
-
-    if (error || !verified) {
-      this.setState({ error: error ? error.message : 'Unknown error' });
-    } else if (verified) {
-      this.setState({ success: true });
-    }
-  };
-
-  onError = (error: Error) => this.setState({ error: error.message });
-
-  clearError = () => {
-    this.setState({ error: null });
-  };
-
-  // this is a dummy placeholder.
-  verifyAccountMutation = async (options: any) => {
-    this.setState({ error: 'Unknown error ' });
-  };
-
-  verifyAccount = () => {
-    const { location } = this.props;
-
-    const { secret: verificationSecret } = queryString.parse(location.search);
-
-    if (!verificationSecret) {
-      return this.setState({
-        error: 'Please use the verify link provided in your email',
-      });
-    }
-
-    const variables = {
-      input: { verificationSecret },
-    };
-
-    return this.verifyAccountMutation({ variables });
-  };
-
-  render() {
-    const { error, success } = this.state;
-
-    if (error) {
-      return <p>Error:{error}</p>;
-    }
-
-    if (success) {
-      return <p>Account verified successfully</p>;
-    }
-
-    return (
-      <Mutation
-        mutation={VERIFY_ACCOUNT_MUTATION}
-        onCompleted={this.onCompleted}
-        onError={this.onError}
-      >
-        {(verifyAccountMutation, { loading }) => {
-          this.verifyAccountMutation = verifyAccountMutation;
-
-          if (loading) {
-            return <p>Verifying. Please wait...</p>;
-          }
-
-          return null;
-        }}
-      </Mutation>
-    );
+  if (error) {
+    return <p>Error:{error}</p>;
   }
+
+  if (data && data.result.error) {
+    return <p>Error:{data.result.error.message}</p>;
+  }
+
+  if (data && data.result.verified) {
+    return <p>Account verified successfully</p>;
+  }
+
+  verifyAccount({ variables });
+
+  return null;
 }

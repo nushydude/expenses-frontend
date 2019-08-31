@@ -1,5 +1,6 @@
 // @flow
 import { BrowserRouter } from 'react-router-dom';
+import { env } from '../configs/env';
 
 type Props = {};
 
@@ -9,7 +10,7 @@ export class Router extends BrowserRouter<Props> {
     // $FlowFixMe
     super(props);
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.isDev) {
       // eslint-disable-next-line no-console
       console.log(
         'initial history is: ',

@@ -1,8 +1,7 @@
 // @flow
 import { createLogger } from 'redux-logger';
+import { env } from '../configs/env';
 
 const logger = createLogger();
 
-export const middleware = [
-  process.env.NODE_ENV !== 'production' && logger,
-].filter(Boolean);
+export const middleware = [env.isDev && logger].filter(Boolean);

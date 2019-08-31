@@ -2,6 +2,7 @@
 import React from 'react';
 import * as Sentry from '@sentry/browser';
 import { ApolloProvider } from 'react-apollo';
+// import { ApolloProvider } from '@apollo/react-hooks';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Route, Switch } from 'react-router-dom';
@@ -17,8 +18,9 @@ import { LandingPage } from './routes/landing/LandingPage';
 import { Header } from './components/Header';
 import { persistor, store } from './redux/store';
 import { getApolloClient } from './apollo/getApolloClient';
+import { env } from './configs/env';
 
-Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
+Sentry.init({ dsn: env.sentryDSN });
 
 function AppComp() {
   return (
@@ -52,7 +54,7 @@ function AppComp() {
 
 export function App() {
   return (
-    <ApolloProvider client={getApolloClient(process.env.REACT_APP_API_URL)}>
+    <ApolloProvider client={getApolloClient(env.apiURL)}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router>
