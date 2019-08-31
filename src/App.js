@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo';
 // import { ApolloProvider } from '@apollo/react-hooks';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from './components/Router';
 import { UnauthedRouter } from './components/UnauthedRouter';
 import { ROUTE } from './configs/route';
@@ -46,7 +46,8 @@ function AppComp() {
           component={ChangePasswordPage}
         />
 
-        <Route path={ROUTE.LANDING} component={LandingPage} />
+        <Route exact path={ROUTE.LANDING} component={LandingPage} />
+        <Redirect to={ROUTE.LANDING} />
       </Switch>
     </div>
   );
