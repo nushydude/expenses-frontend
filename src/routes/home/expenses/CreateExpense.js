@@ -1,8 +1,11 @@
 // @flow
+import { format } from 'date-fns';
+import gql from 'graphql-tag';
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Redirect } from 'react-router-dom';
 import { CreateExpenseForm } from './CreateExpenseForm';
+import { ROUTE } from '../../../configs/route';
 
 const CREATE_EXPENSE_MUTATION = gql`
   mutation EXPENSES_CreateExpense($input: CreateExpenseInput!) {
@@ -17,7 +20,9 @@ const CREATE_EXPENSE_MUTATION = gql`
   }
 `;
 
-type Props = {};
+type Props = {
+  history: any,
+};
 
 type State = {
   type: string,
@@ -46,7 +51,7 @@ export class CreateExpense extends React.Component<Props, State> {
     this.state = {
       type: '',
       amount: 0,
-      date: '',
+      date: format(new Date(), 'yyyy-MM-dd'),
       paymentMethod: '',
       error: null,
       success: false,
@@ -79,45 +84,47 @@ export class CreateExpense extends React.Component<Props, State> {
   onError = ({ message }: Error) => this.setState({ error: message });
 
   render() {
+    const { history } = this.props;
     const { error, success, ...fields } = this.state;
 
+    if (success) {
+      return <Redirect to={ROUTE.EXPENSES} />;
+    }
+
     return (
-      <>
-        {success && <p>Expense successfully created</p>}
+      <Mutation
+        mutation={CREATE_EXPENSE_MUTATION}
+        onCompleted={this.onCompleted}
+        onError={this.onError}
+      >
+        {(createExpense, { loading }) => (
+          <div style={{ width: '600px' }}>
+            <CreateExpenseForm
+              cancel={history.goBack}
+              clearError={this.clearError}
+              error={error}
+              isBusy={loading}
+              submit={(e: SyntheticInputEvent<any>) => {
+                e.preventDefault();
 
-        <Mutation
-          mutation={CREATE_EXPENSE_MUTATION}
-          onCompleted={this.onCompleted}
-          onError={this.onError}
-        >
-          {(createExpense, { loading }) => (
-            <div style={{ width: '600px' }}>
-              <CreateExpenseForm
-                isBusy={loading}
-                clearError={this.clearError}
-                error={error}
-                submit={(e: SyntheticInputEvent<any>) => {
-                  e.preventDefault();
+                const { amount, date, ...rest } = fields;
 
-                  const { amount, date, ...rest } = fields;
-
-                  return createExpense({
-                    variables: {
-                      input: {
-                        ...rest,
-                        amount: Number.parseFloat(amount),
-                        date: new Date(date).toISOString(),
-                      },
+                return createExpense({
+                  variables: {
+                    input: {
+                      ...rest,
+                      amount: Number.parseFloat(amount),
+                      date: new Date(date).toISOString(),
                     },
-                  });
-                }}
-                handleInputChange={this.handleInputChange}
-                {...fields}
-              />
-            </div>
-          )}
-        </Mutation>
-      </>
+                  },
+                });
+              }}
+              handleInputChange={this.handleInputChange}
+              {...fields}
+            />
+          </div>
+        )}
+      </Mutation>
     );
   }
 }

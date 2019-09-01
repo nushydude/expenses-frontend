@@ -66,7 +66,7 @@ export function ExpensesList(props: Props) {
     );
   }
 
-  if (loading) {
+  if (loading && Object.keys(data).length === 0) {
     return <p>Loading ...</p>;
   }
 
