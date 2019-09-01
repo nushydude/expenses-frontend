@@ -7,7 +7,7 @@ export const ROUTE = Object.freeze({
   AUTH_RECOVER: '/auth/recover',
   AUTH_VERIFY: '/auth/verify',
   AUTH_CHANGE_PWD: '/auth/change_password',
-  CREATE_EXPENSE: '/expenses/create',
+  CREATE_EXPENSE: '/home/expenses/create',
   EXPENSES: '/home/expenses',
   EXPENSE: '/home/expenses/:id',
 });

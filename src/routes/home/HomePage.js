@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
+import { Switch, Redirect, Route } from 'react-router-dom';
 import { ExpensesList } from './expenses/ExpensesList';
 import { CreateExpense } from './expenses/CreateExpense';
-import { Switch, Redirect, Route } from 'react-router-dom';
 import { ROUTE } from '../../configs/route';
 
 export function HomePage() {

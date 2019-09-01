@@ -4,6 +4,8 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { format } from 'date-fns';
 import { pick } from 'ramda';
+import { Link } from 'react-router-dom';
+import { ROUTE } from '../../../configs/route';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -54,7 +56,9 @@ export function ExpensesList(props: Props) {
       <>
         <p>An error occurred</p>
         {error.message && <p>{error.message}</p>}
-        <button onClick={refetch}>Retry</button>
+        <button type="button" onClick={refetch}>
+          Retry
+        </button>
       </>
     );
   }
@@ -70,27 +74,36 @@ export function ExpensesList(props: Props) {
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Amount</th>
-          <th>Payment method</th>
-        </tr>
-      </thead>
-      <tbody>
-        {expenses.map(expense => (
-          <tr key={expense.id}>
-            <td>
-              {format(new Date(Number.parseInt(expense.date)), 'yyyy-MM-dd')}
-            </td>
-            <td>{expense.type}</td>
-            <td>{Number.parseFloat(expense.amount).toFixed(2)}</td>
-            <td>{expense.paymentMethod}</td>
+    <>
+      <div>
+        <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Payment method</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {expenses.map(expense => (
+            <tr key={expense.id}>
+              <td>
+                {format(
+                  new Date(Number.parseInt(expense.date, 10)),
+                  'yyyy-MM-dd',
+                )}
+              </td>
+              <td>{expense.type}</td>
+              <td>{Number.parseFloat(expense.amount).toFixed(2)}</td>
+              <td>{expense.paymentMethod}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }
