@@ -48,7 +48,10 @@ export function ExpensesList(props: Props) {
 
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
     GET_EXPENSES_QUERY,
-    { variables: { input } },
+    {
+      variables: { input },
+      fetchPolicy: 'cache-and-network',
+    },
   );
 
   if (error) {
