@@ -21,7 +21,7 @@ type Props = {};
 
 type State = {
   type: string,
-  amount: string,
+  amount: number,
   date: string,
   paymentMethod: string,
   error: ?string,
@@ -99,13 +99,14 @@ export class CreateExpense extends React.Component<Props, State> {
                 submit={(e: SyntheticInputEvent<any>) => {
                   e.preventDefault();
 
-                  const { amount, ...rest } = fields;
+                  const { amount, date, ...rest } = fields;
 
                   return createExpense({
                     variables: {
                       input: {
                         ...rest,
                         amount: Number.parseFloat(amount),
+                        date: new Date(date).toISOString(),
                       },
                     },
                   });

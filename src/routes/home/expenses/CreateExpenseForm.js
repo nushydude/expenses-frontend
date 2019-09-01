@@ -39,28 +39,29 @@ export function CreateExpenseForm({
         onChange={handleInputChange('date')}
         onFocus={clearError}
         placeholder="Date"
-        type="text"
+        type="date"
         value={date}
       />
       <input
         onChange={handleInputChange('type')}
         onFocus={clearError}
         placeholder="Type"
-        type="type"
+        type="text"
         value={type}
       />
       <input
         onChange={handleInputChange('amount')}
         onFocus={clearError}
         placeholder="Amount"
-        type="amount"
+        type="number"
+        step="0.01"
         value={amount}
       />
       <input
         onChange={handleInputChange('paymentMethod')}
         onFocus={clearError}
         placeholder="Payment Method"
-        type="paymentMethod"
+        type="text"
         value={paymentMethod}
       />
       <button type="submit" disabled={isBusy}>
