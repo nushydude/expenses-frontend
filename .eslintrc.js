@@ -33,6 +33,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'react/jsx-filename-extension': 0,
     'react/jsx-one-expression-per-line': 0,
-    'react/jsx-no-props-spreading': 0,
+    'react/jsx-props-no-spreading': 0,
+    'react/no-unescaped-entities': 0,
   },
 };

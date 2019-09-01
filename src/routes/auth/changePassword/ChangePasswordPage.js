@@ -103,7 +103,7 @@ export class ChangePasswordPage extends React.Component<Props, State> {
 
   changePassword = async (
     changePasswordMutation: (options: any) => Promise<void>,
-  ): Promise<void> => {
+  ): Promise<?Data> => {
     const { location } = this.props;
     const { password, confirmPassword } = this.state;
 
@@ -114,7 +114,7 @@ export class ChangePasswordPage extends React.Component<Props, State> {
     if (error) {
       this.setState({ error });
 
-      return;
+      return null;
     }
 
     const variables = {

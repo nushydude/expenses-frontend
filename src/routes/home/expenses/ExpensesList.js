@@ -37,10 +37,10 @@ type Variables = {
 };
 
 type Props = {
-  from?: string,
-  to?: string,
-  paymentMethods?: Array<string>,
-  types?: Array<string>,
+  // from?: string,
+  // to?: string,
+  // paymentMethods?: Array<string>,
+  // types?: Array<string>,
 };
 
 export function ExpensesList(props: Props) {

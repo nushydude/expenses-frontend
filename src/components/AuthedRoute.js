@@ -21,3 +21,7 @@ export function AuthedRoute(props: Props) {
   // eslint-disable-next-line react/jsx-props-no-spreading
   return <Route {...props} />;
 }
+
+AuthedRoute.defaultProps = {
+  exact: false,
+};

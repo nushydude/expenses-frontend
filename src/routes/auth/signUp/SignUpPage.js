@@ -17,9 +17,7 @@ const SIGNUP_WITH_EMAIL_MUTATION = gql`
   }
 `;
 
-type Props = {
-  authed: boolean,
-};
+type Props = {};
 
 type FormInputs = {
   email: string,
@@ -106,7 +104,7 @@ export class SignUpPage extends React.Component<Props, State> {
 
   signUp = async (
     signUpMutation: (options: any) => Promise<void>,
-  ): Promise<void> => {
+  ): Promise<?Data> => {
     const { email, name, confirmPassword, password } = this.state;
 
     const error = validateInputs({
@@ -119,7 +117,7 @@ export class SignUpPage extends React.Component<Props, State> {
     if (error) {
       this.setState({ error });
 
-      return;
+      return null;
     }
 
     const variables = { input: { email, name, password } };
