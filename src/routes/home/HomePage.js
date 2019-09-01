@@ -1,27 +1,21 @@
 // @flow
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { ExpensesList } from './expenses/ExpensesList';
+import { CreateExpense } from './expenses/CreateExpense';
+import { Switch, Redirect, Route } from 'react-router-dom';
 import { ROUTE } from '../../configs/route';
-import { isAuthed } from '../../redux/selectors/auth';
-import type { AppState } from '../../redux/types';
 
-type Props = {
-  authed: Boolean,
-};
+export function HomePage() {
+  return (
+    <div>
+      <h1>Home page</h1>
 
-export function HomePageComp({ authed }: Props) {
-  if (!authed) {
-    return <Redirect to={ROUTE.AUTH_LOGIN} />;
-  }
+      <Switch>
+        <Route exact path={ROUTE.CREATE_EXPENSE} component={CreateExpense} />
+        <Route exact path={ROUTE.EXPENSES} component={ExpensesList} />
 
-  return <p>HomePage</p>;
+        <Redirect to={ROUTE.EXPENSES} />
+      </Switch>
+    </div>
+  );
 }
-
-function mapStateToProps(state: AppState) {
-  return {
-    authed: isAuthed(state),
-  };
-}
-
-export const HomePage = connect(mapStateToProps)(HomePageComp);

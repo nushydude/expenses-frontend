@@ -11,11 +11,11 @@ type Props = {
   exact?: boolean,
 };
 
-export function UnauthedRouter(props: Props) {
+export function AuthedRoute(props: Props) {
   const authed = useSelector(isAuthed);
 
-  if (authed) {
-    return <Redirect to={ROUTE.HOME} />;
+  if (!authed) {
+    return <Redirect to={ROUTE.AUTH_LOGIN} />;
   }
 
   // eslint-disable-next-line react/jsx-props-no-spreading

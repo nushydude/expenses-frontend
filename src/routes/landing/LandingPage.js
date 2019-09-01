@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { isAuthed } from '../../redux/selectors/auth';
-import { HomePage } from '../home/HomePage';
 import type { AppState } from '../../redux/types';
+import { ROUTE } from '../../configs/route';
 
 type Props = {
   authed: boolean,
@@ -11,7 +12,7 @@ type Props = {
 
 export function LandingPageComp({ authed }: Props) {
   if (authed) {
-    return <HomePage />;
+    return <Redirect to={ROUTE.HOME} />;
   }
 
   return <p>LandingPage</p>;
