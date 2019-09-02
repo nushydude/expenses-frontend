@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './assets/fonts/Roboto-Regular.ttf';
 import './index.css';
 import './configs/env';
 import { App } from './App';

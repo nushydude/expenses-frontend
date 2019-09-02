@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { format } from 'date-fns';
 import { pick } from 'ramda';
-import { Link } from 'react-router-dom';
+import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
 
 const GET_EXPENSES_QUERY = gql`
@@ -66,7 +66,7 @@ export function ExpensesList(props: Props) {
     );
   }
 
-  if (loading && Object.keys(data).length === 0) {
+  if (loading && (!data || !Array.isArray(data.expenses))) {
     return <p>Loading ...</p>;
   }
 

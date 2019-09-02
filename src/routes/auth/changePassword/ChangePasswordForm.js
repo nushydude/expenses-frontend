@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
 
 export type FormFields = 'password' | 'confirmPassword';

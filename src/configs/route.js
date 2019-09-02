@@ -10,6 +10,7 @@ export const ROUTE = Object.freeze({
   CREATE_EXPENSE: '/home/expenses/create',
   EXPENSES: '/home/expenses',
   EXPENSE: '/home/expenses/:id',
+  MANAGE_ACCOUNT: '/home/account',
 });
 
 export type Route = $Values<typeof ROUTE>;
