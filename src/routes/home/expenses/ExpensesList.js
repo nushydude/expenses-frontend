@@ -95,10 +95,12 @@ export function ExpensesList(props: Props) {
           {expenses.map(expense => (
             <tr key={expense.id}>
               <td>
-                {format(
-                  new Date(Number.parseInt(expense.date, 10)),
-                  'yyyy-MM-dd',
-                )}
+                <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
+                  {format(
+                    new Date(Number.parseInt(expense.date, 10)),
+                    'yyyy-MM-dd',
+                  )}
+                </Link>
               </td>
               <td>{expense.type}</td>
               <td>{Number.parseFloat(expense.amount).toFixed(2)}</td>
