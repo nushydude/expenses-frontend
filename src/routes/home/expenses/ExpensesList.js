@@ -13,6 +13,7 @@ const GET_EXPENSES_QUERY = gql`
       amount
       date
       id
+      notes
       paymentMethod
       type
     }

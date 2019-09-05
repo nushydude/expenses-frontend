@@ -29,6 +29,7 @@ type State = {
   amount: number,
   date: string,
   paymentMethod: string,
+  notes: string,
   error: ?string,
   success: boolean,
 };
@@ -53,6 +54,7 @@ export class CreateExpense extends React.Component<Props, State> {
       amount: 0,
       date: format(new Date(), 'yyyy-MM-dd'),
       paymentMethod: '',
+      notes: '',
       error: null,
       success: false,
     };

@@ -14,6 +14,7 @@ const EXPENSE_QUERY = gql`
       id
       paymentMethod
       type
+      notes
     }
   }
 `;
@@ -27,6 +28,7 @@ const UPDATE_EXPENSE_MUTATION = gql`
         id
         paymentMethod
         type
+        notes
       }
       error {
         message
@@ -140,6 +142,16 @@ export function Expense(props: Props) {
         getValue={getStringValue('paymentMethod')}
         getError={getError}
         getVariables={getVariables(expenseID, 'paymentMethod')}
+      />
+
+      <label>Notes</label>
+      <EditableTextField
+        mutation={UPDATE_EXPENSE_MUTATION}
+        field="notes"
+        value={expense.notes}
+        getValue={getStringValue('notes')}
+        getError={getError}
+        getVariables={getVariables(expenseID, 'notes')}
       />
     </div>
   );
