@@ -1,9 +1,10 @@
 // @flow
-import React from 'react';
+import invariant from 'invariant';
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import * as React from 'react';
 import { format } from 'date-fns';
-import styled from 'styled-components';
+import gql from 'graphql-tag';
+import { EditableTextField } from '../../../components/EditableTextField';
 
 const EXPENSE_QUERY = gql`
   query WEBAPP_GetExpense($input: GetExpenseInput!) {
@@ -17,9 +18,21 @@ const EXPENSE_QUERY = gql`
   }
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
+const UPDATE_EXPENSE_MUTATION = gql`
+  mutation WEBAPP_UpdateExpense($input: UpdateExpenseInput!) {
+    result: updateExpense(input: $input) {
+      expense {
+        amount
+        date
+        id
+        paymentMethod
+        type
+      }
+      error {
+        message
+      }
+    }
+  }
 `;
 
 type Props = {
@@ -30,10 +43,45 @@ type Props = {
   },
 };
 
+const getError = data => {
+  if (!data || !data.result || !data.result.error) {
+    return null;
+  }
+
+  return new Error(data.result.error.message);
+};
+
+const getStringValue = (field: string) => (data): string => {
+  invariant(!getError(data), 'Should check for error first');
+
+  return data.result.expense[field];
+};
+
+const getVariables = (
+  expenseID: string,
+  field: string,
+  type: string = 'string',
+) => (value: string) => {
+  let parsedValue: any = value;
+
+  if (type === 'int') {
+    parsedValue = parseInt(value);
+  } else if (type === 'float') {
+    parsedValue = parseFloat(value);
+  } else if (type === 'date') {
+    parsedValue = new Date(value).toISOString();
+  }
+
+  return {
+    input: {
+      expenseID,
+      [field]: parsedValue,
+    },
+  };
+};
+
 export function Expense(props: Props) {
   const expenseID = props.match.params.id || '-1';
-
-  console.log('expenseID:', expenseID);
 
   const { loading, error, data } = useQuery(EXPENSE_QUERY, {
     variables: {
@@ -57,21 +105,42 @@ export function Expense(props: Props) {
   }
 
   return (
-    <Container>
-      <div>
-        <p>Date</p>
-        <p>Type</p>
-        <p>Amount</p>
-        <p>Payment Method</p>
-      </div>
-      <div>
-        <p>
-          {format(new Date(Number.parseInt(expense.date, 10)), 'yyyy-MM-dd')}
-        </p>
-        <p>{expense.type}</p>
-        <p>{Number.parseFloat(expense.amount).toFixed(2)}</p>
-        <p>{expense.paymentMethod}</p>
-      </div>
-    </Container>
+    <div>
+      <label>Date</label>
+      <p>{format(new Date(Number.parseInt(expense.date, 10)), 'yyyy-MM-dd')}</p>
+
+      <label>Type</label>
+      <EditableTextField
+        mutation={UPDATE_EXPENSE_MUTATION}
+        field="type"
+        value={expense.type}
+        getValue={getStringValue('type')}
+        getError={getError}
+        getVariables={getVariables(expenseID, 'type')}
+      />
+
+      <label>Amount</label>
+      <EditableTextField
+        mutation={UPDATE_EXPENSE_MUTATION}
+        field="amount"
+        value={expense.amount}
+        getValue={getStringValue('amount')}
+        getError={getError}
+        getVariables={getVariables(expenseID, 'amount', 'float')}
+        formatValue={(value: string) =>
+          `$ ${Number.parseFloat(value).toFixed(2)}`
+        }
+      />
+
+      <label>Payment Method</label>
+      <EditableTextField
+        mutation={UPDATE_EXPENSE_MUTATION}
+        field="paymentMethod"
+        value={expense.paymentMethod}
+        getValue={getStringValue('paymentMethod')}
+        getError={getError}
+        getVariables={getVariables(expenseID, 'paymentMethod')}
+      />
+    </div>
   );
 }
