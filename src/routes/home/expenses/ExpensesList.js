@@ -6,6 +6,9 @@ import { format } from 'date-fns';
 import { pick } from 'ramda';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
+import { ExpenseSearch } from './ExpenseSearch';
+import type { SearchOptions } from './ExpenseSearch';
+import styled from 'styled-components';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -18,6 +21,12 @@ const GET_EXPENSES_QUERY = gql`
       type
     }
   }
+`;
+
+const Container = styled.div`
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
 type Data = {
@@ -37,15 +46,10 @@ type Variables = {
   },
 };
 
-type Props = {
-  // from?: string,
-  // to?: string,
-  // paymentMethods?: Array<string>,
-  // types?: Array<string>,
-};
+export function ExpensesList() {
+  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>({});
 
-export function ExpensesList(props: Props) {
-  const input = pick(['from', 'to', 'paymentMethods', 'types'], props);
+  const input = pick(['from', 'to', 'paymentMethods', 'types'], searchOptions);
 
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
     GET_EXPENSES_QUERY,
@@ -78,18 +82,20 @@ export function ExpensesList(props: Props) {
   }
 
   return (
-    <>
+    <Container>
       <div>
         <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
       </div>
 
+      <ExpenseSearch updateOptions={setSearchOptions} />
+
       <table>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Payment method</th>
+            <th align="left">Date</th>
+            <th align="left">Type</th>
+            <th align="left">Amount</th>
+            <th align="left">Payment method</th>
           </tr>
         </thead>
         <tbody>
@@ -110,6 +116,6 @@ export function ExpensesList(props: Props) {
           ))}
         </tbody>
       </table>
-    </>
+    </Container>
   );
 }
