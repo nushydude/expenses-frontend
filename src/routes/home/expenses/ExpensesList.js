@@ -4,21 +4,23 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { format } from 'date-fns';
 import { pick } from 'ramda';
+import styled from 'styled-components';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
 import { ExpenseSearch } from './ExpenseSearch';
 import type { SearchOptions } from './ExpenseSearch';
-import styled from 'styled-components';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
-    expenses: getExpenses(input: $input) {
-      amount
-      date
-      id
-      notes
-      paymentMethod
-      type
+    result: getExpenses(input: $input) {
+      expenses {
+        amount
+        date
+        id
+        notes
+        paymentMethod
+        type
+      }
     }
   }
 `;
@@ -30,13 +32,15 @@ const Container = styled.div`
 `;
 
 type Data = {
-  expenses: Array<{
-    amount: number,
-    date: string,
-    id: string,
-    paymentMethod: string,
-    type: string,
-  }>,
+  result: {
+    expenses: Array<{
+      amount: number,
+      date: string,
+      id: string,
+      paymentMethod: string,
+      type: string,
+    }>,
+  },
 };
 
 type Variables = {
@@ -71,11 +75,14 @@ export function ExpensesList() {
     );
   }
 
-  if (loading && (!data || !Array.isArray(data.expenses))) {
+  if (
+    loading &&
+    (!data || !data.result || !Array.isArray(data.result.expenses))
+  ) {
     return <p>Loading ...</p>;
   }
 
-  const { expenses } = data;
+  const { expenses } = data.result;
 
   if (expenses.length === 0) {
     return <p>You have not entered any expenses yet</p>;
