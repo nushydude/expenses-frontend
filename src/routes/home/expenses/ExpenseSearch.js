@@ -1,6 +1,14 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import {
+  format,
+  startOfMonth,
+  startOfYear,
+  addMilliseconds,
+  addMonths,
+  addYears,
+} from 'date-fns';
 
 const Container = styled.div`
   display: flex;
@@ -8,6 +16,25 @@ const Container = styled.div`
   padding: 10px;
   border: 1px solid #ccc;
   margin-bottom: 20px;
+`;
+
+const PeriodContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+`;
+
+const SpecificPeriodContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-right: 20px;
+`;
+
+const PresetsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const Input = styled.input`
@@ -23,6 +50,11 @@ const FormField = styled.div`
   display: flex:
   flex-direction: column;
   margin-bottom: 10px;
+  margin-right: 10px;
+
+  :last-child {
+    margin-right: 0;
+  }
 `;
 
 const Label = styled.label`
@@ -35,6 +67,11 @@ const Button = styled.button`
   padding: 4px;
   width: 60px;
   font: 15px roboto, sans-serif;
+  margin-right: 10px;
+
+  :last-child {
+    margin-right: 0;
+  }
 `;
 
 export type SearchOptions = {
@@ -85,29 +122,64 @@ export class ExpenseSearch extends React.Component<Props, State> {
     return searchOptions;
   };
 
+  setMonth = (offset: num) => () => {
+    const now = addMonths(new Date(), offset);
+
+    const from = format(startOfMonth(now), 'yyyy-MM-dd');
+    const to = format(
+      addMilliseconds(addMonths(startOfMonth(now), 1), -1),
+      'yyyy-MM-dd',
+    );
+
+    this.setState({ from, to });
+  };
+
+  setYear = (offset: num) => () => {
+    const now = addYears(new Date(), offset);
+
+    const from = format(startOfYear(now), 'yyyy-MM-dd');
+    const to = format(
+      addMilliseconds(addYears(startOfYear(now), 1), -1),
+      'yyyy-MM-dd',
+    );
+
+    this.setState({ from, to });
+  };
+
   render() {
     const { from, to } = this.state;
     const { updateOptions } = this.props;
 
     return (
       <Container>
-        <FormField>
-          <Label>From</Label>
-          <Input
-            type="date"
-            value={from}
-            onChange={e => this.setState({ from: e.target.value })}
-          />
-        </FormField>
+        <PeriodContainer>
+          <SpecificPeriodContainer>
+            <FormField>
+              <Label>From</Label>
+              <Input
+                type="date"
+                value={from}
+                onChange={e => this.setState({ from: e.target.value })}
+              />
+            </FormField>
 
-        <FormField>
-          <Label>To</Label>
-          <Input
-            type="date"
-            value={to}
-            onChange={e => this.setState({ to: e.target.value })}
-          />
-        </FormField>
+            <FormField>
+              <Label>To</Label>
+              <Input
+                type="date"
+                value={to}
+                onChange={e => this.setState({ to: e.target.value })}
+              />
+            </FormField>
+          </SpecificPeriodContainer>
+
+          <PresetsContainer>
+            <Button onClick={this.setMonth(0)}>This Month</Button>
+            <Button onClick={this.setMonth(-1)}>Last Month</Button>
+            <Button onClick={this.setYear(0)}>This Year</Button>
+            <Button onClick={this.setYear(-1)}>Last Year</Button>
+          </PresetsContainer>
+        </PeriodContainer>
 
         <div>
           <Button onClick={() => updateOptions(this.createSearchOptions())}>

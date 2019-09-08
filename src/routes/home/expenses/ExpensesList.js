@@ -114,10 +114,6 @@ export function ExpensesList() {
 
   const { expenses, totalPages } = data.result;
 
-  if (expenses.length === 0) {
-    return <p>You have not entered any expenses yet</p>;
-  }
-
   return (
     <Container>
       <div>
@@ -126,33 +122,38 @@ export function ExpensesList() {
 
       <ExpenseSearch updateOptions={setSearchOptions} />
 
-      <Table>
-        <thead>
-          <tr>
-            <Th>Date</Th>
-            <Th>Type</Th>
-            <Th>Amount</Th>
-            <Th>Payment method</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {expenses.map(expense => (
-            <tr key={expense.id}>
-              <Td>
-                <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
-                  {format(
-                    new Date(Number.parseInt(expense.date, 10)),
-                    'yyyy-MM-dd',
-                  )}
-                </Link>
-              </Td>
-              <Td>{expense.type}</Td>
-              <Td>{Number.parseFloat(expense.amount).toFixed(2)}</Td>
-              <Td>{expense.paymentMethod}</Td>
+      {expenses.length === 0 && (
+        <p>There are no recorded expenses for the selected time period</p>
+      )}
+      {expenses.length > 0 && (
+        <Table>
+          <thead>
+            <tr>
+              <Th>Date</Th>
+              <Th>Type</Th>
+              <Th>Amount</Th>
+              <Th>Payment method</Th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {expenses.map(expense => (
+              <tr key={expense.id}>
+                <Td>
+                  <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
+                    {format(
+                      new Date(Number.parseInt(expense.date, 10)),
+                      'yyyy-MM-dd',
+                    )}
+                  </Link>
+                </Td>
+                <Td>{expense.type}</Td>
+                <Td>{Number.parseFloat(expense.amount).toFixed(2)}</Td>
+                <Td>{expense.paymentMethod}</Td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
       <PaginationControls
         pageNumber={pageNumber}
