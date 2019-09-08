@@ -72,7 +72,7 @@ export class ExpenseSearch extends React.Component<Props, State> {
   createSearchOptions = () => {
     const searchOptions: SearchOptions = {};
 
-    const { from, to, paymentMethods, types } = this.state;
+    const { from, to /* , paymentMethods, types */ } = this.state;
 
     if (from) {
       searchOptions.from = new Date(from).toISOString();
@@ -86,13 +86,16 @@ export class ExpenseSearch extends React.Component<Props, State> {
   };
 
   render() {
+    const { from, to } = this.state;
+    const { updateOptions } = this.props;
+
     return (
       <Container>
         <FormField>
           <Label>From</Label>
           <Input
             type="date"
-            value={this.state.from}
+            value={from}
             onChange={e => this.setState({ from: e.target.value })}
           />
         </FormField>
@@ -101,23 +104,19 @@ export class ExpenseSearch extends React.Component<Props, State> {
           <Label>To</Label>
           <Input
             type="date"
-            value={this.state.to}
+            value={to}
             onChange={e => this.setState({ to: e.target.value })}
           />
         </FormField>
 
         <div>
-          <Button
-            onClick={() => {
-              this.props.updateOptions(this.createSearchOptions());
-            }}
-          >
+          <Button onClick={() => updateOptions(this.createSearchOptions())}>
             Search
           </Button>
           <Button
             onClick={() => {
               this.setState(initialState, () => {
-                this.props.updateOptions(this.createSearchOptions());
+                updateOptions(this.createSearchOptions());
               });
             }}
           >
