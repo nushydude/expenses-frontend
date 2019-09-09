@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { format } from 'date-fns';
+import { startOfMonth } from 'date-fns';
 import { pick } from 'ramda';
 import styled from 'styled-components';
 import { Link } from '../../../components/Link';
@@ -10,6 +10,8 @@ import { ROUTE } from '../../../configs/route';
 import { ExpenseSearch } from './ExpenseSearch';
 import type { SearchOptions } from './ExpenseSearch';
 import { PaginationControls } from '../../../components/PaginationControls';
+import { formatDateForTables } from '../../../utils/formatDateForTables';
+import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -75,7 +77,12 @@ type Variables = {
 const recordsPerPage = 10;
 
 export function ExpensesList() {
-  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>({});
+  const now = new Date();
+
+  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>({
+    from: startOfMonth(now).toISOString(),
+    to: now.toISOString(),
+  });
   // const [recordsPerPage, setRecordsPerPage] = React.useState<number>(10);
   const [pageNumber, setPageNumber] = React.useState<number>(1);
 
@@ -89,43 +96,44 @@ export function ExpensesList() {
     GET_EXPENSES_QUERY,
     {
       variables: { input },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
     },
   );
 
-  if (error) {
-    return (
-      <>
-        <p>An error occurred</p>
-        {error.message && <p>{error.message}</p>}
-        <button type="button" onClick={refetch}>
-          Retry
-        </button>
-      </>
-    );
-  }
-
-  if (
-    loading &&
-    (!data || !data.result || !Array.isArray(data.result.expenses))
-  ) {
-    return <p>Loading ...</p>;
-  }
-
-  const { expenses, totalPages } = data.result;
+  const dataLoading = !error && loading;
+  const expenses = !dataLoading && data.result.expenses;
+  const totalPages = !dataLoading && data.result.totalPages;
+  const { from, to } = searchOptions;
 
   return (
     <Container>
-      <div>
-        <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
-      </div>
+      <h3>
+        {`Data from ${formatDateForHeadings(
+          new Date(from),
+        )} to ${formatDateForHeadings(new Date(to))}`}
+      </h3>
 
-      <ExpenseSearch updateOptions={setSearchOptions} />
+      <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
 
-      {expenses.length === 0 && (
+      <ExpenseSearch updateOptions={setSearchOptions} loading={dataLoading} />
+
+      {error && (
+        <div>
+          <p>An error occurred</p>
+          {error.message && <p>{error.message}</p>}
+          <button type="button" onClick={refetch}>
+            Retry
+          </button>
+        </div>
+      )}
+
+      {dataLoading && <p>Loading...</p>}
+
+      {expenses && expenses.length === 0 && (
         <p>There are no recorded expenses for the selected time period</p>
       )}
-      {expenses.length > 0 && (
+
+      {expenses && expenses.length > 0 && (
         <Table>
           <thead>
             <tr>
@@ -140,9 +148,8 @@ export function ExpensesList() {
               <tr key={expense.id}>
                 <Td>
                   <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
-                    {format(
+                    {formatDateForTables(
                       new Date(Number.parseInt(expense.date, 10)),
-                      'yyyy-MM-dd',
                     )}
                   </Link>
                 </Td>
