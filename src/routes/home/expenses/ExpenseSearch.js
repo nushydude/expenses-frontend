@@ -79,6 +79,7 @@ export type SearchOptions = {
   to?: string,
   paymentMethods?: Array<string>,
   types?: Array<string>,
+  recordsPerPage?: number,
 };
 
 type State = {
@@ -90,20 +91,21 @@ type State = {
 
 type Props = {
   updateOptions: (options: SearchOptions) => void,
-};
-
-const initialState = {
-  from: '',
-  to: '',
-  paymentMethods: [],
-  types: [],
+  loading: boolean,
+  to: string,
+  from: string,
 };
 
 export class ExpenseSearch extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
+    this.state = {
+      to: props.to,
+      from: props.from,
+      paymentMethods: [],
+      types: [],
+    };
   }
 
   createSearchOptions = () => {
@@ -147,8 +149,10 @@ export class ExpenseSearch extends React.Component<Props, State> {
   };
 
   render() {
+    console.log('state:', this.state);
+
     const { from, to } = this.state;
-    const { updateOptions } = this.props;
+    const { loading, updateOptions } = this.props;
 
     return (
       <Container>
@@ -182,14 +186,26 @@ export class ExpenseSearch extends React.Component<Props, State> {
         </PeriodContainer>
 
         <div>
-          <Button onClick={() => updateOptions(this.createSearchOptions())}>
+          <Button
+            disabled={loading || to === '' || from === ''}
+            onClick={() => updateOptions(this.createSearchOptions())}
+          >
             Search
           </Button>
           <Button
+            disabled={loading}
             onClick={() => {
-              this.setState(initialState, () => {
-                updateOptions(this.createSearchOptions());
-              });
+              this.setState(
+                {
+                  to: this.props.to,
+                  from: this.to.from,
+                  paymentMethods: [],
+                  types: [],
+                },
+                () => {
+                  updateOptions(this.createSearchOptions());
+                },
+              );
             }}
           >
             Clear

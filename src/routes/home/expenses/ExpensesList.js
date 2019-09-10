@@ -74,8 +74,6 @@ type Variables = {
   },
 };
 
-const recordsPerPage = 10;
-
 export function ExpensesList() {
   const now = new Date();
 
@@ -83,14 +81,14 @@ export function ExpensesList() {
     from: startOfMonth(now).toISOString(),
     to: now.toISOString(),
   });
-  // const [recordsPerPage, setRecordsPerPage] = React.useState<number>(10);
   const [pageNumber, setPageNumber] = React.useState<number>(1);
 
   const input = {
     ...pick(['from', 'to', 'paymentMethods', 'types'], searchOptions),
-    recordsPerPage,
     pageNumber,
   };
+
+  console.log('input:', input);
 
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
     GET_EXPENSES_QUERY,
@@ -103,7 +101,7 @@ export function ExpensesList() {
   const dataLoading = !error && loading;
   const expenses = !dataLoading && data.result.expenses;
   const totalPages = !dataLoading && data.result.totalPages;
-  const { from, to } = searchOptions;
+  const { recordsPerPage, from, to } = searchOptions;
 
   return (
     <Container>
@@ -115,7 +113,13 @@ export function ExpensesList() {
 
       <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
 
-      <ExpenseSearch updateOptions={setSearchOptions} loading={dataLoading} />
+      <ExpenseSearch
+        updateOptions={setSearchOptions}
+        loading={dataLoading}
+        to={formatDateForTables(new Date(to))}
+        from={formatDateForTables(new Date(from))}
+        recordsPerPage={recordsPerPage}
+      />
 
       {error && (
         <div>
