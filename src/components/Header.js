@@ -8,18 +8,30 @@ import type { AppState } from '../redux/types';
 import { ROUTE } from '../configs/route';
 import * as actions from '../redux/actionCreators/auth';
 import { LinkButton } from './LinkButton';
+import styled from 'styled-components';
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    background: 'pink',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1em',
-    marginBottom: '10px',
-  },
-};
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  background: #ccc;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 10px;
+`;
+
+const LinksBox = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const LinkContainer = styled.div`
+  margin-right: 16px;
+
+  :last-child {
+    margin-right: 0;
+  }
+`;
 
 type Props = {
   authed: boolean,
@@ -28,31 +40,38 @@ type Props = {
 
 export function HeaderComp({ authed, logOut }: Props) {
   return (
-    <div style={styles.container}>
+    <Container>
       <Link to={ROUTE.LANDING}>
-        <h1>Header and Logo</h1>
+        <h1>HL</h1>
       </Link>
-      <div>
-        {!authed && (
-          <div>
-            <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
-            <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>
-          </div>
-        )}
-        {authed && (
-          <div>
-            <Link to={ROUTE.MANAGE_ACCOUNT}>Manage Account</Link>
-            <LinkButton onClick={logOut}>Log Out</LinkButton>
-          </div>
-        )}
 
-        {/* menu
+      {!authed && (
+        <LinksBox>
+          <LinkContainer>
+            <Link to={ROUTE.AUTH_LOGIN}>Sign In</Link>
+          </LinkContainer>
+          <LinkContainer>
+            <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>
+          </LinkContainer>
+        </LinksBox>
+      )}
+      {authed && (
+        <LinksBox>
+          <LinkContainer>
+            <Link to={ROUTE.MANAGE_ACCOUNT}>Account</Link>
+          </LinkContainer>
+          <LinkContainer>
+            <LinkButton onClick={logOut}>Sign Out</LinkButton>
+          </LinkContainer>
+        </LinksBox>
+      )}
+
+      {/* menu
         {!authed && <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>}
         {!authed && <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>}
         {authed && <Menu />}
         */}
-      </div>
-    </div>
+    </Container>
   );
 }
 

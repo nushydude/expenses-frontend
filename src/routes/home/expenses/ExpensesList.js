@@ -9,9 +9,9 @@ import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
 import { ExpenseSearch } from './ExpenseSearch';
 import type { SearchOptions } from './ExpenseSearch';
-import { PaginationControls } from '../../../components/PaginationControls';
 import { formatDateForTables } from '../../../utils/formatDateForTables';
 import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
+import { ExpensesTable } from './ExpensesTable';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -31,26 +31,8 @@ const GET_EXPENSES_QUERY = gql`
 `;
 
 const Container = styled.div`
-  padding: 10px;
   display: flex;
   flex-direction: column;
-`;
-
-const Table = styled.table`
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-collapse: collapse;
-`;
-
-const Th = styled.th`
-  padding: 10px;
-  text-align: left;
-  background: #ccc;
-`;
-
-const Td = styled.td`
-  padding: 10px;
-  text-align: left;
 `;
 
 type Data = {
@@ -88,8 +70,6 @@ export function ExpensesList() {
     pageNumber,
   };
 
-  console.log('input:', input);
-
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
     GET_EXPENSES_QUERY,
     {
@@ -106,12 +86,16 @@ export function ExpensesList() {
   return (
     <Container>
       <h3>
-        {`Data from ${formatDateForHeadings(
+        {`From ${formatDateForHeadings(
           new Date(from),
         )} to ${formatDateForHeadings(new Date(to))}`}
       </h3>
 
-      <Link to={ROUTE.CREATE_EXPENSE}>Create Expense</Link>
+      <div>
+        <Link to={ROUTE.CREATE_EXPENSE} button>
+          Add New
+        </Link>
+      </div>
 
       <ExpenseSearch
         updateOptions={setSearchOptions}
@@ -138,39 +122,13 @@ export function ExpensesList() {
       )}
 
       {expenses && expenses.length > 0 && (
-        <Table>
-          <thead>
-            <tr>
-              <Th>Date</Th>
-              <Th>Type</Th>
-              <Th>Amount</Th>
-              <Th>Payment method</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map(expense => (
-              <tr key={expense.id}>
-                <Td>
-                  <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
-                    {formatDateForTables(
-                      new Date(Number.parseInt(expense.date, 10)),
-                    )}
-                  </Link>
-                </Td>
-                <Td>{expense.type}</Td>
-                <Td>{Number.parseFloat(expense.amount).toFixed(2)}</Td>
-                <Td>{expense.paymentMethod}</Td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <ExpensesTable
+          expenses={expenses}
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={setPageNumber}
+        />
       )}
-
-      <PaginationControls
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        setPageNumber={setPageNumber}
-      />
     </Container>
   );
 }

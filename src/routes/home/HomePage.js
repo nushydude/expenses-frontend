@@ -9,9 +9,7 @@ import { ROUTE } from '../../configs/route';
 
 export function HomePage() {
   return (
-    <div>
-      <h1>Home page</h1>
-
+    <>
       <Switch>
         <Route exact path={ROUTE.CREATE_EXPENSE} component={CreateExpense} />
         <Route exact path={ROUTE.EXPENSE} component={Expense} />
@@ -21,6 +19,6 @@ export function HomePage() {
 
         <Redirect to={ROUTE.EXPENSES} />
       </Switch>
-    </div>
+    </>
   );
 }

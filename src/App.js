@@ -21,39 +21,50 @@ import { Header } from './components/Header';
 import { persistor, store } from './redux/store';
 import { getApolloClient } from './apollo/getApolloClient';
 import { env } from './configs/env';
+import styled from 'styled-components';
+
+const ContentsWrapper = styled.div`
+  padding: 0 20px;
+`;
 
 Sentry.init({ dsn: env.sentryDSN });
 
 function AppComp() {
   return (
-    <div className="App">
+    <div>
       <Header />
 
-      <Switch>
-        <UnauthedRoute exact path={ROUTE.AUTH_LOGIN} component={LogInPage} />
-        <UnauthedRoute exact path={ROUTE.AUTH_SIGNUP} component={SignUpPage} />
-        <UnauthedRoute
-          exact
-          path={ROUTE.AUTH_RECOVER}
-          component={RecoverPage}
-        />
-        <UnauthedRoute
-          exact
-          path={ROUTE.AUTH_VERIFY}
-          component={VerifyAccountPage}
-        />
-        <UnauthedRoute
-          exact
-          path={ROUTE.AUTH_CHANGE_PWD}
-          component={ChangePasswordPage}
-        />
+      <ContentsWrapper>
+        <Switch>
+          <UnauthedRoute exact path={ROUTE.AUTH_LOGIN} component={LogInPage} />
+          <UnauthedRoute
+            exact
+            path={ROUTE.AUTH_SIGNUP}
+            component={SignUpPage}
+          />
+          <UnauthedRoute
+            exact
+            path={ROUTE.AUTH_RECOVER}
+            component={RecoverPage}
+          />
+          <UnauthedRoute
+            exact
+            path={ROUTE.AUTH_VERIFY}
+            component={VerifyAccountPage}
+          />
+          <UnauthedRoute
+            exact
+            path={ROUTE.AUTH_CHANGE_PWD}
+            component={ChangePasswordPage}
+          />
 
-        <AuthedRoute path={ROUTE.HOME} component={HomePage} />
+          <AuthedRoute path={ROUTE.HOME} component={HomePage} />
 
-        <Route exact path={ROUTE.LANDING} component={LandingPage} />
+          <Route exact path={ROUTE.LANDING} component={LandingPage} />
 
-        <Redirect to={ROUTE.LANDING} />
-      </Switch>
+          <Redirect to={ROUTE.LANDING} />
+        </Switch>
+      </ContentsWrapper>
     </div>
   );
 }

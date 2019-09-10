@@ -1,8 +1,24 @@
 // @flow
+import * as React from 'react';
 import styled from 'styled-components';
-import { Link as _Link } from 'react-router-dom';
+import { Link as RRDLink } from 'react-router-dom';
 
-export const Link = styled(_Link)`
+const Button = styled.div`
+  border: 1px solid green;
+  box-sizing: border-box;
+  user-select: none;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+  display: inline-block;
+
+  a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+  }
+`;
+
+const NonButtonLink = styled(RRDLink)`
   text-decoration: none;
   color: green;
 
@@ -19,3 +35,20 @@ export const Link = styled(_Link)`
     color: green;
   }
 `;
+
+type Props = {
+  button: boolean,
+  children: React.ReactNode,
+};
+
+export function Link({ button, children, ...rest }: Props) {
+  if (button) {
+    return (
+      <Button>
+        <RRDLink {...rest}>{children}</RRDLink>
+      </Button>
+    );
+  }
+
+  return <NonButtonLink {...rest}>{children}</NonButtonLink>;
+}
