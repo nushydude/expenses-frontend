@@ -12,6 +12,7 @@ import type { SearchOptions } from './ExpenseSearch';
 import { formatDateForTables } from '../../../utils/formatDateForTables';
 import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
 import { ExpensesTable } from './ExpensesTable';
+import { ExpensesChart } from './ExpensesChart';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -33,6 +34,18 @@ const GET_EXPENSES_QUERY = gql`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const Button = styled.button`
+  border: 1px solid green;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+  color: green;
+  font-family: Roboto, sans-serif;
+  /*input has OS specific font-family*/
+  cursor: pointer;
+  font-size: 16px;
 `;
 
 type Data = {
@@ -64,6 +77,7 @@ export function ExpensesList() {
     to: now.toISOString(),
   });
   const [pageNumber, setPageNumber] = React.useState<number>(1);
+  const [table, setTable] = React.useState<boolean>(true);
 
   const input = {
     ...pick(['from', 'to', 'paymentMethods', 'types'], searchOptions),
@@ -95,6 +109,10 @@ export function ExpensesList() {
         <Link to={ROUTE.CREATE_EXPENSE} button>
           Add New
         </Link>
+
+        <Button onClick={() => setTable(!table)}>
+          {table ? 'Chart View' : 'Table View'}
+        </Button>
       </div>
 
       <ExpenseSearch
@@ -121,13 +139,17 @@ export function ExpensesList() {
         <p>There are no recorded expenses for the selected time period</p>
       )}
 
-      {expenses && expenses.length > 0 && (
+      {expenses && expenses.length > 0 && table && (
         <ExpensesTable
           expenses={expenses}
           pageNumber={pageNumber}
           totalPages={totalPages}
           setPageNumber={setPageNumber}
         />
+      )}
+
+      {expenses && expenses.length > 0 && !table && (
+        <ExpensesChart expenses={expenses} />
       )}
     </Container>
   );
