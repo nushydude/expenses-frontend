@@ -149,8 +149,6 @@ export class ExpenseSearch extends React.Component<Props, State> {
   };
 
   render() {
-    console.log('state:', this.state);
-
     const { from, to } = this.state;
     const { loading, updateOptions } = this.props;
 
