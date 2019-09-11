@@ -42,6 +42,9 @@ type Props = {
     paymentMethod: string,
     type: string,
   }>,
+  pageNumber: number,
+  totalPages: number,
+  setPageNumber: (num: number) => void,
 };
 
 export function ExpensesTable({

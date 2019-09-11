@@ -1,21 +1,19 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { ROUTE } from '../../../configs/route';
-import { formatDateForTables } from '../../../utils/formatDateForTables';
-import { Link } from '../../../components/Link';
+
 import {
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar,
-  PieChart,
-  Pie,
-  ResponsiveContainer,
+  // Bar,
+  // BarChart,
+  // CartesianGrid,
+  // XAxis,
+  // YAxis,
   Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
 } from 'recharts';
 
 type Props = {
@@ -43,7 +41,8 @@ const COLORS = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600'];
 
 export function ExpensesChart({ expenses }: Props) {
   const defaultDataObj = expenses.reduce((accum, expense) => {
-    accum[expense.type] = (accum[expense.type] | 0) + expense.amount;
+    // eslint-disable-next-line no-param-reassign
+    accum[expense.type] = (accum[expense.type] || 0) + expense.amount;
 
     return accum;
   }, {});
@@ -70,6 +69,7 @@ export function ExpensesChart({ expenses }: Props) {
           >
             {data.map((entry, index) => (
               <Cell
+                // eslint-disable-next-line react/no-array-index-key
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
               />

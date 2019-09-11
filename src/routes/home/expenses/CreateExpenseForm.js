@@ -22,6 +22,7 @@ const Label = styled.label`
   margin: 0;
   display: block;
   margin-bottom: 4px;
+  user-select: none;
 `;
 
 const Input = styled.input`

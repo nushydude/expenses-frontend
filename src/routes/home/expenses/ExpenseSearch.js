@@ -197,10 +197,10 @@ export class ExpenseSearch extends React.Component<Props, State> {
             onClick={() => {
               this.setState(
                 {
-                  to: this.props.to,
-                  from: this.to.from,
+                  from,
                   paymentMethods: [],
                   types: [],
+                  to,
                 },
                 () => {
                   updateOptions(this.createSearchOptions());

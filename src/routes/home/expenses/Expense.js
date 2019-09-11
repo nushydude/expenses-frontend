@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import * as React from 'react';
 import { format } from 'date-fns';
 import gql from 'graphql-tag';
+import styled from 'styled-components';
 import { EditableTextField } from '../../../components/EditableTextField';
 
 const EXPENSE_QUERY = gql`
@@ -35,6 +36,14 @@ const UPDATE_EXPENSE_MUTATION = gql`
       }
     }
   }
+`;
+
+const Label = styled.label`
+  font: 16px roboto, sans-serif;
+  margin: 0;
+  display: block;
+  margin-bottom: 4px;
+  user-select: none;
 `;
 
 type Props = {
@@ -108,10 +117,10 @@ export function Expense(props: Props) {
 
   return (
     <div>
-      <label>Date</label>
+      <Label>Date</Label>
       <p>{format(new Date(Number.parseInt(expense.date, 10)), 'yyyy-MM-dd')}</p>
 
-      <label>Type</label>
+      <Label>Type</Label>
       <EditableTextField
         mutation={UPDATE_EXPENSE_MUTATION}
         field="type"
@@ -121,7 +130,7 @@ export function Expense(props: Props) {
         getVariables={getVariables(expenseID, 'type')}
       />
 
-      <label>Amount</label>
+      <Label>Amount</Label>
       <EditableTextField
         mutation={UPDATE_EXPENSE_MUTATION}
         field="amount"
@@ -134,7 +143,7 @@ export function Expense(props: Props) {
         }
       />
 
-      <label>Payment Method</label>
+      <Label>Payment Method</Label>
       <EditableTextField
         mutation={UPDATE_EXPENSE_MUTATION}
         field="paymentMethod"
@@ -144,7 +153,7 @@ export function Expense(props: Props) {
         getVariables={getVariables(expenseID, 'paymentMethod')}
       />
 
-      <label>Notes</label>
+      <Label>Notes</Label>
       <EditableTextField
         mutation={UPDATE_EXPENSE_MUTATION}
         field="notes"
