@@ -9,6 +9,7 @@ import {
   addMonths,
   addYears,
 } from 'date-fns';
+import { MdRefresh, MdSearch } from 'react-icons/md';
 
 const Container = styled.div`
   display: flex;
@@ -42,15 +43,28 @@ const Input = styled.input`
   padding; 4px;
   padding-left: 2px;
   margin: 0;
+  margin-left: 8px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const Select = styled.select`
+  font: 15px roboto, sans-serif;
+  padding; 4px;
+  padding-left: 2px;
+  margin: 0;
+  margin-left: 8px;
   width: 100%;
   box-sizing: border-box;
 `;
 
 const FormField = styled.div`
-  display: flex:
-  flex-direction: column;
-  margin-bottom: 10px;
-  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 16px;
+  margin-bottom: 4px;
+  white-space: nowrap;
 
   :last-child {
     margin-right: 0;
@@ -64,10 +78,10 @@ const Label = styled.label`
 
 const Button = styled.button`
   margin-right: 4px;
-  padding: 4px;
-  width: 60px;
+  padding: 4px 8px;
   font: 15px roboto, sans-serif;
-  margin-right: 10px;
+  margin-right: 8px;
+  margin-bottom: 4px;
 
   :last-child {
     margin-right: 0;
@@ -82,36 +96,34 @@ export type SearchOptions = {
   recordsPerPage?: number,
 };
 
-type State = {
-  from: ?string,
-  to: ?string,
-  paymentMethods: ?Array<string>,
-  types: ?Array<string>,
-};
-
 type Props = {
-  updateOptions: (options: SearchOptions) => void,
-  loading: boolean,
-  to: string,
   from: string,
+  loading: boolean,
+  reset: () => void,
+  to: string,
+  updateOptions: (options: SearchOptions) => void,
 };
 
-export class ExpenseSearch extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
+const PRESETS = {
+  LAST_MONTH: 'LAST_MONTH',
+  LAST_YEAR: 'LAST_YEAR',
+  THIS_MONTH: 'THIS_MONTH',
+  THIS_YEAR: 'THIS_YEAR',
+};
 
-    this.state = {
-      to: props.to,
-      from: props.from,
-      paymentMethods: [],
-      types: [],
-    };
-  }
+const DATE_FORMAT_FOR_INPUT = 'yyyy-MM-dd';
 
-  createSearchOptions = () => {
+export function ExpenseSearch(props: Props) {
+  console.log('props:', props);
+
+  const [from, setFrom] = React.useState(props.from);
+  const [to, setTo] = React.useState(props.to);
+
+  console.log('from:', from);
+  console.log('to:', to);
+
+  const createSearchOptions = () => {
     const searchOptions: SearchOptions = {};
-
-    const { from, to /* , paymentMethods, types */ } = this.state;
 
     if (from) {
       searchOptions.from = new Date(from).toISOString();
@@ -124,92 +136,83 @@ export class ExpenseSearch extends React.Component<Props, State> {
     return searchOptions;
   };
 
-  setMonth = (offset: num) => () => {
+  const setMonth = (offset: num) => {
     const now = addMonths(new Date(), offset);
-
-    const from = format(startOfMonth(now), 'yyyy-MM-dd');
+    const from = format(startOfMonth(now), DATE_FORMAT_FOR_INPUT);
     const to = format(
       addMilliseconds(addMonths(startOfMonth(now), 1), -1),
-      'yyyy-MM-dd',
+      DATE_FORMAT_FOR_INPUT,
     );
 
-    this.setState({ from, to });
+    setFrom(from);
+    setTo(to);
   };
 
-  setYear = (offset: num) => () => {
+  const setYear = (offset: num) => {
     const now = addYears(new Date(), offset);
 
-    const from = format(startOfYear(now), 'yyyy-MM-dd');
+    const from = format(startOfYear(now), DATE_FORMAT_FOR_INPUT);
     const to = format(
       addMilliseconds(addYears(startOfYear(now), 1), -1),
-      'yyyy-MM-dd',
+      DATE_FORMAT_FOR_INPUT,
     );
 
-    this.setState({ from, to });
+    setFrom(from);
+    setTo(to);
   };
 
-  render() {
-    const { from, to } = this.state;
-    const { loading, updateOptions } = this.props;
+  const search = () => props.updateOptions(createSearchOptions());
 
-    return (
-      <Container>
-        <PeriodContainer>
-          <SpecificPeriodContainer>
-            <FormField>
-              <Label>From</Label>
-              <Input
-                type="date"
-                value={from}
-                onChange={e => this.setState({ from: e.target.value })}
-              />
-            </FormField>
+  const setPresetDateRange = (preset: string) => {
+    if (preset === PRESETS.THIS_MONTH) {
+      setMonth(0);
+    } else if (preset === PRESETS.LAST_MONTH) {
+      setMonth(-1);
+    } else if (preset === PRESETS.THIS_YEAR) {
+      setYear(0);
+    } else if (preset === PRESETS.LAST_YEAR) {
+      setYear(-1);
+    }
+  };
 
-            <FormField>
-              <Label>To</Label>
-              <Input
-                type="date"
-                value={to}
-                onChange={e => this.setState({ to: e.target.value })}
-              />
-            </FormField>
-          </SpecificPeriodContainer>
+  return (
+    <Container>
+      <PeriodContainer>
+        <FormField>
+          <Label>From</Label>
+          <Input
+            type="date"
+            value={from}
+            onChange={e => setFrom(e.target.value)}
+          />
+        </FormField>
 
-          <PresetsContainer>
-            <Button onClick={this.setMonth(0)}>This Month</Button>
-            <Button onClick={this.setMonth(-1)}>Last Month</Button>
-            <Button onClick={this.setYear(0)}>This Year</Button>
-            <Button onClick={this.setYear(-1)}>Last Year</Button>
-          </PresetsContainer>
-        </PeriodContainer>
+        <FormField>
+          <Label>To</Label>
+          <Input type="date" value={to} onChange={e => setTo(e.target.value)} />
+        </FormField>
+        <FormField>
+          <Label>Date Range</Label>
+          <Select onChange={e => setPresetDateRange(e.target.value)}>
+            <option value={PRESETS.THIS_MONTH}>This Month</option>
+            <option value={PRESETS.LAST_MONTH}>Last Month</option>
+            <option value={PRESETS.THIS_YEAR}>This Year</option>
+            <option value={PRESETS.LAST_YEAR}>Last Year</option>
+          </Select>
+        </FormField>
+      </PeriodContainer>
 
-        <div>
-          <Button
-            disabled={loading || to === '' || from === ''}
-            onClick={() => updateOptions(this.createSearchOptions())}
-          >
-            Search
-          </Button>
-          <Button
-            disabled={loading}
-            onClick={() => {
-              this.setState(
-                {
-                  from,
-                  paymentMethods: [],
-                  types: [],
-                  to,
-                },
-                () => {
-                  updateOptions(this.createSearchOptions());
-                },
-              );
-            }}
-          >
-            Clear
-          </Button>
-        </div>
-      </Container>
-    );
-  }
+      <div>
+        <Button
+          disabled={props.loading || to === '' || from === ''}
+          onClick={search}
+        >
+          <MdSearch size={12} /> Search
+        </Button>
+        <Button disabled={props.loading} onClick={props.reset}>
+          <MdRefresh size={12} /> Reset
+        </Button>
+      </div>
+    </Container>
+  );
 }

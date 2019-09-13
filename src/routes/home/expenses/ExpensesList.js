@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import type { ContextRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { startOfMonth } from 'date-fns';
 import { pick } from 'ramda';
 import styled from 'styled-components';
-import { Link } from '../../../components/Link';
+import { MdAdd, MdShowChart, MdViewList, MdFilterList } from 'react-icons/md';
 import { ROUTE } from '../../../configs/route';
 import { ExpenseSearch } from './ExpenseSearch';
 import type { SearchOptions } from './ExpenseSearch';
@@ -69,15 +70,28 @@ type Variables = {
   },
 };
 
-export function ExpensesList() {
+type Props = {
+  ...ContextRouter,
+};
+
+const ICON_SIZE = 32;
+
+function getDefaultSearchOptions() {
   const now = new Date();
 
-  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>({
+  return {
     from: startOfMonth(now).toISOString(),
     to: now.toISOString(),
-  });
+  };
+}
+
+export function ExpensesList(props: Props) {
+  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>(
+    getDefaultSearchOptions(),
+  );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
   const [table, setTable] = React.useState<boolean>(true);
+  const [showFilter, setShowFilter] = React.useState<boolean>(false);
 
   const input = {
     ...pick(['from', 'to', 'paymentMethods', 'types'], searchOptions),
@@ -106,22 +120,35 @@ export function ExpensesList() {
       </h3>
 
       <div>
-        <Link to={ROUTE.CREATE_EXPENSE} button>
-          Add New
-        </Link>
+        <MdAdd
+          size={ICON_SIZE}
+          onClick={() => props.history.push(ROUTE.CREATE_EXPENSE)}
+        />
 
-        <Button onClick={() => setTable(!table)}>
-          {table ? 'Chart View' : 'Table View'}
-        </Button>
+        {table && (
+          <MdShowChart size={ICON_SIZE} onClick={() => setTable(false)} />
+        )}
+
+        {!table && (
+          <MdViewList size={ICON_SIZE} onClick={() => setTable(true)} />
+        )}
+
+        <MdFilterList
+          size={ICON_SIZE}
+          onClick={() => setShowFilter(!showFilter)}
+        />
       </div>
 
-      <ExpenseSearch
-        updateOptions={setSearchOptions}
-        loading={dataLoading}
-        to={formatDateForTables(new Date(to))}
-        from={formatDateForTables(new Date(from))}
-        recordsPerPage={recordsPerPage}
-      />
+      {showFilter && (
+        <ExpenseSearch
+          updateOptions={setSearchOptions}
+          reset={() => setSearchOptions(getDefaultSearchOptions())}
+          loading={dataLoading}
+          to={formatDateForTables(new Date(to))}
+          from={formatDateForTables(new Date(from))}
+          recordsPerPage={recordsPerPage}
+        />
+      )}
 
       {error && (
         <div>
