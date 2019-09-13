@@ -37,17 +37,17 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Button = styled.button`
-  border: 1px solid green;
-  box-sizing: border-box;
-  padding: 8px 16px;
-  margin-bottom: 10px;
-  color: green;
-  font-family: Roboto, sans-serif;
-  /*input has OS specific font-family*/
-  cursor: pointer;
-  font-size: 16px;
-`;
+// const Button = styled.button`
+//   border: 1px solid green;
+//   box-sizing: border-box;
+//   padding: 8px 16px;
+//   margin-bottom: 10px;
+//   color: green;
+//   font-family: Roboto, sans-serif;
+//   /*input has OS specific font-family*/
+//   cursor: pointer;
+//   font-size: 16px;
+// `;
 
 type Data = {
   result: {
