@@ -39,7 +39,7 @@ const PeriodContainer = styled.div`
 // `;
 
 const Input = styled.input`
-  font: 15px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   padding; 4px;
   padding-left: 2px;
   margin: 0;
@@ -49,7 +49,7 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
-  font: 15px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   padding; 4px;
   padding-left: 2px;
   margin: 0;
@@ -72,14 +72,14 @@ const FormField = styled.div`
 `;
 
 const Label = styled.label`
-  font: 16px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   margin: 0;
 `;
 
 const Button = styled.button`
   margin-right: 4px;
   padding: 4px 8px;
-  font: 15px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   margin-right: 8px;
   margin-bottom: 4px;
 
@@ -114,13 +114,8 @@ const PRESETS = {
 const DATE_FORMAT_FOR_INPUT = 'yyyy-MM-dd';
 
 export function ExpenseSearch(props: Props) {
-  console.log('props:', props);
-
   const [from, setFrom] = React.useState(props.from);
   const [to, setTo] = React.useState(props.to);
-
-  console.log('from:', from);
-  console.log('to:', to);
 
   const createSearchOptions = () => {
     const searchOptions: SearchOptions = {};
@@ -207,10 +202,10 @@ export function ExpenseSearch(props: Props) {
           disabled={props.loading || to === '' || from === ''}
           onClick={search}
         >
-          <MdSearch size={12} /> Search
+          <MdSearch size={12} />
         </Button>
         <Button disabled={props.loading} onClick={props.reset}>
-          <MdRefresh size={12} /> Reset
+          <MdRefresh size={12} />
         </Button>
       </div>
     </Container>

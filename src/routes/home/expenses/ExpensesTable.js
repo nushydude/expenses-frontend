@@ -10,6 +10,7 @@ const Table = styled.table`
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-collapse: collapse;
+  font-size: 12px;
 `;
 
 const Tr = styled.tr`
@@ -24,9 +25,18 @@ const Th = styled.th`
   background: #ccc;
 `;
 
+const ThRightAligned = styled(Th)`
+  text-align: right;
+`;
+
 const Td = styled.td`
-  padding: 4px;
+  padding: 2px 4px;
   text-align: left;
+  white-space: nowrap;
+`;
+
+const TdRightAligned = styled(Td)`
+  text-align: right;
 `;
 
 const TableContainer = styled.div`
@@ -58,15 +68,17 @@ export function ExpensesTable({
       <Table>
         <thead>
           <tr>
+            <Th>#</Th>
             <Th>Date</Th>
             <Th>Type</Th>
-            <Th>Amount</Th>
-            <Th>Payment method</Th>
+            <Th>Source</Th>
+            <ThRightAligned>Amount</ThRightAligned>
           </tr>
         </thead>
         <tbody>
-          {expenses.map(expense => (
+          {expenses.map((expense, idx) => (
             <Tr key={expense.id}>
+              <TdRightAligned>{idx}</TdRightAligned>
               <Td>
                 <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
                   {formatDateForTables(
@@ -75,8 +87,10 @@ export function ExpensesTable({
                 </Link>
               </Td>
               <Td>{expense.type}</Td>
-              <Td>{Number.parseFloat(expense.amount).toFixed(2)}</Td>
               <Td>{expense.paymentMethod}</Td>
+              <TdRightAligned>
+                ${Number.parseFloat(expense.amount).toFixed(2)}
+              </TdRightAligned>
             </Tr>
           ))}
         </tbody>

@@ -1,17 +1,18 @@
 // @flow
-import * as React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import type { ContextRouter } from 'react-router-dom';
-import gql from 'graphql-tag';
 import { startOfMonth } from 'date-fns';
+import gql from 'graphql-tag';
 import { pick } from 'ramda';
-import styled from 'styled-components';
+import * as React from 'react';
 import { MdAdd, MdShowChart, MdViewList, MdFilterList } from 'react-icons/md';
+import type { ContextRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import { PageMenu } from '../../../components/PageMenu';
 import { ROUTE } from '../../../configs/route';
-import { ExpenseSearch } from './ExpenseSearch';
-import type { SearchOptions } from './ExpenseSearch';
 import { formatDateForTables } from '../../../utils/formatDateForTables';
 import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
+import type { SearchOptions } from './ExpenseSearch';
+import { ExpenseSearch } from './ExpenseSearch';
 import { ExpensesTable } from './ExpensesTable';
 import { ExpensesChart } from './ExpensesChart';
 
@@ -35,6 +36,29 @@ const GET_EXPENSES_QUERY = gql`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const PageTitleContainer = styled.div`
+  display: flex;
+  margin-top: 4px;
+  margin-bottom: 8px;
+`;
+
+const PageTitle = styled.div`
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const PageMenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  :hover {
+    color: #999;
+  }
 `;
 
 // const Button = styled.button`
@@ -74,7 +98,7 @@ type Props = {
   ...ContextRouter,
 };
 
-const ICON_SIZE = 32;
+const ICON_SIZE = 20;
 
 function getDefaultSearchOptions() {
   const now = new Date();
@@ -84,6 +108,8 @@ function getDefaultSearchOptions() {
     to: now.toISOString(),
   };
 }
+
+const menuIconStyle = { marginRight: '4px' };
 
 export function ExpensesList(props: Props) {
   const [searchOptions, setSearchOptions] = React.useState<SearchOptions>(
@@ -113,31 +139,40 @@ export function ExpensesList(props: Props) {
 
   return (
     <Container>
-      <h3>
-        {`From ${formatDateForHeadings(
-          new Date(from),
-        )} to ${formatDateForHeadings(new Date(to))}`}
-      </h3>
+      <PageTitleContainer>
+        <PageTitle>
+          {`From ${formatDateForHeadings(
+            new Date(from),
+          )} to ${formatDateForHeadings(new Date(to))}`}
+        </PageTitle>
+        <PageMenu>
+          <PageMenuItem
+            onClick={() => props.history.push(ROUTE.CREATE_EXPENSE)}
+          >
+            <MdAdd size={ICON_SIZE} style={menuIconStyle} />
+            Add new expense
+          </PageMenuItem>
 
-      <div>
-        <MdAdd
-          size={ICON_SIZE}
-          onClick={() => props.history.push(ROUTE.CREATE_EXPENSE)}
-        />
+          {table && (
+            <PageMenuItem onClick={() => setTable(false)}>
+              <MdShowChart size={ICON_SIZE} style={menuIconStyle} />
+              Show chart view
+            </PageMenuItem>
+          )}
 
-        {table && (
-          <MdShowChart size={ICON_SIZE} onClick={() => setTable(false)} />
-        )}
+          {!table && (
+            <PageMenuItem onClick={() => setTable(true)}>
+              <MdViewList size={ICON_SIZE} style={menuIconStyle} />
+              Show table view
+            </PageMenuItem>
+          )}
 
-        {!table && (
-          <MdViewList size={ICON_SIZE} onClick={() => setTable(true)} />
-        )}
-
-        <MdFilterList
-          size={ICON_SIZE}
-          onClick={() => setShowFilter(!showFilter)}
-        />
-      </div>
+          <PageMenuItem onClick={() => setShowFilter(!showFilter)}>
+            <MdFilterList size={ICON_SIZE} style={menuIconStyle} />
+            Filter expenses
+          </PageMenuItem>
+        </PageMenu>
+      </PageTitleContainer>
 
       {showFilter && (
         <ExpenseSearch
