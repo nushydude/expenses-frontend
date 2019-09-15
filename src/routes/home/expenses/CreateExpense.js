@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
-import { CreateExpenseForm } from './CreateExpenseForm';
+import { CreateExpenseForm } from './components/CreateExpenseForm';
 import { ROUTE } from '../../../configs/route';
 
 const CREATE_EXPENSE_MUTATION = gql`
@@ -122,33 +122,31 @@ export class CreateExpense extends React.Component<Props, State> {
               }
 
               return (
-                <div style={{ width: '600px' }}>
-                  <CreateExpenseForm
-                    cancel={history.goBack}
-                    clearError={this.clearError}
-                    error={error}
-                    isBusy={loading}
-                    submit={(e: SyntheticInputEvent<any>) => {
-                      e.preventDefault();
+                <CreateExpenseForm
+                  cancel={history.goBack}
+                  clearError={this.clearError}
+                  error={error}
+                  isBusy={loading}
+                  submit={(e: SyntheticInputEvent<any>) => {
+                    e.preventDefault();
 
-                      const { amount, date, ...rest } = fields;
+                    const { amount, date, ...rest } = fields;
 
-                      return createExpense({
-                        variables: {
-                          input: {
-                            ...rest,
-                            amount: Number.parseFloat(amount),
-                            date: new Date(date).toISOString(),
-                          },
+                    return createExpense({
+                      variables: {
+                        input: {
+                          ...rest,
+                          amount: Number.parseFloat(amount),
+                          date: new Date(date).toISOString(),
                         },
-                      });
-                    }}
-                    handleInputChange={this.handleInputChange}
-                    paymentMethods={paymentMethods}
-                    types={types}
-                    {...fields}
-                  />
-                </div>
+                      },
+                    });
+                  }}
+                  handleInputChange={this.handleInputChange}
+                  paymentMethods={paymentMethods}
+                  types={types}
+                  {...fields}
+                />
               );
             }}
           </Query>

@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { PaginationControls } from '../../../components/PaginationControls';
-import { ROUTE } from '../../../configs/route';
-import { formatDateForTables } from '../../../utils/formatDateForTables';
-import { Link } from '../../../components/Link';
+import { ROUTE } from '../../../../configs/route';
+import { PaginationControls } from '../../../../components/PaginationControls';
+import { Link } from '../../../../components/Link';
+import { formatDateForTables } from '../../../../utils/formatDateForTables';
 
 const Table = styled.table`
   margin-bottom: 20px;

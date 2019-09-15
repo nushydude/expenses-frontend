@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from '../../../components/Link';
-import { ROUTE } from '../../../configs/route';
+import { Link } from '../../../../components/Link';
+import { ROUTE } from '../../../../configs/route';
 
 export type FormFields = 'type' | 'amount' | 'date' | 'paymentMethod';
 
@@ -12,32 +12,34 @@ const Container = styled.div`
 `;
 
 const FormField = styled.div`
-  display: flex:
-  flex-direction: column;
+  display: flex;
+  flex-direction: row;
   margin-bottom: 16px;
+  // flex-wrap: wrap;
 `;
 
 const Label = styled.label`
-  font: 16px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   margin: 0;
   display: block;
   margin-bottom: 4px;
   user-select: none;
+  width: 70px;
 `;
 
 const Input = styled.input`
-  font: 15px roboto, sans-serif;
-  padding: 8px;
+  font: 12px roboto, sans-serif;
+  padding: 2px 4px;
   margin: 0;
-  width: 100%;
+  flex-grow: 1;
   box-sizing: border-box;
 `;
 
 const TextArea = styled.textarea`
-  font: 15px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
   padding: 8px;
   margin: 0;
-  width: 100%;
+  flex-grow: 1;
   box-sizing: border-box;
 `;
 
@@ -45,7 +47,7 @@ const Button = styled.button`
   margin-right: 8px;
   padding: 4px;
   width: 60px;
-  font: 15px roboto, sans-serif;
+  font: 12px roboto, sans-serif;
 
   :last-child {
     margin-right: 0;
@@ -54,6 +56,19 @@ const Button = styled.button`
 
 const Buttons = styled.div`
   display: flex;
+  justify-content: flex-end;
+`;
+
+const PageTitleContainer = styled.div`
+  display: flex;
+  margin-top: 4px;
+  margin-bottom: 16px;
+`;
+
+const PageTitle = styled.div`
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: bold;
 `;
 
 type Props = {
@@ -91,9 +106,11 @@ export function CreateExpenseForm({
 }: Props) {
   return (
     <Container>
-      <h3>
-        <Link to={ROUTE.EXPENSES}>Expenses</Link> > Adding new expense
-      </h3>
+      <PageTitleContainer>
+        <PageTitle>
+          <Link to={ROUTE.EXPENSES}>Expenses</Link> > Adding new expense
+        </PageTitle>
+      </PageTitleContainer>
       <form
         onSubmit={submit}
         style={{ display: 'flex', flexDirection: 'column' }}
@@ -137,7 +154,7 @@ export function CreateExpenseForm({
         </FormField>
 
         <FormField>
-          <Label>Payment Method</Label>
+          <Label>Source</Label>
           <Input
             onChange={handleInputChange('paymentMethod')}
             onFocus={clearError}

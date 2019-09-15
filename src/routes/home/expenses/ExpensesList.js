@@ -11,10 +11,10 @@ import { PageMenu } from '../../../components/PageMenu';
 import { ROUTE } from '../../../configs/route';
 import { formatDateForTables } from '../../../utils/formatDateForTables';
 import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
-import type { SearchOptions } from './ExpenseSearch';
-import { ExpenseSearch } from './ExpenseSearch';
-import { ExpensesTable } from './ExpensesTable';
-import { ExpensesChart } from './ExpensesChart';
+import { ExpenseSearch } from './components/ExpenseSearch';
+import { ExpensesTable } from './components/ExpensesTable';
+import { ExpensesChart } from './components/ExpensesChart';
+import type { SearchOptions } from './components/ExpenseSearch';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -41,7 +41,7 @@ const Container = styled.div`
 const PageTitleContainer = styled.div`
   display: flex;
   margin-top: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `;
 
 const PageTitle = styled.div`

@@ -26,18 +26,6 @@ const PeriodContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-// const SpecificPeriodContainer = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   margin-right: 20px;
-// `;
-
-// const PresetsContainer = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-// `;
-
 const Input = styled.input`
   font: 12px roboto, sans-serif;
   padding; 4px;
