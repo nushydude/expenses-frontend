@@ -78,7 +78,7 @@ export function ExpensesTable({
         <tbody>
           {expenses.map((expense, idx) => (
             <Tr key={expense.id}>
-              <TdRightAligned>{idx}</TdRightAligned>
+              <TdRightAligned>{idx + 1}</TdRightAligned>
               <Td>
                 <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
                   {formatDateForTables(
