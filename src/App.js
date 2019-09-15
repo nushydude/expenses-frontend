@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import * as Sentry from '@sentry/browser';
 import { ApolloProvider } from 'react-apollo';
 // import { ApolloProvider } from '@apollo/react-hooks';
 import { Provider } from 'react-redux';
@@ -27,11 +26,9 @@ const ContentsWrapper = styled.div`
   padding: 0 20px;
 `;
 
-Sentry.init({ dsn: env.sentryDSN });
-
 function AppComp() {
   return (
-    <div>
+    <>
       <Header />
 
       <ContentsWrapper>
@@ -65,7 +62,7 @@ function AppComp() {
           <Redirect to={ROUTE.LANDING} />
         </Switch>
       </ContentsWrapper>
-    </div>
+    </>
   );
 }
 

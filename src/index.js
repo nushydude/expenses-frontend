@@ -1,11 +1,14 @@
 // @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as Sentry from '@sentry/browser';
 import './assets/fonts/Roboto-Regular.ttf';
 import './index.css';
-import './configs/env';
+import { env } from './configs/env';
 import { App } from './App';
 import * as serviceWorker from './serviceWorker';
+
+Sentry.init({ dsn: env.sentryDSN });
 
 ReactDOM.render(
   <App />,
