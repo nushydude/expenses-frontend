@@ -16,7 +16,6 @@ import { VerifyAccountPage } from './routes/auth/verifyAccount/VerifyAccountPage
 import { LandingPage } from './routes/landing/LandingPage';
 import { HomePage } from './routes/home/HomePage';
 import { Header } from './components/Header';
-// import { Sidebar } from './components/Sidebar';
 import { persistor, store } from './redux/store';
 import { getApolloClient } from './apollo/getApolloClient';
 import { env } from './configs/env';
@@ -29,7 +28,6 @@ const ContentsWrapper = styled.div`
 function AppComp() {
   return (
     <>
-      {/* <Sidebar /> */}
       <Header />
 
       <ContentsWrapper>
