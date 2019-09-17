@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled /* , { css, keyframes } */ from 'styled-components';
 import { MdClose } from 'react-icons/md';
 import { withRouter } from 'react-router-dom';
 import { ROUTE } from '../configs/route';

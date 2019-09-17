@@ -2,7 +2,6 @@
 import invariant from 'invariant';
 import { useQuery } from '@apollo/react-hooks';
 import * as React from 'react';
-import { format } from 'date-fns';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { EditableTextField } from '../../../components/EditableTextField';

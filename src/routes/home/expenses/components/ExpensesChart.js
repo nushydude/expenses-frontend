@@ -25,7 +25,8 @@ const TYPES = {
 };
 
 export function ExpensesChart({ expenses }: Props) {
-  const [type, setType] = React.useState(TYPES.CATEGORY_PIE_CHART);
+  // const [type, setType] = React.useState(TYPES.CATEGORY_PIE_CHART);
+  const type = TYPES.CATEGORY_PIE_CHART;
 
   return (
     <ChartContainer>

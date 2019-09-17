@@ -132,9 +132,10 @@ export function ExpensesList(props: Props) {
     },
   );
 
-  const dataLoading = !error && loading;
-  const expenses = !dataLoading && data.result.expenses;
-  const totalPages = !dataLoading && data.result.totalPages;
+  const result = data && data.result;
+  const dataLoading = loading && !result;
+  const expenses = result && result.expenses;
+  const totalPages = result && result.totalPages;
   const { recordsPerPage, from, to } = searchOptions;
 
   return (
