@@ -38,12 +38,28 @@ const UPDATE_EXPENSE_MUTATION = gql`
   }
 `;
 
+const FormField = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  background: #ddd;
+  align-items: left;
+  flex-grow: 1;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+`;
+
 const Label = styled.label`
-  font: 16px roboto, sans-serif;
+  font: 14px roboto, sans-serif;
   margin: 0;
-  display: block;
-  margin-bottom: 4px;
+  margin-right: 4px;
   user-select: none;
+  width: 120px;
+  white-space: nowrap;
 `;
 
 type Props = {
@@ -116,52 +132,74 @@ export function Expense(props: Props) {
   }
 
   return (
-    <div>
-      <Label>Date</Label>
-      <p>{format(new Date(Number.parseInt(expense.date, 10)), 'yyyy-MM-dd')}</p>
+    <>
+      <FormField>
+        <Label>Date</Label>
+        <EditableTextField
+          mutation={UPDATE_EXPENSE_MUTATION}
+          field="date"
+          value={expense.date}
+          getValue={data =>
+            new Date(getStringValue('date')(data)).toLocaleDateString()
+          }
+          getError={getError}
+          getVariables={getVariables(expenseID, 'date')}
+          type="date"
+          formatValueForDisplay={(value: string) => new Date(value).toLocaleDateString()}
+          formatValueForInput={(value: string) => format(new Date(value), 'yyyy-MM-dd')}
+        />
+      </FormField>
+      {/*
+      <FormField>
+        <Label>Type</Label>
+        <EditableTextField
+          mutation={UPDATE_EXPENSE_MUTATION}
+          field="type"
+          value={expense.type}
+          getValue={getStringValue('type')}
+          getError={getError}
+          getVariables={getVariables(expenseID, 'type')}
+        />
+      </FormField>
 
-      <Label>Type</Label>
-      <EditableTextField
-        mutation={UPDATE_EXPENSE_MUTATION}
-        field="type"
-        value={expense.type}
-        getValue={getStringValue('type')}
-        getError={getError}
-        getVariables={getVariables(expenseID, 'type')}
-      />
+      <FormField>
+        <Label>Amount</Label>
+        <EditableTextField
+          mutation={UPDATE_EXPENSE_MUTATION}
+          field="amount"
+          value={expense.amount}
+          getValue={getStringValue('amount')}
+          getError={getError}
+          getVariables={getVariables(expenseID, 'amount', 'float')}
+          formatValue={(value: string) =>
+            `$ ${Number.parseFloat(value).toFixed(2)}`
+          }
+        />
+      </FormField>
 
-      <Label>Amount</Label>
-      <EditableTextField
-        mutation={UPDATE_EXPENSE_MUTATION}
-        field="amount"
-        value={expense.amount}
-        getValue={getStringValue('amount')}
-        getError={getError}
-        getVariables={getVariables(expenseID, 'amount', 'float')}
-        formatValue={(value: string) =>
-          `$ ${Number.parseFloat(value).toFixed(2)}`
-        }
-      />
+      <FormField>
+        <Label>Payment Method</Label>
+        <EditableTextField
+          mutation={UPDATE_EXPENSE_MUTATION}
+          field="paymentMethod"
+          value={expense.paymentMethod}
+          getValue={getStringValue('paymentMethod')}
+          getError={getError}
+          getVariables={getVariables(expenseID, 'paymentMethod')}
+        />
+      </FormField>
 
-      <Label>Payment Method</Label>
-      <EditableTextField
-        mutation={UPDATE_EXPENSE_MUTATION}
-        field="paymentMethod"
-        value={expense.paymentMethod}
-        getValue={getStringValue('paymentMethod')}
-        getError={getError}
-        getVariables={getVariables(expenseID, 'paymentMethod')}
-      />
-
-      <Label>Notes</Label>
-      <EditableTextField
-        mutation={UPDATE_EXPENSE_MUTATION}
-        field="notes"
-        value={expense.notes}
-        getValue={getStringValue('notes')}
-        getError={getError}
-        getVariables={getVariables(expenseID, 'notes')}
-      />
-    </div>
+      <FormField>
+        <Label>Notes</Label>
+        <EditableTextField
+          mutation={UPDATE_EXPENSE_MUTATION}
+          field="notes"
+          value={expense.notes}
+          getValue={getStringValue('notes')}
+          getError={getError}
+          getVariables={getVariables(expenseID, 'notes')}
+        />
+      </FormField> */}
+    </>
   );
 }

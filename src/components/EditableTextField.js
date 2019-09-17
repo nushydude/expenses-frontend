@@ -2,31 +2,30 @@
 import * as React from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components';
+import { MdModeEdit, MdSave, MdCancel } from 'react-icons/md';
 
 const Container = styled.div`
   display: flex;
   flexdirection: row;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
   height: 50px;
-`;
-
-const Content = styled.div`
-  flex: 80;
-  padding-right: 20px;
+  flex-grow: 1;
+  background: #aaa;
 `;
 
 const ControlBox = styled.div`
-  flex: 20;
+  width: 50px;
   display: flex;
   justify-content: flex-end;
+  background: #999;
 `;
 
 const ValueBox = styled.p`
   font: 15px roboto, sans-serif;
   margin: 0;
   padding: 4px;
+  display: block;
 `;
 
 const Input = styled.input`
@@ -34,21 +33,15 @@ const Input = styled.input`
   padding; 4px;
   padding-left: 2px;
   margin: 0;
-  width: 100%;
   box-sizing: border-box;
-`;
-
-const Button = styled.button`
-  margin-left: 4px;
-  padding: 4px;
-  width: 60px;
-  font: 15px roboto, sans-serif;
+  flex-grow: 1;
 `;
 
 type Props = {
   value: string,
   mutation: any,
   field: string,
+  type?: 'text' | 'date' | 'password' | 'email',
   getValue: (data: TData) => string,
   getError: (data: TData) => Error,
   getVariables: (value: string) => any,
@@ -58,7 +51,12 @@ type Props = {
 export function EditableTextField<TData, TVariables>(props: Props) {
   const [editing, setEditing] = React.useState<boolean>(false);
   const [originalValue, setOriginalValue] = React.useState<string>(props.value);
-  const [value, setValue] = React.useState<string>(props.value);
+  const [inputValue, setInputValue] = React.useState<string>(
+    props.formatValueForInput(props.value),
+  );
+  const [displayValue, setDisplayValue] = React.useState<string>(
+    props.formatValueForDisplay(props.value),
+  );
   const [error, setError] = React.useState<?Error>(null);
 
   const [save, { loading }] = useMutation<TData, TVariables>(props.mutation, {
@@ -72,70 +70,79 @@ export function EditableTextField<TData, TVariables>(props: Props) {
       const value = props.getValue(data);
 
       setOriginalValue(value);
+
       setEditing(false);
+
+      setInputValue(props.formatValueForInput(value));
+      setDisplayValue(props.formatValueForDisplay(value));
     },
     onError: (error: Error) => {
       setError(error);
     },
   });
 
+  console.log('inputValue:', inputValue);
+  console.log('displayValue:', displayValue);
+
   return (
-    <div>
+    <>
       <Container>
         {editing && (
           <>
-            <Content>
-              <Input
-                type="text"
-                value={value}
-                onChange={e => setValue(e.target.value)}
-                onFocus={() => setError(null)}
-              />
-            </Content>
+            <Input
+              type={props.type}
+              value={inputValue}
+              onChange={e => {
+                const { value } = e.target;
+
+                setInputValue(value);
+                setDisplayValue(props.formatValueForDisplay(value));
+              }}
+              onFocus={() => setError(null)}
+            />
             <ControlBox>
-              <Button
-                onClick={e => save({ variables: props.getVariables(value) })}
+              <MdSave
+                size={24}
+                onClick={e =>
+                  save({ variables: props.getVariables(inputValue) })
+                }
                 disabled={loading}
-              >
-                Save
-              </Button>
-              <Button
+              />
+              <MdCancel
+                size={24}
                 onClick={() => {
                   setEditing(false);
                   // reset the value
-                  setValue(props.value);
+                  setInputValue(props.formatValueForInput(originalValue));
+                  setDisplayValue(props.formatValueForDisplay(originalValue));
                   setError(null);
                 }}
                 disabled={loading}
-              >
-                Cancel
-              </Button>
+              />
             </ControlBox>
           </>
         )}
         {!editing && (
           <>
-            <Content>
-              <ValueBox>{props.formatValue(originalValue)}</ValueBox>
-            </Content>
+            <ValueBox>{displayValue}</ValueBox>
             <ControlBox>
-              <Button
+              <MdModeEdit
+                size={24}
                 onClick={() => {
                   setEditing(true);
-                  setValue(originalValue);
                 }}
-              >
-                Modify
-              </Button>
+              />
             </ControlBox>
           </>
         )}
       </Container>
       {error && <p>Error: {error.message}</p>}
-    </div>
+    </>
   );
 }
 
 EditableTextField.defaultProps = {
-  formatValue: (value: string) => value,
+  formatValueForDisplay: (value: string) => value,
+  formatValueForInput: (value: string) => value,
+  type: 'text',
 };

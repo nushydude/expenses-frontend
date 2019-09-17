@@ -15,7 +15,7 @@ const FormField = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 16px;
-  // flex-wrap: wrap;
+  flex-wrap: wrap;
 `;
 
 const Label = styled.label`
