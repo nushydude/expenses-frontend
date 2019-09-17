@@ -1,10 +1,10 @@
 // @flow
+import { format } from 'date-fns';
 import * as React from 'react';
 import styled from 'styled-components';
 import { ROUTE } from '../../../../configs/route';
 import { PaginationControls } from '../../../../components/PaginationControls';
 import { Link } from '../../../../components/Link';
-import { formatDateForTables } from '../../../../utils/formatDateForTables';
 
 const Table = styled.table`
   margin-bottom: 20px;
@@ -47,7 +47,7 @@ const TableContainer = styled.div`
 type Props = {
   expenses: Array<{
     amount: number,
-    date: string,
+    date: Date,
     id: string,
     paymentMethod: string,
     type: string,
@@ -81,9 +81,7 @@ export function ExpensesTable({
               <TdRightAligned>{idx + 1}</TdRightAligned>
               <Td>
                 <Link to={ROUTE.EXPENSE.replace(':id', expense.id)}>
-                  {formatDateForTables(
-                    new Date(Number.parseInt(expense.date, 10)),
-                  )}
+                  {format(new Date(expense.date), 'yyyy-MM-dd')}
                 </Link>
               </Td>
               <Td>{expense.type}</Td>

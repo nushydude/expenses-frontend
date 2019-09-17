@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { EditableTextField } from '../../../components/EditableTextField';
+import { EditableDateField } from '../../../components/EditableDateField';
 
 const EXPENSE_QUERY = gql`
   query WEBAPP_GetExpense($input: GetExpenseInput!) {
@@ -43,9 +44,9 @@ const FormField = styled.div`
   flex-direction: column;
   margin-bottom: 16px;
   flex-wrap: wrap;
-  background: #ddd;
   align-items: left;
   flex-grow: 1;
+  border-bottom: 1px solid #eee;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -55,6 +56,7 @@ const FormField = styled.div`
 
 const Label = styled.label`
   font: 14px roboto, sans-serif;
+  font-weight: bold;
   margin: 0;
   margin-right: 4px;
   user-select: none;
@@ -135,21 +137,16 @@ export function Expense(props: Props) {
     <>
       <FormField>
         <Label>Date</Label>
-        <EditableTextField
+        <EditableDateField
           mutation={UPDATE_EXPENSE_MUTATION}
           field="date"
           value={expense.date}
-          getValue={data =>
-            new Date(getStringValue('date')(data)).toLocaleDateString()
-          }
+          getValue={data => new Date(getStringValue('date')(data))}
           getError={getError}
           getVariables={getVariables(expenseID, 'date')}
-          type="date"
-          formatValueForDisplay={(value: string) => new Date(value).toLocaleDateString()}
-          formatValueForInput={(value: string) => format(new Date(value), 'yyyy-MM-dd')}
         />
       </FormField>
-      {/*
+
       <FormField>
         <Label>Type</Label>
         <EditableTextField
@@ -171,9 +168,6 @@ export function Expense(props: Props) {
           getValue={getStringValue('amount')}
           getError={getError}
           getVariables={getVariables(expenseID, 'amount', 'float')}
-          formatValue={(value: string) =>
-            `$ ${Number.parseFloat(value).toFixed(2)}`
-          }
         />
       </FormField>
 
@@ -199,7 +193,7 @@ export function Expense(props: Props) {
           getError={getError}
           getVariables={getVariables(expenseID, 'notes')}
         />
-      </FormField> */}
+      </FormField>
     </>
   );
 }

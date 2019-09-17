@@ -22,7 +22,10 @@ import { env } from './configs/env';
 import styled from 'styled-components';
 
 const ContentsWrapper = styled.div`
-  padding: 0 20px;
+  max-width: 960px;
+  min-width: 300px;
+  margin: 0 auto;
+  padding: 0 10px;
 `;
 
 function AppComp() {
