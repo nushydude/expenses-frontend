@@ -11,10 +11,10 @@ import { PageMenu } from '../../../components/PageMenu';
 import { ROUTE } from '../../../configs/route';
 import { formatDateForTables } from '../../../utils/formatDateForTables';
 import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
-import { ExpenseSearch } from './components/ExpenseSearch';
-import { ExpensesTable } from './components/ExpensesTable';
-import { ExpensesChart } from './components/ExpensesChart';
-import type { SearchOptions } from './components/ExpenseSearch';
+import { IncomeSearch } from './components/IncomeSearch';
+import { IncomesTable } from './components/IncomesTable';
+import { IncomesChart } from './components/IncomesChart';
+import type { SearchOptions } from './components/IncomeSearch';
 
 const GET_EXPENSES_QUERY = gql`
   query EXPENSES_GetExpenses($input: GetExpensesInput!) {
@@ -111,7 +111,7 @@ function getDefaultSearchOptions() {
 
 const menuIconStyle = { marginRight: '4px' };
 
-export function ExpensesList(props: Props) {
+export function IncomesList(props: Props) {
   const [searchOptions, setSearchOptions] = React.useState<SearchOptions>(
     getDefaultSearchOptions(),
   );
@@ -176,7 +176,7 @@ export function ExpensesList(props: Props) {
       </PageTitleContainer>
 
       {showFilter && (
-        <ExpenseSearch
+        <IncomeSearch
           updateOptions={setSearchOptions}
           reset={() => setSearchOptions(getDefaultSearchOptions())}
           loading={dataLoading}
@@ -203,7 +203,7 @@ export function ExpensesList(props: Props) {
       )}
 
       {expenses && expenses.length > 0 && table && (
-        <ExpensesTable
+        <IncomesTable
           expenses={expenses}
           pageNumber={pageNumber}
           totalPages={totalPages}
@@ -212,7 +212,7 @@ export function ExpensesList(props: Props) {
       )}
 
       {expenses && expenses.length > 0 && !table && (
-        <ExpensesChart expenses={expenses} />
+        <IncomesChart expenses={expenses} />
       )}
     </Container>
   );

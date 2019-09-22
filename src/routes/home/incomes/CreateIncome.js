@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
-import { CreateExpenseForm } from './components/CreateExpenseForm';
+import { CreateIncomeForm } from './components/CreateIncomeForm';
 import { ROUTE } from '../../../configs/route';
 
 const EXPENSE_CREATE_MUTATION = gql`
@@ -55,7 +55,7 @@ type Data = {
   },
 };
 
-export class CreateExpense extends React.Component<Props, State> {
+export class CreateIncome extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -122,7 +122,7 @@ export class CreateExpense extends React.Component<Props, State> {
               }
 
               return (
-                <CreateExpenseForm
+                <CreateIncomeForm
                   cancel={history.goBack}
                   clearError={this.clearError}
                   error={error}

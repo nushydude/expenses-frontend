@@ -65,6 +65,15 @@ function SidebarComp({ open, close, history }: Props) {
 
       <SidebarButton
         onClick={() => {
+          history.push(ROUTE.DASHBOARD);
+          close();
+        }}
+      >
+        Dashboard
+      </SidebarButton>
+
+      <SidebarButton
+        onClick={() => {
           history.push(ROUTE.EXPENSES);
           close();
         }}
@@ -72,7 +81,14 @@ function SidebarComp({ open, close, history }: Props) {
         Expenses
       </SidebarButton>
 
-      <SidebarButton>Incomes</SidebarButton>
+      <SidebarButton
+        onClick={() => {
+          history.push(ROUTE.INCOMES);
+          close();
+        }}
+      >
+        Incomes
+      </SidebarButton>
     </Container>
   );
 }

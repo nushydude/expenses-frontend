@@ -26,7 +26,7 @@ const TYPES = {
   CATEGORY_PIE_CHART: 0,
 };
 
-export function ExpensesChart({ expenses }: Props) {
+export function IncomesChart({ expenses }: Props) {
   // const [type, setType] = React.useState(TYPES.CATEGORY_PIE_CHART);
   const type = TYPES.CATEGORY_PIE_CHART;
 
