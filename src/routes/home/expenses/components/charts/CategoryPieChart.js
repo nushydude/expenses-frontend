@@ -1,25 +1,6 @@
 // @flow
 import * as React from 'react';
-import {
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
-import styled from 'styled-components';
 import { ResponsivePie } from '@nivo/pie';
-
-const CustomToolTipContainer = styled.div`
-  padding: 8px;
-  background: #444;
-  border-radius: 4px;
-  color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-`;
-
-const COLORS = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600'];
 
 type Props = {
   expenses: Array<any>,
