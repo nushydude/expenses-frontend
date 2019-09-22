@@ -21,11 +21,11 @@ const GET_EXPENSES_QUERY = gql`
     result: getExpenses(input: $input) {
       expenses {
         amount
+        category
         date
         id
         notes
-        paymentMethod
-        type
+        source
       }
       totalPages
       totalRecordsCount
@@ -79,8 +79,8 @@ type Data = {
       amount: number,
       date: string,
       id: string,
-      paymentMethod: string,
-      type: string,
+      source: string,
+      category: string,
     }>,
     totalPages: number,
     totalRecordsCount: number,
@@ -120,7 +120,7 @@ export function ExpensesList(props: Props) {
   const [showFilter, setShowFilter] = React.useState<boolean>(false);
 
   const input = {
-    ...pick(['from', 'to', 'paymentMethods', 'types'], searchOptions),
+    ...pick(['from', 'to', 'sources', 'categories'], searchOptions),
     pageNumber,
   };
 

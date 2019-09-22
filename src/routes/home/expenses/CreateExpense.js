@@ -24,8 +24,8 @@ const GET_CURRENT_USER_QUERY = gql`
   query EXPENSES_GetCurrentUser {
     result: getCurrentUser(input: {}) {
       id
-      paymentMethods
-      types
+      sources
+      categories
     }
   }
 `;
@@ -38,7 +38,7 @@ type State = {
   type: string,
   amount: number,
   date: string,
-  paymentMethod: string,
+  source: string,
   notes: string,
   error: ?string,
   success: boolean,
@@ -60,10 +60,10 @@ export class CreateExpense extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      type: '',
+      category: '',
       amount: 0,
       date: format(new Date(), 'yyyy-MM-dd'),
-      paymentMethod: '',
+      source: '',
       notes: '',
       error: null,
       success: false,
@@ -113,12 +113,12 @@ export class CreateExpense extends React.Component<Props, State> {
           <Query query={GET_CURRENT_USER_QUERY} fetchPolicy="cache-and-network">
             {({ data = {} }) => {
               const { result } = data;
-              let paymentMethods = [];
-              let types = [];
+              let sources = [];
+              let categories = [];
 
               if (result) {
-                paymentMethods = result.paymentMethods;
-                types = result.types;
+                sources = result.sources;
+                categories = result.categories;
               }
 
               return (
@@ -143,8 +143,8 @@ export class CreateExpense extends React.Component<Props, State> {
                     });
                   }}
                   handleInputChange={this.handleInputChange}
-                  paymentMethods={paymentMethods}
-                  types={types}
+                  sources={sources}
+                  categories={categories}
                   {...fields}
                 />
               );

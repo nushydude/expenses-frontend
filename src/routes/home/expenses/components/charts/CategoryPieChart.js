@@ -28,7 +28,7 @@ type Props = {
 export function CategoryPieChart({ expenses, height, width }: Props) {
   const dataObj = expenses.reduce((accum, expense) => {
     // eslint-disable-next-line no-param-reassign
-    accum[expense.type] = (accum[expense.type] || 0) + expense.amount;
+    accum[expense.category] = (accum[expense.category] || 0) + expense.amount;
 
     return accum;
   }, {});

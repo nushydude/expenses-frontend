@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from '../../../../components/Link';
 import { ROUTE } from '../../../../configs/route';
 
-export type FormFields = 'type' | 'amount' | 'date' | 'paymentMethod';
+export type FormFields = 'category' | 'amount' | 'date' | 'source';
 
 const Container = styled.div`
   display: flex;
@@ -80,13 +80,13 @@ type Props = {
   ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
-  type: string,
-  types?: Array<string>,
+  category: string,
+  categories?: Array<string>,
   amount: number,
   notes: string,
   date: string,
-  paymentMethod: string,
-  paymentMethods?: Array<string>,
+  source: string,
+  sources?: Array<string>,
 };
 
 export function CreateExpenseForm({
@@ -95,12 +95,12 @@ export function CreateExpenseForm({
   isBusy,
   handleInputChange,
   submit,
-  type,
-  types,
+  category,
+  categories,
   amount,
   date,
-  paymentMethod,
-  paymentMethods,
+  source,
+  sources,
   notes,
   cancel,
 }: Props) {
@@ -126,16 +126,16 @@ export function CreateExpenseForm({
         </FormField>
 
         <FormField>
-          <Label>Type</Label>
+          <Label>Category</Label>
           <Input
-            onChange={handleInputChange('type')}
+            onChange={handleInputChange('category')}
             onFocus={clearError}
             type="text"
-            value={type}
-            list="types"
+            value={category}
+            list="categories"
           />
-          <datalist id="types">
-            {types.map(t => (
+          <datalist id="categories">
+            {categories.map(t => (
               // eslint-disable-next-line jsx-a11y/control-has-associated-label
               <option value={t} />
             ))}
@@ -156,14 +156,14 @@ export function CreateExpenseForm({
         <FormField>
           <Label>Source</Label>
           <Input
-            onChange={handleInputChange('paymentMethod')}
+            onChange={handleInputChange('source')}
             onFocus={clearError}
             type="text"
-            value={paymentMethod}
-            list="paymentMethods"
+            value={source}
+            list="sources"
           />
-          <datalist id="paymentMethods">
-            {paymentMethods.map(t => (
+          <datalist id="sources">
+            {sources.map(t => (
               // eslint-disable-next-line jsx-a11y/control-has-associated-label
               <option value={t} />
             ))}
@@ -195,6 +195,6 @@ export function CreateExpenseForm({
 }
 
 CreateExpenseForm.defaultProps = {
-  paymentMethods: [],
-  types: [],
+  sources: [],
+  categories: [],
 };
