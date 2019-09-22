@@ -49,8 +49,8 @@ type Props = {
     amount: number,
     date: Date,
     id: string,
-    paymentMethod: string,
-    type: string,
+    source: string,
+    category: string,
   }>,
   pageNumber: number,
   totalPages: number,
@@ -70,7 +70,7 @@ export function ExpensesTable({
           <tr>
             <Th>#</Th>
             <Th>Date</Th>
-            <Th>Type</Th>
+            <Th>Category</Th>
             <Th>Source</Th>
             <ThRightAligned>Amount</ThRightAligned>
           </tr>
@@ -84,8 +84,8 @@ export function ExpensesTable({
                   {format(new Date(expense.date), 'yyyy-MM-dd')}
                 </Link>
               </Td>
-              <Td>{expense.type}</Td>
-              <Td>{expense.paymentMethod}</Td>
+              <Td>{expense.category}</Td>
+              <Td>{expense.source}</Td>
               <TdRightAligned>
                 ${Number.parseFloat(expense.amount).toFixed(2)}
               </TdRightAligned>

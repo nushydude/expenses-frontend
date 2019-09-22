@@ -79,8 +79,8 @@ const Button = styled.button`
 export type SearchOptions = {
   from?: string,
   to?: string,
-  paymentMethods?: Array<string>,
-  types?: Array<string>,
+  sources?: Array<string>,
+  categories?: Array<string>,
   recordsPerPage?: number,
 };
 

@@ -8,8 +8,8 @@ type Props = {
     amount: number,
     date: string,
     id: string,
-    paymentMethod: string,
-    type: string,
+    source: string,
+    category: string,
   }>,
 };
 
