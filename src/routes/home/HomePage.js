@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import { CreateExpense } from './expenses/CreateExpense';
-import { Expense } from './expenses/Expense';
 import { CashFlows } from './expenses/CashFlows';
+import { CashFlow } from './expenses/CashFlow';
 import { CreateIncome } from './incomes/CreateIncome';
 import { Income } from './incomes/Income';
 import { IncomesList } from './incomes/IncomesList';
@@ -18,7 +18,7 @@ export function HomePage() {
         <Route exact path={ROUTE.DASHBOARD} component={Dashboard} />
 
         <Route exact path={ROUTE.EXPENSE_CREATE} component={CreateExpense} />
-        <Route exact path={ROUTE.EXPENSE} component={Expense} />
+        <Route exact path={ROUTE.EXPENSE} component={CashFlow} />
         <Route
           exact
           path={ROUTE.EXPENSES}

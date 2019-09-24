@@ -25,6 +25,7 @@ const GET_CASHFLOWS_QUERY = gql`
         id
         notes
         source
+        type
       }
       totalPages
       totalRecordsCount
