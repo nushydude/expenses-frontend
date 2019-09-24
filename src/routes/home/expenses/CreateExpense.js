@@ -8,9 +8,9 @@ import { CreateExpenseForm } from './components/CreateExpenseForm';
 import { ROUTE } from '../../../configs/route';
 
 const EXPENSE_CREATE_MUTATION = gql`
-  mutation EXPENSES_CreateExpense($input: CreateExpenseInput!) {
-    result: createExpense(input: $input) {
-      expense {
+  mutation EXPENSES_CreateCashFlow($input: CreateCashFlowInput!) {
+    result: createCashFlow(input: $input) {
+      cashFlow {
         id
       }
       error {
@@ -131,16 +131,16 @@ export class CreateExpense extends React.Component<Props, State> {
                     e.preventDefault();
 
                     const { amount, date, ...rest } = fields;
-
-                    return createExpense({
-                      variables: {
-                        input: {
-                          ...rest,
-                          amount: Number.parseFloat(amount),
-                          date: new Date(date).toISOString(),
-                        },
+                    const variables = {
+                      input: {
+                        ...rest,
+                        amount: Number.parseFloat(amount),
+                        date: new Date(date).toISOString(),
+                        type: 'EXPENSE',
                       },
-                    });
+                    };
+
+                    return createExpense({ variables });
                   }}
                   handleInputChange={this.handleInputChange}
                   sources={sources}
