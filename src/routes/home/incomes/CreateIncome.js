@@ -110,7 +110,7 @@ export class CreateIncome extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(createExpense, { loading }) => (
-          <Query query={GET_CURRENT_USER_QUERY} fetchPolicy="cache-and-network">
+          <Query query={GET_CURRENT_USER_QUERY}>
             {({ data = {} }) => {
               const { result } = data;
               let sources = [];

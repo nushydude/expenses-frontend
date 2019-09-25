@@ -105,8 +105,8 @@ export function CashFlows(props: Props) {
     getDefaultSearchOptions(),
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
-  const [table, setTable] = React.useState<boolean>(true);
   const [showFilter, setShowFilter] = React.useState<boolean>(false);
+  const [table, setTable] = React.useState<boolean>(true);
 
   const input = {
     ...pick(['from', 'to', 'sources', 'categories'], searchOptions),
@@ -118,7 +118,6 @@ export function CashFlows(props: Props) {
     GET_CASHFLOWS_QUERY,
     {
       variables: { input },
-      fetchPolicy: 'network-only',
     },
   );
 

@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from '../../../../components/Link';
-import { ROUTE } from '../../../../configs/route';
+import { Link } from '../../../components/Link';
+import { ROUTE } from '../../../configs/route';
 
 export type FormFields = 'category' | 'amount' | 'date' | 'source';
 
@@ -87,9 +87,10 @@ type Props = {
   date: string,
   source: string,
   sources?: Array<string>,
+  type: 'EXPENSE' | 'INCOME',
 };
 
-export function CreateExpenseForm({
+export function CreateCashFlowForm({
   clearError,
   error,
   isBusy,
@@ -103,12 +104,16 @@ export function CreateExpenseForm({
   sources,
   notes,
   cancel,
+  type,
 }: Props) {
   return (
     <Container>
       <PageTitleContainer>
         <PageTitle>
-          <Link to={ROUTE.EXPENSES}>Expenses</Link> > Adding new expense
+          <Link to={type === 'EXPENSE' ? ROUTE.EXPENSES : ROUTE.INCOMES}>
+            {type === 'EXPENSE' ? 'Expenses' : 'Income'}
+          </Link>{' '}
+          > Adding new {type === 'EXPENSE' ? 'Expense' : 'Income'}
         </PageTitle>
       </PageTitleContainer>
       <form
@@ -194,7 +199,7 @@ export function CreateExpenseForm({
   );
 }
 
-CreateExpenseForm.defaultProps = {
+CreateCashFlowForm.defaultProps = {
   sources: [],
   categories: [],
 };

@@ -128,7 +128,6 @@ export function IncomesList(props: Props) {
     GET_EXPENSES_QUERY,
     {
       variables: { input },
-      fetchPolicy: 'network-only',
     },
   );
 

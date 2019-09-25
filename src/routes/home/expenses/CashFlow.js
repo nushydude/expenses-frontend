@@ -111,12 +111,10 @@ const getVariables = (
 
 export function CashFlow(props: Props) {
   const cashFlowID = props.match.params.id || '-1';
+  const variables = { input: { cashFlowID } };
 
   const { loading, error, data } = useQuery(CASHFLOW_QUERY, {
-    variables: {
-      input: { cashFlowID },
-    },
-    fetchPolicy: 'cache-and-network',
+    variables,
   });
 
   if (error) {

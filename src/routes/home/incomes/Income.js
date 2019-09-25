@@ -115,7 +115,6 @@ export function Income(props: Props) {
     variables: {
       input: { expenseID },
     },
-    fetchPolicy: 'cache-and-network',
   });
 
   if (error) {
