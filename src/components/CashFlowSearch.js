@@ -76,6 +76,16 @@ const Button = styled.button`
   }
 `;
 
+const CloseButton = styled.button`
+  position: absolute;
+  right: 4px;
+  top: 4px;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+`;
+
 export type SearchOptions = {
   from?: string,
   to?: string,
@@ -90,6 +100,7 @@ type Props = {
   reset: () => void,
   to: string,
   updateOptions: (options: SearchOptions) => void,
+  close: () => void,
 };
 
 const PRESETS = {
@@ -159,43 +170,51 @@ export function CashFlowSearch(props: Props) {
   };
 
   return (
-    <Container>
-      <PeriodContainer>
-        <FormField>
-          <Label>From</Label>
-          <Input
-            type="date"
-            value={from}
-            onChange={e => setFrom(e.target.value)}
-          />
-        </FormField>
+    <Wrapper>
+      <Container>
+        <PeriodContainer>
+          <FormField>
+            <Label>From</Label>
+            <Input
+              type="date"
+              value={from}
+              onChange={e => setFrom(e.target.value)}
+            />
+          </FormField>
 
-        <FormField>
-          <Label>To</Label>
-          <Input type="date" value={to} onChange={e => setTo(e.target.value)} />
-        </FormField>
-        <FormField>
-          <Label>Date Range</Label>
-          <Select onChange={e => setPresetDateRange(e.target.value)}>
-            <option value={PRESETS.THIS_MONTH}>This Month</option>
-            <option value={PRESETS.LAST_MONTH}>Last Month</option>
-            <option value={PRESETS.THIS_YEAR}>This Year</option>
-            <option value={PRESETS.LAST_YEAR}>Last Year</option>
-          </Select>
-        </FormField>
-      </PeriodContainer>
+          <FormField>
+            <Label>To</Label>
+            <Input
+              type="date"
+              value={to}
+              onChange={e => setTo(e.target.value)}
+            />
+          </FormField>
+          <FormField>
+            <Label>Date Range</Label>
+            <Select onChange={e => setPresetDateRange(e.target.value)}>
+              <option value={PRESETS.THIS_MONTH}>This Month</option>
+              <option value={PRESETS.LAST_MONTH}>Last Month</option>
+              <option value={PRESETS.THIS_YEAR}>This Year</option>
+              <option value={PRESETS.LAST_YEAR}>Last Year</option>
+            </Select>
+          </FormField>
+        </PeriodContainer>
 
-      <div>
-        <Button
-          disabled={props.loading || to === '' || from === ''}
-          onClick={search}
-        >
-          <MdSearch size={12} />
-        </Button>
-        <Button disabled={props.loading} onClick={props.reset}>
-          <MdRefresh size={12} />
-        </Button>
-      </div>
-    </Container>
+        <div>
+          <Button
+            disabled={props.loading || to === '' || from === ''}
+            onClick={search}
+          >
+            <MdSearch size={12} />
+          </Button>
+          <Button disabled={props.loading} onClick={props.reset}>
+            <MdRefresh size={12} />
+          </Button>
+        </div>
+      </Container>
+
+      <CloseButton onClick={props.close}>X</CloseButton>
+    </Wrapper>
   );
 }

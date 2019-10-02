@@ -105,7 +105,7 @@ export function CashFlows(props: Props) {
     getDefaultSearchOptions(),
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
-  const [showFilter, setShowFilter] = React.useState<boolean>(false);
+  const [showFilter, setShowFilter] = React.useState<boolean>(true);
   const [table, setTable] = React.useState<boolean>(true);
 
   const input = {
@@ -179,6 +179,7 @@ export function CashFlows(props: Props) {
           to={formatDateForTables(new Date(to))}
           from={formatDateForTables(new Date(from))}
           recordsPerPage={recordsPerPage}
+          close={() => setShowFilter(false)}
         />
       )}
 
