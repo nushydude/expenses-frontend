@@ -4,8 +4,8 @@ import { useQuery } from '@apollo/react-hooks';
 import * as React from 'react';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
-import { EditableTextField } from '../../../components/EditableTextField';
-import { EditableDateField } from '../../../components/EditableDateField';
+import { EditableTextField } from './EditableTextField';
+import { EditableDateField } from './EditableDateField';
 
 const CASHFLOW_QUERY = gql`
   query WEBAPP_GetCashFlow($input: GetCashFlowInput!) {
@@ -65,11 +65,7 @@ const Label = styled.label`
 `;
 
 type Props = {
-  match: {
-    params: {
-      id?: string,
-    },
-  },
+  id: string,
 };
 
 const getError = data => {
@@ -109,9 +105,8 @@ const getVariables = (
   };
 };
 
-export function CashFlow(props: Props) {
-  const cashFlowID = props.match.params.id || '-1';
-  const variables = { input: { cashFlowID } };
+export function CashFlow({ id }: Props) {
+  const variables = { input: { cashFlowID: id } };
 
   const { loading, error, data } = useQuery(CASHFLOW_QUERY, {
     variables,
@@ -141,7 +136,7 @@ export function CashFlow(props: Props) {
           value={cashFlow.date}
           getValue={data => new Date(getStringValue('date')(data))}
           getError={getError}
-          getVariables={getVariables(cashFlowID, 'date')}
+          getVariables={getVariables(id, 'date')}
         />
       </FormField>
 
@@ -153,7 +148,7 @@ export function CashFlow(props: Props) {
           value={cashFlow.category}
           getValue={getStringValue('category')}
           getError={getError}
-          getVariables={getVariables(cashFlowID, 'category')}
+          getVariables={getVariables(id, 'category')}
         />
       </FormField>
 
@@ -165,7 +160,7 @@ export function CashFlow(props: Props) {
           value={cashFlow.amount}
           getValue={getStringValue('amount')}
           getError={getError}
-          getVariables={getVariables(cashFlowID, 'amount', 'float')}
+          getVariables={getVariables(id, 'amount', 'float')}
         />
       </FormField>
 
@@ -177,7 +172,7 @@ export function CashFlow(props: Props) {
           value={cashFlow.source}
           getValue={getStringValue('source')}
           getError={getError}
-          getVariables={getVariables(cashFlowID, 'source')}
+          getVariables={getVariables(id, 'source')}
         />
       </FormField>
 
@@ -189,7 +184,7 @@ export function CashFlow(props: Props) {
           value={cashFlow.notes}
           getValue={getStringValue('notes')}
           getError={getError}
-          getVariables={getVariables(cashFlowID, 'notes')}
+          getVariables={getVariables(id, 'notes')}
         />
       </FormField>
     </>

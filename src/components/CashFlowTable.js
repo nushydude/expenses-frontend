@@ -51,6 +51,7 @@ type Props = {
     id: string,
     source: string,
     category: string,
+    type: string,
   }>,
   pageNumber: number,
   totalPages: number,
@@ -91,9 +92,7 @@ export function CashFlowTable({
               </Td>
               <Td>{cashFlow.category}</Td>
               <Td>{cashFlow.source}</Td>
-              <TdRightAligned>
-                ${Number.parseFloat(cashFlow.amount).toFixed(2)}
-              </TdRightAligned>
+              <TdRightAligned>${cashFlow.amount.toFixed(2)}</TdRightAligned>
             </Tr>
           ))}
         </tbody>

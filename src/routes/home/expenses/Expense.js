@@ -8,11 +8,11 @@ import { ROUTE } from '../../../configs/route';
 
 type Props = ContextRouter;
 
-export function Income({ match }: Props) {
+export function Expense({ match }: Props) {
   const id = match.params.id || '';
 
   if (!isMongoId(id)) {
-    return <Redirect to={ROUTE.INCOMES} />;
+    return <Redirect to={ROUTE.EXPENSES} />;
   }
 
   return <CashFlow id={id} />;

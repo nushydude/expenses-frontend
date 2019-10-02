@@ -6,7 +6,7 @@ type Props = {
   expenses: Array<any>,
 };
 
-export function CategoryPieChart({ expenses, height, width }: Props) {
+export function CategoryPieChart({ expenses }: Props) {
   const dataObj = expenses.reduce((accum, expense) => {
     // eslint-disable-next-line no-param-reassign
     accum[expense.category] = (accum[expense.category] || 0) + expense.amount;

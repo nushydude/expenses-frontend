@@ -6,11 +6,11 @@ import { ROUTE } from '../../../configs/route';
 
 type Props = ContextRouter;
 
-export function CreateIncome({ history }: Props) {
+export function CreateExpense({ history }: Props) {
   return (
     <CreateCashFlow
-      type="INCOME"
-      onSuccess={() => history.push(ROUTE.INCOMES)}
+      type="EXPENSE"
+      onSuccess={() => history.push(ROUTE.EXPENSES)}
       onCancel={() => history.goBack()}
     />
   );

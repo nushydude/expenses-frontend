@@ -39,19 +39,19 @@ type Props = {
   value: string,
   mutation: any,
   field: string,
-  getValue: (data: TData) => string,
-  getError: (data: TData) => Error,
+  getValue: (data: any) => string,
+  getError: (data: any) => ?Error,
   getVariables: (value: string) => any,
 };
 
-export function EditableTextField<TData, TVariables>(props: Props) {
+export function EditableTextField(props: Props) {
   const [editing, setEditing] = React.useState<boolean>(false);
   const [originalValue, setOriginalValue] = React.useState<string>(props.value);
   const [value, setValue] = React.useState<string>(props.value);
   const [error, setError] = React.useState<?Error>(null);
 
-  const [save, { loading }] = useMutation<TData, TVariables>(props.mutation, {
-    onCompleted: (data: TData) => {
+  const [save, { loading }] = useMutation(props.mutation, {
+    onCompleted: data => {
       const error = props.getError(data);
 
       if (error) {
@@ -75,7 +75,7 @@ export function EditableTextField<TData, TVariables>(props: Props) {
         {editing && (
           <>
             <Input
-              type={props.type}
+              type="text"
               value={value}
               onChange={e => setValue(e.target.value)}
               onFocus={() => setError(null)}

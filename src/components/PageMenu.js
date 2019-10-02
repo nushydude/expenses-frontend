@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { MdMoreVert, MdClose } from 'react-icons/md';
 
 type Props = {
-  children: React.ReactNode,
+  children: React.Node,
 };
 
 const Container = styled.div`

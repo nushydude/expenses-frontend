@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from '../../../components/Link';
-import { ROUTE } from '../../../configs/route';
+import { Link } from './Link';
+import { ROUTE } from '../configs/route';
 
-export type FormFields = 'category' | 'amount' | 'date' | 'source';
+export type FormFields = 'category' | 'amount' | 'date' | 'source' | 'notes';
 
 const Container = styled.div`
   display: flex;
@@ -81,12 +81,12 @@ type Props = {
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
   category: string,
-  categories?: Array<string>,
+  categories: Array<string>,
   amount: number,
   notes: string,
   date: string,
   source: string,
-  sources?: Array<string>,
+  sources: Array<string>,
   type: 'EXPENSE' | 'INCOME',
 };
 

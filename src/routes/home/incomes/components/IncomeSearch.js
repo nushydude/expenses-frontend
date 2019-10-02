@@ -119,7 +119,7 @@ export function IncomeSearch(props: Props) {
     return searchOptions;
   };
 
-  const setMonth = (offset: num) => {
+  const setMonth = (offset: number) => {
     const now = addMonths(new Date(), offset);
     const from = format(startOfMonth(now), DATE_FORMAT_FOR_INPUT);
     const to = format(

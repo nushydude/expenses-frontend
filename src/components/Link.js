@@ -38,7 +38,8 @@ const NonButtonLink = styled(RRDLink)`
 
 type Props = {
   button: boolean,
-  children: React.ReactNode,
+  children: React.Node,
+  to: string,
 };
 
 export function Link({ button, children, ...rest }: Props) {
@@ -52,3 +53,7 @@ export function Link({ button, children, ...rest }: Props) {
 
   return <NonButtonLink {...rest}>{children}</NonButtonLink>;
 }
+
+Link.defaultProps = {
+  button: false,
+};

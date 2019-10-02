@@ -30,7 +30,7 @@ const PageNumber = styled.p``;
 type Props = {
   pageNumber: number,
   totalPages: number,
-  setPageNumber: () => void,
+  setPageNumber: (num: number) => void,
 };
 
 export function PaginationControls({

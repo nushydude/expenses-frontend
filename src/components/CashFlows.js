@@ -7,25 +7,25 @@ import * as React from 'react';
 import { MdAdd, MdShowChart, MdViewList, MdFilterList } from 'react-icons/md';
 import type { ContextRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { PageMenu } from '../../../components/PageMenu';
-import { ROUTE } from '../../../configs/route';
-import { formatDateForTables } from '../../../utils/formatDateForTables';
-import { formatDateForHeadings } from '../../../utils/formatDateForHeadings';
-import { IncomeSearch } from './components/IncomeSearch';
-import { IncomesTable } from './components/IncomesTable';
-import { IncomesChart } from './components/IncomesChart';
-import type { SearchOptions } from './components/IncomeSearch';
+import { PageMenu } from './PageMenu';
+import { ROUTE } from '../configs/route';
+import { formatDateForTables } from '../utils/formatDateForTables';
+import { formatDateForHeadings } from '../utils/formatDateForHeadings';
+import { CashFlowSearch } from './CashFlowSearch';
+import type { SearchOptions } from './CashFlowSearch';
+import { CashFlowTable } from './CashFlowTable';
 
-const GET_EXPENSES_QUERY = gql`
-  query EXPENSES_GetExpenses($input: GetExpensesInput!) {
-    result: getExpenses(input: $input) {
-      expenses {
+const GET_CASHFLOWS_QUERY = gql`
+  query EXPENSES_GetCashFlows($input: GetCashFlowsInput!) {
+    result: getCashFlows(input: $input) {
+      cashFlows {
         amount
         category
         date
         id
         notes
         source
+        type
       }
       totalPages
       totalRecordsCount
@@ -61,21 +61,9 @@ const PageMenuItem = styled.div`
   }
 `;
 
-// const Button = styled.button`
-//   border: 1px solid green;
-//   box-sizing: border-box;
-//   padding: 8px 16px;
-//   margin-bottom: 10px;
-//   color: green;
-//   font-family: Roboto, sans-serif;
-//   /*input has OS specific font-family*/
-//   cursor: pointer;
-//   font-size: 16px;
-// `;
-
 type Data = {
   result: {
-    expenses: Array<{
+    cashFlows: Array<{
       amount: number,
       date: string,
       id: string,
@@ -96,6 +84,7 @@ type Variables = {
 
 type Props = {
   ...ContextRouter,
+  type: 'EXPENSE' | 'INCOME',
 };
 
 const ICON_SIZE = 20;
@@ -111,31 +100,33 @@ function getDefaultSearchOptions() {
 
 const menuIconStyle = { marginRight: '4px' };
 
-export function IncomesList(props: Props) {
+export function CashFlows(props: Props) {
   const [searchOptions, setSearchOptions] = React.useState<SearchOptions>(
     getDefaultSearchOptions(),
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
-  const [table, setTable] = React.useState<boolean>(true);
   const [showFilter, setShowFilter] = React.useState<boolean>(false);
+  const [table, setTable] = React.useState<boolean>(true);
 
   const input = {
     ...pick(['from', 'to', 'sources', 'categories'], searchOptions),
     pageNumber,
+    type: props.type,
   };
 
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
-    GET_EXPENSES_QUERY,
-    {
-      variables: { input },
-    },
+    GET_CASHFLOWS_QUERY,
+    { variables: { input } },
   );
 
   const result = data && data.result;
   const dataLoading = loading && !result;
-  const expenses = result && result.expenses;
+  const cashFlows = result && result.cashFlows;
   const totalPages = result && result.totalPages;
   const { recordsPerPage, from, to } = searchOptions;
+  const addCashFlowCaption = `Add new ${
+    props.type === 'EXPENSE' ? 'expense' : 'income'
+  }`;
 
   return (
     <Container>
@@ -147,10 +138,16 @@ export function IncomesList(props: Props) {
         </PageTitle>
         <PageMenu>
           <PageMenuItem
-            onClick={() => props.history.push(ROUTE.EXPENSE_CREATE)}
+            onClick={() =>
+              props.history.push(
+                props.type === 'EXPENSE'
+                  ? ROUTE.EXPENSE_CREATE
+                  : ROUTE.INCOME_CREATE,
+              )
+            }
           >
             <MdAdd size={ICON_SIZE} style={menuIconStyle} />
-            Add new expense
+            {addCashFlowCaption}
           </PageMenuItem>
 
           {table && (
@@ -169,13 +166,13 @@ export function IncomesList(props: Props) {
 
           <PageMenuItem onClick={() => setShowFilter(!showFilter)}>
             <MdFilterList size={ICON_SIZE} style={menuIconStyle} />
-            Filter expenses
+            Filter
           </PageMenuItem>
         </PageMenu>
       </PageTitleContainer>
 
       {showFilter && (
-        <IncomeSearch
+        <CashFlowSearch
           updateOptions={setSearchOptions}
           reset={() => setSearchOptions(getDefaultSearchOptions())}
           loading={dataLoading}
@@ -197,21 +194,17 @@ export function IncomesList(props: Props) {
 
       {dataLoading && <p>Loading...</p>}
 
-      {expenses && expenses.length === 0 && (
-        <p>There are no recorded expenses for the selected time period</p>
+      {cashFlows && cashFlows.length === 0 && (
+        <p>There are no recorded {props.type} for the selected time period</p>
       )}
 
-      {expenses && expenses.length > 0 && table && (
-        <IncomesTable
-          expenses={expenses}
+      {cashFlows && cashFlows.length > 0 && (
+        <CashFlowTable
+          cashFlows={cashFlows}
           pageNumber={pageNumber}
           totalPages={totalPages}
           setPageNumber={setPageNumber}
         />
-      )}
-
-      {expenses && expenses.length > 0 && !table && (
-        <IncomesChart expenses={expenses} />
       )}
     </Container>
   );

@@ -51,17 +51,17 @@ type Props = {
   mutation: any,
   field: string,
   type?: 'text' | 'date' | 'password' | 'email',
-  getValue: (data: TData) => string,
-  getError: (data: TData) => Error,
+  getValue: (data: any) => Date,
+  getError: (data: any) => ?Error,
   getVariables: (value: string) => any,
 };
 
 export function EditableDateField<TData, TVariables>(props: Props) {
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [originalValue, setOriginalValue] = React.useState<string>(
+  const [originalValue, setOriginalValue] = React.useState<Date>(
     new Date(props.value),
   );
-  const [value, setValue] = React.useState<string>(new Date(props.value));
+  const [value, setValue] = React.useState<Date>(new Date(props.value));
   const [error, setError] = React.useState<?Error>(null);
 
   const [save, { loading }] = useMutation<TData, TVariables>(props.mutation, {

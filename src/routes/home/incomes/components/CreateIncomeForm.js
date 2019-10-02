@@ -4,7 +4,13 @@ import styled from 'styled-components';
 import { Link } from '../../../../components/Link';
 import { ROUTE } from '../../../../configs/route';
 
-export type FormFields = 'category' | 'amount' | 'date' | 'source';
+export const FORM_FIELDS = Object.freeze({
+  AMOUNT: 'amount',
+  CATEGORY: 'category',
+  DATE: 'date',
+  SOURCE: 'source',
+  NOTES: 'notes',
+});
 
 const Container = styled.div`
   display: flex;
@@ -76,17 +82,17 @@ type Props = {
   error: ?string,
   isBusy: boolean,
   handleInputChange: (
-    name: FormFields,
+    name: $Values<typeof FORM_FIELDS>,
   ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
   category: string,
-  categories?: Array<string>,
+  categories: Array<string>,
   amount: number,
   notes: string,
   date: string,
   source: string,
-  sources?: Array<string>,
+  sources: Array<string>,
 };
 
 export function CreateIncomeForm({
@@ -128,7 +134,7 @@ export function CreateIncomeForm({
         <FormField>
           <Label>Category</Label>
           <Input
-            onChange={handleInputChange('category')}
+            onChange={handleInputChange(FORM_FIELDS.CATEGORY)}
             onFocus={clearError}
             type="text"
             value={category}
@@ -145,7 +151,7 @@ export function CreateIncomeForm({
         <FormField>
           <Label>Amount</Label>
           <Input
-            onChange={handleInputChange('amount')}
+            onChange={handleInputChange(FORM_FIELDS.AMOUNT)}
             onFocus={clearError}
             type="number"
             step="0.01"
@@ -156,7 +162,7 @@ export function CreateIncomeForm({
         <FormField>
           <Label>Source</Label>
           <Input
-            onChange={handleInputChange('source')}
+            onChange={handleInputChange(FORM_FIELDS.SOURCE)}
             onFocus={clearError}
             type="text"
             value={source}
@@ -173,7 +179,7 @@ export function CreateIncomeForm({
         <FormField>
           <Label>Notes</Label>
           <TextArea
-            onChange={handleInputChange('notes')}
+            onChange={handleInputChange(FORM_FIELDS.NOTES)}
             onFocus={clearError}
             value={notes}
             rows="4"

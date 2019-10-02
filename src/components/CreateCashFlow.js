@@ -3,9 +3,7 @@ import { format } from 'date-fns';
 import gql from 'graphql-tag';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import { Redirect } from 'react-router-dom';
 import { CreateCashFlowForm } from './CreateCashFlowForm';
-import { ROUTE } from '../../../configs/route';
 
 const CREATGE_CASHFLOW_MUTATION = gql`
   mutation EXPENSES_CreateCashFlow($input: CreateCashFlowInput!) {
@@ -31,12 +29,13 @@ const GET_CURRENT_USER_QUERY = gql`
 `;
 
 type Props = {
-  history: any,
   type: 'EXPENSE' | 'INCOME',
+  onSuccess: () => void,
+  onCancel: () => void,
 };
 
 type State = {
-  type: string,
+  type: 'EXPENSE' | 'INCOME',
   amount: number,
   date: string,
   source: string,
@@ -86,7 +85,7 @@ export class CreateCashFlow extends React.Component<Props, State> {
     const { cashFlow, error } = result;
 
     if (cashFlow && !error) {
-      this.setState({ success: true });
+      this.props.onSuccess();
     } else {
       this.setState({
         error: error ? error.message : 'Unknown error',
@@ -98,14 +97,8 @@ export class CreateCashFlow extends React.Component<Props, State> {
   onError = ({ message }: Error) => this.setState({ error: message });
 
   render() {
-    const { history, type } = this.props;
+    const { onCancel, type } = this.props;
     const { error, success, ...fields } = this.state;
-
-    if (success) {
-      return (
-        <Redirect to={type === 'EXPENSE' ? ROUTE.EXPENSES : ROUTE.INCOMES} />
-      );
-    }
 
     return (
       <Query query={GET_CURRENT_USER_QUERY}>
@@ -127,7 +120,7 @@ export class CreateCashFlow extends React.Component<Props, State> {
             >
               {(createCashFlow, { loading }) => (
                 <CreateCashFlowForm
-                  cancel={history.goBack}
+                  cancel={onCancel}
                   clearError={this.clearError}
                   error={error}
                   isBusy={loading}
@@ -138,7 +131,10 @@ export class CreateCashFlow extends React.Component<Props, State> {
                     const variables = {
                       input: {
                         ...rest,
-                        amount: Number.parseFloat(amount),
+                        amount:
+                          typeof amount === 'string'
+                            ? Number.parseFloat(amount)
+                            : amount,
                         date: new Date(date).toISOString(),
                         type,
                       },

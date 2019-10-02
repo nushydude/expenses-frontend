@@ -119,7 +119,7 @@ export function CashFlowSearch(props: Props) {
     return searchOptions;
   };
 
-  const setMonth = (offset: num) => {
+  const setMonth = (offset: number) => {
     const now = addMonths(new Date(), offset);
     const from = format(startOfMonth(now), DATE_FORMAT_FOR_INPUT);
     const to = format(
@@ -131,7 +131,7 @@ export function CashFlowSearch(props: Props) {
     setTo(to);
   };
 
-  const setYear = (offset: num) => {
+  const setYear = (offset: number) => {
     const now = addYears(new Date(), offset);
 
     const from = format(startOfYear(now), DATE_FORMAT_FOR_INPUT);
