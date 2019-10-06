@@ -1,4 +1,5 @@
 // @flow
+import { ApolloClient } from 'apollo-client';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { Provider } from 'react-redux';
@@ -28,8 +29,14 @@ const ContentsWrapper = styled.div`
   padding: 0 10px;
 `;
 
-export class App extends React.Component {
-  constructor(props) {
+type Props = {};
+
+type State = {
+  apolloClient: ?ApolloClient,
+};
+
+export class App extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
