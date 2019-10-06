@@ -28,56 +28,74 @@ const ContentsWrapper = styled.div`
   padding: 0 10px;
 `;
 
-function AppComp() {
-  return (
-    <>
-      <Header />
+export class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-      <ContentsWrapper>
-        <Switch>
-          <UnauthedRoute exact path={ROUTE.AUTH_LOGIN} component={LogInPage} />
-          <UnauthedRoute
-            exact
-            path={ROUTE.AUTH_SIGNUP}
-            component={SignUpPage}
-          />
-          <UnauthedRoute
-            exact
-            path={ROUTE.AUTH_RECOVER}
-            component={RecoverPage}
-          />
-          <UnauthedRoute
-            exact
-            path={ROUTE.AUTH_VERIFY}
-            component={VerifyAccountPage}
-          />
-          <UnauthedRoute
-            exact
-            path={ROUTE.AUTH_CHANGE_PWD}
-            component={ChangePasswordPage}
-          />
+    this.state = {
+      apolloClient: null,
+    };
+  }
 
-          <AuthedRoute path={ROUTE.HOME} component={HomePage} />
+  async componentDidMount() {
+    const apolloClient = await getApolloClient(env.apiURL);
 
-          <Route exact path={ROUTE.LANDING} component={LandingPage} />
+    this.setState({ apolloClient });
+  }
 
-          <Redirect to={ROUTE.LANDING} />
-        </Switch>
-      </ContentsWrapper>
-    </>
-  );
-}
+  render() {
+    const { apolloClient } = this.state;
 
-export function App() {
-  return (
-    <ApolloProvider client={getApolloClient(env.apiURL)}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Router>
-            <AppComp />
-          </Router>
-        </PersistGate>
-      </Provider>
-    </ApolloProvider>
-  );
+    if (!apolloClient) {
+      return <p>Loading...</p>;
+    }
+
+    return (
+      <ApolloProvider client={apolloClient}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Router>
+              <Header />
+
+              <ContentsWrapper>
+                <Switch>
+                  <UnauthedRoute
+                    exact
+                    path={ROUTE.AUTH_LOGIN}
+                    component={LogInPage}
+                  />
+                  <UnauthedRoute
+                    exact
+                    path={ROUTE.AUTH_SIGNUP}
+                    component={SignUpPage}
+                  />
+                  <UnauthedRoute
+                    exact
+                    path={ROUTE.AUTH_RECOVER}
+                    component={RecoverPage}
+                  />
+                  <UnauthedRoute
+                    exact
+                    path={ROUTE.AUTH_VERIFY}
+                    component={VerifyAccountPage}
+                  />
+                  <UnauthedRoute
+                    exact
+                    path={ROUTE.AUTH_CHANGE_PWD}
+                    component={ChangePasswordPage}
+                  />
+
+                  <AuthedRoute path={ROUTE.HOME} component={HomePage} />
+
+                  <Route exact path={ROUTE.LANDING} component={LandingPage} />
+
+                  <Redirect to={ROUTE.LANDING} />
+                </Switch>
+              </ContentsWrapper>
+            </Router>
+          </PersistGate>
+        </Provider>
+      </ApolloProvider>
+    );
+  }
 }
