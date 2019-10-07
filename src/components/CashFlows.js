@@ -106,7 +106,6 @@ export function CashFlows(props: Props) {
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
   const [showFilter, setShowFilter] = React.useState<boolean>(true);
-  const [table, setTable] = React.useState<boolean>(true);
 
   const input = {
     ...pick(['from', 'to', 'sources', 'categories'], searchOptions),
@@ -149,20 +148,6 @@ export function CashFlows(props: Props) {
             <MdAdd size={ICON_SIZE} style={menuIconStyle} />
             {addCashFlowCaption}
           </PageMenuItem>
-
-          {table && (
-            <PageMenuItem onClick={() => setTable(false)}>
-              <MdShowChart size={ICON_SIZE} style={menuIconStyle} />
-              Show chart view
-            </PageMenuItem>
-          )}
-
-          {!table && (
-            <PageMenuItem onClick={() => setTable(true)}>
-              <MdViewList size={ICON_SIZE} style={menuIconStyle} />
-              Show table view
-            </PageMenuItem>
-          )}
 
           <PageMenuItem onClick={() => setShowFilter(!showFilter)}>
             <MdFilterList size={ICON_SIZE} style={menuIconStyle} />

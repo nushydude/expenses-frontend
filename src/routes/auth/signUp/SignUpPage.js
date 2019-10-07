@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
-// import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { isEmail } from 'validator';
 import { SignUpForm } from './SignUpForm';
 import type { FormFields } from './SignUpForm';
@@ -67,123 +67,79 @@ type Data = {
   },
 };
 
-// export function SignUpPage(props: Props) {
-//   const [signUp, { loading } ] = useMutation(SIGNUP_WITH_EMAIL_MUTATION)
+export function SignUpPage(props: Props) {
+  const [error, setError] = React.useState<?string>(null);
+  const [success, setSuccess] = React.useState<boolean>(false);
 
-//   const [error, setError] = React.useState(null);
-//   const [success, setSuccess]= React.useState(false);
-//   const [formState, setFormState]=React.useState<FormFields>({
-//     email: '',
-//     password: '',
-//     confirmPassword: '',
-//     name: ''
-//   })
-// }
+  const [signUp, { loading }] = useMutation(SIGNUP_WITH_EMAIL_MUTATION, {
+    onCompleted: (data: any) => {
+      const { created, error } = data.result;
 
-export class SignUpPage extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+      if (created) {
+        setSuccess(true);
+      } else {
+        setError(error || 'Unknown error');
+      }
+    },
+    onError: (error: Error) => setError(error.message),
+  });
 
-    this.state = {
-      email: '',
-      name: '',
-      confirmPassword: '',
-      password: '',
-      error: null,
-      success: false,
-    };
-  }
+  const [formState, setFormState] = React.useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+  });
 
-  clearError = () => {
-    this.setState({ error: null });
-  };
-
-  handleInputChange = (name: FormFields) => (
+  const handleInputChange = (name: FormFields) => (
     e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
-    this.setState({ [name]: e.target.value });
-  };
-
-  onCompleted = ({ result }: Data) => {
-    const { created, error } = result;
-
-    if (error || !created) {
-      this.setState({ error: error ? error.message : 'Unknown error' });
-    } else if (created) {
-      this.setState({ success: true });
-    }
-  };
-
-  onError = (error: Error) => this.setState({ error: error.message });
-
-  signUp = async (
-    signUpMutation: (options: any) => Promise<void>,
-  ): Promise<?Data> => {
-    const { email, name, confirmPassword, password } = this.state;
-
-    const error = validateInputs({
-      email,
-      name,
-      password,
-      confirmPassword,
+    setFormState({
+      ...formState,
+      [name]: e.target.value,
     });
-
-    if (error) {
-      this.setState({ error });
-
-      return null;
-    }
-
-    const variables = { input: { email, name, password } };
-
-    return signUpMutation({ variables });
   };
 
-  render() {
-    const {
-      email,
-      name,
-      confirmPassword,
-      error,
-      password,
-      success,
-    } = this.state;
-
-    if (success) {
-      return (
-        <p>
-          Sign up successful. Your account needs to be verified before you can
-          log in. Check your email.
-        </p>
-      );
-    }
-
+  if (success) {
     return (
-      <Mutation
-        mutation={SIGNUP_WITH_EMAIL_MUTATION}
-        onCompleted={this.onCompleted}
-        onError={this.onError}
-      >
-        {(signUpMutation, { loading }) => (
-          <div style={{ width: '400px' }}>
-            <SignUpForm
-              isBusy={loading}
-              clearError={this.clearError}
-              error={error}
-              submit={(e: SyntheticInputEvent<any>) => {
-                e.preventDefault();
-
-                return this.signUp(signUpMutation);
-              }}
-              handleInputChange={this.handleInputChange}
-              email={email}
-              name={name}
-              password={password}
-              confirmPassword={confirmPassword}
-            />
-          </div>
-        )}
-      </Mutation>
+      <p>
+        Sign up successful. Your account needs to be verified before you can log
+        in. Check your email.
+      </p>
     );
   }
+
+  return (
+    <div style={{ width: '400px' }}>
+      <SignUpForm
+        isBusy={loading}
+        clearError={() => setError(null)}
+        error={error}
+        submit={(e: SyntheticInputEvent<any>): Promise<any> => {
+          e.preventDefault();
+
+          const { email, name, confirmPassword, password } = formState;
+
+          const error = validateInputs({
+            email,
+            name,
+            password,
+            confirmPassword,
+          });
+
+          if (error) {
+            setError(error);
+
+            return Promise.reject();
+          } else {
+            const variables = { input: { email, name, password } };
+
+            return signUp({ variables });
+          }
+        }}
+        handleInputChange={handleInputChange}
+        {...formState}
+      />
+    </div>
+  );
 }

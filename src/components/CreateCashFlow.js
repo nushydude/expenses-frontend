@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { CreateCashFlowForm } from './CreateCashFlowForm';
+import type { FormFields } from './CreateCashFlowForm';
 
 const CREATGE_CASHFLOW_MUTATION = gql`
   mutation EXPENSES_CreateCashFlow($input: CreateCashFlowInput!) {
@@ -36,6 +37,7 @@ type Props = {
 
 type State = {
   type: 'EXPENSE' | 'INCOME',
+  category: string,
   amount: number,
   date: string,
   source: string,

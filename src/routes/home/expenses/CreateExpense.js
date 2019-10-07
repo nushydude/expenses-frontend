@@ -10,7 +10,7 @@ export function CreateExpense({ history }: Props) {
   return (
     <CreateCashFlow
       type="EXPENSE"
-      onSuccess={() => history.push(ROUTE.EXPENSES)}
+      onSuccess={() => history.goBack()}
       onCancel={() => history.goBack()}
     />
   );
