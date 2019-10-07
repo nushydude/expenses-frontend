@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
+// import { useMutation } from '@apollo/react-hooks';
 import { isEmail } from 'validator';
 import { SignUpForm } from './SignUpForm';
 import type { FormFields } from './SignUpForm';
@@ -65,6 +66,19 @@ type Data = {
     },
   },
 };
+
+// export function SignUpPage(props: Props) {
+//   const [signUp, { loading } ] = useMutation(SIGNUP_WITH_EMAIL_MUTATION)
+
+//   const [error, setError] = React.useState(null);
+//   const [success, setSuccess]= React.useState(false);
+//   const [formState, setFormState]=React.useState<FormFields>({
+//     email: '',
+//     password: '',
+//     confirmPassword: '',
+//     name: ''
+//   })
+// }
 
 export class SignUpPage extends React.Component<Props, State> {
   constructor(props: Props) {

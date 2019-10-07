@@ -5,6 +5,7 @@ import ApolloClient from 'apollo-client';
 import { from } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
 import { RetryLink } from 'apollo-link-retry';
+import localforage from 'localforage';
 import { errorHandlerLink } from './links/errorHandlerLink';
 import { setAuthHeaderLink } from './links/setAuthHeaderLink';
 
@@ -21,7 +22,7 @@ export async function getApolloClient(uri: string): Promise<ApolloClient> {
 
   await persistCache<any>({
     cache,
-    storage: window.localStorage,
+    storage: localforage,
   });
 
   const link = from([errorHandlerLink, setAuthHeaderLink, retryLink, httpLink]);
