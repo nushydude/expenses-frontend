@@ -99,7 +99,9 @@ export function EditableDateField<TData, TVariables>(props: Props) {
             <ControlBox>
               <MdSave
                 size={24}
-                onClick={e => save({ variables: props.getVariables(value) })}
+                onClick={e =>
+                  save({ variables: props.getVariables(value.toISOString()) })
+                }
                 disabled={loading}
               />
               <MdCancel

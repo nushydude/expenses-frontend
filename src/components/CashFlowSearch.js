@@ -87,8 +87,8 @@ const Wrapper = styled.div`
 `;
 
 export type SearchOptions = {
-  from?: string,
-  to?: string,
+  from: string,
+  to: string,
   sources?: Array<string>,
   categories?: Array<string>,
   recordsPerPage?: number,
