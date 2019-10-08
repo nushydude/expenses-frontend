@@ -9,9 +9,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (
-    name: FormFields,
-  ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  handleInputChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   password: string,
   confirmPassword: string,
@@ -32,14 +30,16 @@ export function ChangePasswordForm({
       style={{ display: 'flex', flexDirection: 'column' }}
     >
       <input
-        onChange={handleInputChange('password')}
+        name="password"
+        onChange={handleInputChange}
         onFocus={clearError}
         placeholder="Password"
         type="password"
         value={password}
       />
       <input
-        onChange={handleInputChange('confirmPassword')}
+        name="confirmPassword"
+        onChange={handleInputChange}
         onFocus={clearError}
         placeholder="Confirm Password"
         type="password"
