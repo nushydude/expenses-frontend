@@ -1,8 +1,8 @@
 // @flow
 import { format } from 'date-fns';
 import gql from 'graphql-tag';
-import React from 'react';
-import { Mutation, Query } from 'react-apollo';
+import React, { useState } from 'react';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { CreateCashFlowForm } from './CreateCashFlowForm';
 import type { FormFields } from './CreateCashFlowForm';
 
@@ -57,103 +57,73 @@ type Data = {
   },
 };
 
-export class CreateCashFlow extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+export function CreateCashFlow(props: Props) {
+  let sources = [];
+  let categories = [];
 
-    this.state = {
-      category: '',
-      amount: 0,
-      date: format(new Date(), 'yyyy-MM-dd'),
-      source: '',
-      notes: '',
-      type: props.type,
-      error: null,
-      success: false,
-    };
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const [formState, setFormState] = useState({
+    type: props.type,
+    category: '',
+    amount: 0,
+    date: format(new Date(), 'yyyy-MM-dd'),
+    source: '',
+    notes: '',
+  });
+
+  const { data: queryData } = useQuery(GET_CURRENT_USER_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [createCashFlow, { loading }] = useMutation(CREATGE_CASHFLOW_MUTATION, {
+    onError: (error: Error) => setError(error.message),
+    onCompleted: (data: Data) => {
+      const { cashFlow, error } = data.result;
+
+      if (cashFlow) {
+        props.onSuccess();
+      } else {
+        setError(error ? error.message : 'Unknown error');
+      }
+    },
+  });
+
+  if (queryData && queryData.result) {
+    sources = queryData.result.sources || [];
+    categories = queryData.result.categories || [];
   }
 
-  clearError = () => {
-    this.setState({ error: null, success: false });
-  };
+  return (
+    <CreateCashFlowForm
+      cancel={props.onCancel}
+      clearError={() => setError(null)}
+      error={error}
+      isBusy={loading}
+      submit={(e: SyntheticInputEvent<any>): Promise<void> => {
+        e.preventDefault();
 
-  handleInputChange = (name: FormFields) => (
-    e: SyntheticInputEvent<HTMLInputElement>,
-  ) => {
-    this.setState({ [name]: e.target.value });
-  };
+        const { amount, date, ...rest } = formState;
 
-  onCompleted = ({ result }: Data) => {
-    const { cashFlow, error } = result;
+        const variables = {
+          input: {
+            ...rest,
+            amount:
+              typeof amount === 'string' ? Number.parseFloat(amount) : amount,
+            date: new Date(date).toISOString(),
+          },
+        };
 
-    if (cashFlow && !error) {
-      this.props.onSuccess();
-    } else {
-      this.setState({
-        error: error ? error.message : 'Unknown error',
-        success: false,
-      });
-    }
-  };
+        return createCashFlow({ variables });
+      }}
+      handleInputChange={(e: SyntheticInputEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
 
-  onError = ({ message }: Error) => this.setState({ error: message });
-
-  render() {
-    const { onCancel, type } = this.props;
-    const { error, success, ...fields } = this.state;
-
-    return (
-      <Query query={GET_CURRENT_USER_QUERY}>
-        {({ data = {} }) => {
-          const { result } = data;
-          let sources = [];
-          let categories = [];
-
-          if (result) {
-            sources = result.sources;
-            categories = result.categories;
-          }
-
-          return (
-            <Mutation
-              mutation={CREATGE_CASHFLOW_MUTATION}
-              onCompleted={this.onCompleted}
-              onError={this.onError}
-            >
-              {(createCashFlow, { loading }) => (
-                <CreateCashFlowForm
-                  cancel={onCancel}
-                  clearError={this.clearError}
-                  error={error}
-                  isBusy={loading}
-                  submit={(e: SyntheticInputEvent<any>) => {
-                    e.preventDefault();
-
-                    const { amount, date, ...rest } = fields;
-                    const variables = {
-                      input: {
-                        ...rest,
-                        amount:
-                          typeof amount === 'string'
-                            ? Number.parseFloat(amount)
-                            : amount,
-                        date: new Date(date).toISOString(),
-                        type,
-                      },
-                    };
-
-                    return createCashFlow({ variables });
-                  }}
-                  handleInputChange={this.handleInputChange}
-                  sources={sources}
-                  categories={categories}
-                  {...fields}
-                />
-              )}
-            </Mutation>
-          );
-        }}
-      </Query>
-    );
-  }
+        setFormState({ ...formState, [name]: value });
+      }}
+      sources={sources}
+      categories={categories}
+      {...formState}
+    />
+  );
 }

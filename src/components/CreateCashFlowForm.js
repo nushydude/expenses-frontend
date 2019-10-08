@@ -75,9 +75,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (
-    name: FormFields,
-  ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  handleInputChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
   category: string,
@@ -123,7 +121,8 @@ export function CreateCashFlowForm({
         <FormField>
           <Label>Date</Label>
           <Input
-            onChange={handleInputChange('date')}
+            name="date"
+            onChange={handleInputChange}
             onFocus={clearError}
             type="date"
             value={date}
@@ -133,7 +132,8 @@ export function CreateCashFlowForm({
         <FormField>
           <Label>Category</Label>
           <Input
-            onChange={handleInputChange('category')}
+            name="category"
+            onChange={handleInputChange}
             onFocus={clearError}
             type="text"
             value={category}
@@ -150,7 +150,8 @@ export function CreateCashFlowForm({
         <FormField>
           <Label>Amount</Label>
           <Input
-            onChange={handleInputChange('amount')}
+            name="amount"
+            onChange={handleInputChange}
             onFocus={clearError}
             type="number"
             step="0.01"
@@ -161,7 +162,8 @@ export function CreateCashFlowForm({
         <FormField>
           <Label>Source</Label>
           <Input
-            onChange={handleInputChange('source')}
+            name="source"
+            onChange={handleInputChange}
             onFocus={clearError}
             type="text"
             value={source}
@@ -178,7 +180,8 @@ export function CreateCashFlowForm({
         <FormField>
           <Label>Notes</Label>
           <TextArea
-            onChange={handleInputChange('notes')}
+            name="notes"
+            onChange={handleInputChange}
             onFocus={clearError}
             value={notes}
             rows="4"
