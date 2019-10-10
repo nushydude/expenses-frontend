@@ -79,12 +79,12 @@ type Props = {
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
   category: string,
-  categories: Array<string>,
+  categories?: Array<string>,
   amount: number,
   notes: string,
   date: string,
   source: string,
-  sources: Array<string>,
+  sources?: Array<string>,
   type: 'EXPENSE' | 'INCOME',
 };
 

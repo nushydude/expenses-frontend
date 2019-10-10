@@ -18,8 +18,6 @@ const SIGNUP_WITH_EMAIL_MUTATION = gql`
   }
 `;
 
-type Props = {};
-
 type FormInputs = {
   email: string,
   name: string,
@@ -67,21 +65,21 @@ type Data = {
   },
 };
 
-export function SignUpPage(props: Props) {
-  const [error, setError] = React.useState<?string>(null);
+export function SignUpPage() {
+  const [errorMessage, setErrorMessage] = React.useState<?string>(null);
   const [success, setSuccess] = React.useState<boolean>(false);
 
   const [signUp, { loading }] = useMutation(SIGNUP_WITH_EMAIL_MUTATION, {
-    onCompleted: (data: any) => {
+    onCompleted: (data: Data) => {
       const { created, error } = data.result;
 
       if (created) {
         setSuccess(true);
       } else {
-        setError(error || 'Unknown error');
+        setErrorMessage(error ? error.message : 'Unknown error');
       }
     },
-    onError: (error: Error) => setError(error.message),
+    onError: (error: Error) => setErrorMessage(error.message),
   });
 
   const [formState, setFormState] = React.useState({
@@ -113,29 +111,29 @@ export function SignUpPage(props: Props) {
     <div style={{ width: '400px' }}>
       <SignUpForm
         isBusy={loading}
-        clearError={() => setError(null)}
-        error={error}
+        clearError={() => setErrorMessage(null)}
+        error={errorMessage}
         submit={(e: SyntheticInputEvent<any>): Promise<any> => {
           e.preventDefault();
 
           const { email, name, confirmPassword, password } = formState;
 
-          const error = validateInputs({
+          const validationErrorMessage = validateInputs({
             email,
             name,
             password,
             confirmPassword,
           });
 
-          if (error) {
-            setError(error);
+          if (validationErrorMessage) {
+            setErrorMessage(validationErrorMessage);
 
             return Promise.reject();
-          } else {
-            const variables = { input: { email, name, password } };
-
-            return signUp({ variables });
           }
+
+          const variables = { input: { email, name, password } };
+
+          return signUp({ variables });
         }}
         handleInputChange={handleInputChange}
         {...formState}

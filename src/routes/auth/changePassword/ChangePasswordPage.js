@@ -52,12 +52,6 @@ function validateInputs({
   return null;
 }
 
-type State = {
-  ...FormInputs,
-  error: ?string,
-  success: boolean,
-};
-
 type Data = {
   result: {
     passwordChanged: boolean,
@@ -68,22 +62,22 @@ type Data = {
 };
 
 export function ChangePasswordPage(props: Props) {
-  const [error, setError] = React.useState(null);
-  const [success, setSuccess] = React.useState(false);
-  const [formState, setFormState] = React.useState({
+  const [errorMessage, setErrorMessage] = React.useState<?string>(null);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [formState, setFormState] = React.useState<FormInputs>({
     password: '',
     confirmPassword: '',
   });
 
   const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD_MUTATION, {
-    onError: (error: Error) => setError(error.message),
+    onError: (error: Error) => setErrorMessage(error.message),
     onCompleted: (data: Data) => {
       const { passwordChanged, error } = data.result;
 
       if (passwordChanged) {
         setSuccess(true);
       } else {
-        setError(error ? error.message : 'Unknown error');
+        setErrorMessage(error ? error.message : 'Unknown error');
       }
     },
   });
@@ -96,8 +90,8 @@ export function ChangePasswordPage(props: Props) {
     <div style={{ width: '400px' }}>
       <ChangePasswordForm
         isBusy={loading}
-        clearError={() => setError(null)}
-        error={error}
+        clearError={() => setErrorMessage(null)}
+        error={errorMessage}
         submit={(e: SyntheticInputEvent<any>) => {
           e.preventDefault();
 
@@ -106,14 +100,14 @@ export function ChangePasswordPage(props: Props) {
 
           const { secret } = queryString.parse(location.search);
 
-          const errorMessage = validateInputs({
+          const validationErrorMessage = validateInputs({
             password,
             confirmPassword,
             secret,
           });
 
-          if (errorMessage) {
-            setError(errorMessage);
+          if (validationErrorMessage) {
+            setErrorMessage(validationErrorMessage);
 
             return Promise.reject();
           }

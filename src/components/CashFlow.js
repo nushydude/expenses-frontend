@@ -90,7 +90,7 @@ const getVariables = (
   let parsedValue: any = value;
 
   if (type === 'int') {
-    parsedValue = parseInt(value);
+    parsedValue = parseInt(value, 10);
   } else if (type === 'float') {
     parsedValue = parseFloat(value);
   } else if (type === 'date') {
@@ -134,7 +134,7 @@ export function CashFlow({ id }: Props) {
           mutation={UPDATGE_CASH_FLOW_MUTATION}
           field="date"
           value={cashFlow.date}
-          getValue={data => new Date(getStringValue('date')(data))}
+          getValue={d => new Date(getStringValue('date')(d))}
           getError={getError}
           getVariables={getVariables(id, 'date')}
         />

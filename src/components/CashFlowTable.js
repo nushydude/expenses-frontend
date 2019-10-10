@@ -5,12 +5,14 @@ import styled from 'styled-components';
 import { ROUTE } from '../configs/route';
 import { PaginationControls } from './PaginationControls';
 import { Link } from './Link';
+import { Loading } from './Loading';
 
 const Table = styled.table`
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-collapse: collapse;
   font-size: 12px;
+  width: 100%;
 `;
 
 const Tr = styled.tr`
@@ -40,11 +42,22 @@ const TdRightAligned = styled(Td)`
 `;
 
 const TableContainer = styled.div`
+  position: relative;
+`;
+
+const LoadingContainer = styled.div`
+  position: absolute;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 type Props = {
+  loading: boolean,
   cashFlows: Array<{
     amount: number,
     date: Date,
@@ -63,9 +76,16 @@ export function CashFlowTable({
   pageNumber,
   totalPages,
   setPageNumber,
+  loading,
 }: Props) {
   return (
     <TableContainer>
+      {loading && (
+        <LoadingContainer>
+          <Loading />
+        </LoadingContainer>
+      )}
+
       <Table>
         <thead>
           <tr>

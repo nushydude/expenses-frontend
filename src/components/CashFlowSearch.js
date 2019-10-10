@@ -113,21 +113,24 @@ const PRESETS = {
 const DATE_FORMAT_FOR_INPUT = 'yyyy-MM-dd';
 
 export function CashFlowSearch(props: Props) {
-  const [from, setFrom] = React.useState(props.from);
-  const [to, setTo] = React.useState(props.to);
+  const [searchOptions, setSearchOptions] = React.useState<SearchOptions>({
+    from: props.from,
+    to: props.to,
+  });
 
-  const createSearchOptions = () => {
-    const searchOptions: SearchOptions = {};
+  const formatSearchOptions = () => {
+    const { to, from } = searchOptions;
+    const formattedSearchOptions = {};
 
     if (from) {
-      searchOptions.from = new Date(from).toISOString();
+      formattedSearchOptions.from = new Date(from).toISOString();
     }
 
     if (to) {
-      searchOptions.to = new Date(to).toISOString();
+      formattedSearchOptions.to = new Date(to).toISOString();
     }
 
-    return searchOptions;
+    return formattedSearchOptions;
   };
 
   const setMonth = (offset: number) => {
@@ -138,8 +141,7 @@ export function CashFlowSearch(props: Props) {
       DATE_FORMAT_FOR_INPUT,
     );
 
-    setFrom(from);
-    setTo(to);
+    setSearchOptions({ to, from });
   };
 
   const setYear = (offset: number) => {
@@ -151,11 +153,8 @@ export function CashFlowSearch(props: Props) {
       DATE_FORMAT_FOR_INPUT,
     );
 
-    setFrom(from);
-    setTo(to);
+    setSearchOptions({ to, from });
   };
-
-  const search = () => props.updateOptions(createSearchOptions());
 
   const setPresetDateRange = (preset: string) => {
     if (preset === PRESETS.THIS_MONTH) {
@@ -169,6 +168,8 @@ export function CashFlowSearch(props: Props) {
     }
   };
 
+  const { from, to } = searchOptions;
+
   return (
     <Wrapper>
       <Container>
@@ -178,7 +179,9 @@ export function CashFlowSearch(props: Props) {
             <Input
               type="date"
               value={from}
-              onChange={e => setFrom(e.target.value)}
+              onChange={e =>
+                setSearchOptions({ ...searchOptions, from: e.target.value })
+              }
             />
           </FormField>
 
@@ -187,7 +190,9 @@ export function CashFlowSearch(props: Props) {
             <Input
               type="date"
               value={to}
-              onChange={e => setTo(e.target.value)}
+              onChange={e =>
+                setSearchOptions({ ...searchOptions, to: e.target.value })
+              }
             />
           </FormField>
           <FormField>
@@ -204,7 +209,7 @@ export function CashFlowSearch(props: Props) {
         <div>
           <Button
             disabled={props.loading || to === '' || from === ''}
-            onClick={search}
+            onClick={() => props.updateOptions(formatSearchOptions())}
           >
             <MdSearch size={12} />
           </Button>

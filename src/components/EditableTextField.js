@@ -38,13 +38,12 @@ const Input = styled.input`
 type Props = {
   value: string,
   mutation: any,
-  field: string,
   getValue: (data: any) => string,
   getError: (data: any) => ?Error,
   getVariables: (value: string) => any,
 };
 
-export function EditableTextField(props: Props) {
+export function EditableTextField({ props }: Props) {
   const [editing, setEditing] = React.useState<boolean>(false);
   const [originalValue, setOriginalValue] = React.useState<string>(props.value);
   const [value, setValue] = React.useState<string>(props.value);
@@ -52,21 +51,19 @@ export function EditableTextField(props: Props) {
 
   const [save, { loading }] = useMutation(props.mutation, {
     onCompleted: data => {
-      const error = props.getError(data);
+      const mutationError = props.getError(data);
 
-      if (error) {
-        return setError(error);
+      if (mutationError) {
+        return setError(mutationError);
       }
 
-      const value = props.getValue(data);
+      const extractedValue = props.getValue(data);
 
-      setOriginalValue(value);
-      setValue(value);
+      setOriginalValue(extractedValue);
+      setValue(extractedValue);
       setEditing(false);
     },
-    onError: (error: Error) => {
-      setError(error);
-    },
+    onError: setError,
   });
 
   return (
@@ -83,7 +80,7 @@ export function EditableTextField(props: Props) {
             <ControlBox>
               <MdSave
                 size={24}
-                onClick={e => save({ variables: props.getVariables(value) })}
+                onClick={() => save({ variables: props.getVariables(value) })}
                 disabled={loading}
               />
               <MdCancel

@@ -37,7 +37,7 @@ const NonButtonLink = styled(RRDLink)`
 `;
 
 type Props = {
-  button: boolean,
+  button?: boolean,
   children: React.Node,
   to: string,
 };

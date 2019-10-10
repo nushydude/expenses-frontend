@@ -14,6 +14,9 @@ import { formatDateForHeadings } from '../utils/formatDateForHeadings';
 import { CashFlowSearch } from './CashFlowSearch';
 import type { SearchOptions } from './CashFlowSearch';
 import { CashFlowTable } from './CashFlowTable';
+import { ErrorMessage } from './ErrorMessage';
+import { Loading } from './Loading';
+import { NoResults } from './NoResults';
 
 const GET_CASHFLOWS_QUERY = gql`
   query EXPENSES_GetCashFlows($input: GetCashFlowsInput!) {
@@ -118,14 +121,25 @@ export function CashFlows(props: Props) {
     { variables: { input } },
   );
 
-  const result = data && data.result;
-  const dataLoading = loading && !result;
-  const cashFlows = result && result.cashFlows;
-  const totalPages = result && result.totalPages;
   const { recordsPerPage, from, to } = searchOptions;
-  const addCashFlowCaption = `Add new ${
-    props.type === 'EXPENSE' ? 'expense' : 'income'
-  }`;
+
+  let result = null;
+
+  if (error) {
+    result = <ErrorMessage retry={refetch} error={error} />;
+  } else if (data && data.result && data.result.cashFlows.length === 0) {
+    result = <NoResults />;
+  } else if (data && data.result && data.result.cashFlows.length > 0) {
+    result = (
+      <CashFlowTable
+        loading={loading}
+        cashFlows={data.result.cashFlows}
+        pageNumber={pageNumber}
+        totalPages={data.result.totalPages}
+        setPageNumber={setPageNumber}
+      />
+    );
+  }
 
   return (
     <Container>
@@ -146,7 +160,7 @@ export function CashFlows(props: Props) {
             }
           >
             <MdAdd size={ICON_SIZE} style={menuIconStyle} />
-            {addCashFlowCaption}
+            {`Add new ${props.type === 'EXPENSE' ? 'expense' : 'income'}`}
           </PageMenuItem>
 
           <PageMenuItem onClick={() => setShowFilter(!showFilter)}>
@@ -160,7 +174,7 @@ export function CashFlows(props: Props) {
         <CashFlowSearch
           updateOptions={setSearchOptions}
           reset={() => setSearchOptions(getDefaultSearchOptions())}
-          loading={dataLoading}
+          loading={loading}
           to={formatDateForTables(new Date(to))}
           from={formatDateForTables(new Date(from))}
           recordsPerPage={recordsPerPage}
@@ -168,30 +182,7 @@ export function CashFlows(props: Props) {
         />
       )}
 
-      {error && (
-        <div>
-          <p>An error occurred</p>
-          {error.message && <p>{error.message}</p>}
-          <button type="button" onClick={refetch}>
-            Retry
-          </button>
-        </div>
-      )}
-
-      {dataLoading && <p>Loading...</p>}
-
-      {cashFlows && cashFlows.length === 0 && (
-        <p>There are no recorded {props.type} for the selected time period</p>
-      )}
-
-      {cashFlows && cashFlows.length > 0 && (
-        <CashFlowTable
-          cashFlows={cashFlows}
-          pageNumber={pageNumber}
-          totalPages={totalPages}
-          setPageNumber={setPageNumber}
-        />
-      )}
+      {result}
     </Container>
   );
 }
