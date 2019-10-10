@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import styled from 'styled-components';
 import { ROUTE } from '../configs/route';
-import { PaginationControls } from './PaginationControls';
+import { TableBottomControls } from './TableBottomControls';
 import { Link } from './Link';
 import { Loading } from './Loading';
 
@@ -69,6 +69,7 @@ type Props = {
   pageNumber: number,
   totalPages: number,
   setPageNumber: (num: number) => void,
+  recordsPerPage: number,
 };
 
 export function CashFlowTable({
@@ -77,7 +78,10 @@ export function CashFlowTable({
   totalPages,
   setPageNumber,
   loading,
+  recordsPerPage,
 }: Props) {
+  const itemOffset = (pageNumber - 1) * recordsPerPage + 1;
+
   return (
     <TableContainer>
       {loading && (
@@ -99,7 +103,7 @@ export function CashFlowTable({
         <tbody>
           {cashFlows.map((cashFlow, idx) => (
             <Tr key={cashFlow.id}>
-              <TdRightAligned>{idx + 1}</TdRightAligned>
+              <TdRightAligned>{itemOffset + idx}</TdRightAligned>
               <Td>
                 <Link
                   to={(cashFlow.type === 'EXPENSE'
@@ -118,7 +122,8 @@ export function CashFlowTable({
         </tbody>
       </Table>
 
-      <PaginationControls
+      <TableBottomControls
+        busy={loading}
         pageNumber={pageNumber}
         totalPages={totalPages}
         setPageNumber={setPageNumber}

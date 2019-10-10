@@ -91,7 +91,6 @@ export type SearchOptions = {
   to: string,
   sources?: Array<string>,
   categories?: Array<string>,
-  recordsPerPage?: number,
 };
 
 type Props = {

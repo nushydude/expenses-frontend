@@ -109,11 +109,13 @@ export function CashFlows(props: Props) {
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
   const [showFilter, setShowFilter] = React.useState<boolean>(true);
+  const [recordsPerPage, setRecordsPerPage] = React.useState<number>(25);
 
   const input = {
     ...pick(['from', 'to', 'sources', 'categories'], searchOptions),
     pageNumber,
     type: props.type,
+    recordsPerPage,
   };
 
   const { loading, error, data, refetch } = useQuery<Data, Variables>(
@@ -121,7 +123,7 @@ export function CashFlows(props: Props) {
     { variables: { input } },
   );
 
-  const { recordsPerPage, from, to } = searchOptions;
+  const { from, to } = searchOptions;
 
   let result = null;
 
@@ -137,6 +139,7 @@ export function CashFlows(props: Props) {
         pageNumber={pageNumber}
         totalPages={data.result.totalPages}
         setPageNumber={setPageNumber}
+        recordsPerPage={recordsPerPage}
       />
     );
   }

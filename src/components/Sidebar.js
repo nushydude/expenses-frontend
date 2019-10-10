@@ -16,7 +16,8 @@ const Container = styled.div`
   box-sizing: border-box;
   box-shadow: 8px 8px 14px 2px rgba(0, 0, 0, 0.41);
   left: ${props => (props.visible ? 0 : '-220px')};
-  transition: left 0.5s ease-in-out;
+  transition: left 0.2s ease-in-out;
+  z-index: 100;
 `;
 
 const SidebarButton = styled.div`
