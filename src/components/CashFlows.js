@@ -4,7 +4,12 @@ import { startOfMonth } from 'date-fns';
 import gql from 'graphql-tag';
 import { pick } from 'ramda';
 import * as React from 'react';
-import { MdAdd, MdShowChart, MdViewList, MdFilterList } from 'react-icons/md';
+import {
+  MdAdd,
+  // MdShowChart,
+  // MdViewList,
+  MdFilterList,
+} from 'react-icons/md';
 import type { ContextRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { PageMenu } from './PageMenu';
@@ -15,7 +20,7 @@ import { CashFlowSearch } from './CashFlowSearch';
 import type { SearchOptions } from './CashFlowSearch';
 import { CashFlowTable } from './CashFlowTable';
 import { ErrorMessage } from './ErrorMessage';
-import { Loading } from './Loading';
+// import { Loading } from './Loading';
 import { NoResults } from './NoResults';
 
 const GET_CASHFLOWS_QUERY = gql`
@@ -109,7 +114,8 @@ export function CashFlows(props: Props) {
   );
   const [pageNumber, setPageNumber] = React.useState<number>(1);
   const [showFilter, setShowFilter] = React.useState<boolean>(true);
-  const [recordsPerPage, setRecordsPerPage] = React.useState<number>(25);
+  // const [recordsPerPage, setRecordsPerPage] = React.useState<number>(25);
+  const recordsPerPage = 25;
 
   const input = {
     ...pick(['from', 'to', 'sources', 'categories'], searchOptions),

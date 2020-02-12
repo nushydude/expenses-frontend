@@ -21,12 +21,15 @@ import { Header } from './components/Header';
 import { persistor, store } from './redux/store';
 import { getApolloClient } from './apollo/getApolloClient';
 import { env } from './configs/env';
+import { CentreWithinParent } from './components/layouts/CentreWithinParent';
 
 const ContentsWrapper = styled.div`
   max-width: 960px;
   min-width: 300px;
   margin: 0 auto;
   padding: 0 10px;
+  height: 100%;
+  background: #ade0e5;
 `;
 
 type Props = {};
@@ -64,8 +67,8 @@ export class App extends React.Component<Props, State> {
             <Router>
               <Header />
 
-              <ContentsWrapper>
-                <Switch>
+              <Switch>
+                <CentreWithinParent>
                   <UnauthedRoute
                     exact
                     path={ROUTE.AUTH_LOGIN}
@@ -91,14 +94,16 @@ export class App extends React.Component<Props, State> {
                     path={ROUTE.AUTH_CHANGE_PWD}
                     component={ChangePasswordPage}
                   />
+                </CentreWithinParent>
 
+                <ContentsWrapper>
                   <AuthedRoute path={ROUTE.HOME} component={HomePage} />
+                </ContentsWrapper>
 
-                  <Route exact path={ROUTE.LANDING} component={LandingPage} />
+                <Route exact path={ROUTE.LANDING} component={LandingPage} />
 
-                  <Redirect to={ROUTE.LANDING} />
-                </Switch>
-              </ContentsWrapper>
+                <Redirect to={ROUTE.LANDING} />
+              </Switch>
             </Router>
           </PersistGate>
         </Provider>

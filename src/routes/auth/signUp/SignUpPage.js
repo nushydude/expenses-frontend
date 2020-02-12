@@ -1,11 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
 import * as React from 'react';
-import { Mutation } from 'react-apollo';
+// import { Mutation } from 'react-apollo';
 import { useMutation } from '@apollo/react-hooks';
 import { isEmail } from 'validator';
 import { SignUpForm } from './SignUpForm';
 import type { FormFields } from './SignUpForm';
+import { CentrePage } from '../../../components/layouts/CentrePage';
 
 const SIGNUP_WITH_EMAIL_MUTATION = gql`
   mutation Web_SignUpWithEmail($input: SignUpWithEmailInput!) {
@@ -50,11 +51,11 @@ function validateInputs({
   return null;
 }
 
-type State = {
-  ...FormInputs,
-  error: ?string,
-  success: boolean,
-};
+// type State = {
+//   ...FormInputs,
+//   error: ?string,
+//   success: boolean,
+// };
 
 type Data = {
   result: {
@@ -102,13 +103,13 @@ export function SignUpPage() {
     return (
       <p>
         Sign up successful. Your account needs to be verified before you can log
-        in. Check your email.
+        in. Please check your email for the confirmation link.
       </p>
     );
   }
 
   return (
-    <div style={{ width: '400px' }}>
+    <CentrePage>
       <SignUpForm
         isBusy={loading}
         clearError={() => setErrorMessage(null)}
@@ -138,6 +139,6 @@ export function SignUpPage() {
         handleInputChange={handleInputChange}
         {...formState}
       />
-    </div>
+    </CentrePage>
   );
 }

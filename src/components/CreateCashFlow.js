@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { CreateCashFlowForm } from './CreateCashFlowForm';
-import type { FormFields } from './CreateCashFlowForm';
+// import type { FormFields } from './CreateCashFlowForm';
 
 const CREATGE_CASHFLOW_MUTATION = gql`
   mutation EXPENSES_CreateCashFlow($input: CreateCashFlowInput!) {
@@ -35,16 +35,16 @@ type Props = {
   onCancel: () => void,
 };
 
-type State = {
-  type: 'EXPENSE' | 'INCOME',
-  category: string,
-  amount: number,
-  date: string,
-  source: string,
-  notes: string,
-  error: ?string,
-  success: boolean,
-};
+// type State = {
+//   type: 'EXPENSE' | 'INCOME',
+//   category: string,
+//   amount: number,
+//   date: string,
+//   source: string,
+//   notes: string,
+//   error: ?string,
+//   success: boolean,
+// };
 
 type Data = {
   result: {
@@ -61,7 +61,7 @@ export function CreateCashFlow(props: Props) {
   let sources = [];
   let categories = [];
 
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [formState, setFormState] = useState({
     type: props.type,

@@ -2,7 +2,7 @@
 import { onError } from 'apollo-link-error';
 
 export const errorHandlerLink = onError(
-  ({ graphQLErrors, networkError /*, operation, forward */ }) => {
+  ({ graphQLErrors, networkError /* , operation, forward */ }) => {
     // TODO
     // Log out on auth error
 

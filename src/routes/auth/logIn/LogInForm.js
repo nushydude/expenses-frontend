@@ -2,6 +2,9 @@
 import * as React from 'react';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
+import { TextInput } from '../../../components/forms/TextInput';
+import { Button } from '../../../components/forms/Button';
+import { Form } from '../common/Form';
 
 export type FormFields = 'email' | 'password';
 
@@ -27,35 +30,38 @@ export function LogInForm({
   password,
 }: Props) {
   return (
-    <form
-      onSubmit={submit}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
-      <input
-        onChange={handleInputChange('email')}
+    <Form onSubmit={submit}>
+      <TextInput
+        id="email"
+        label="Email"
+        handleInputChange={handleInputChange('email')}
         onFocus={clearError}
-        placeholder="Email"
-        type="text"
+        placeholder="john@company.com"
         value={email}
+        type="email"
       />
-      <input
-        onChange={handleInputChange('password')}
+
+      <TextInput
+        id="password"
+        label="Password"
+        handleInputChange={handleInputChange('password')}
         onFocus={clearError}
-        placeholder="Password"
-        type="password"
         value={password}
+        type="password"
       />
-      <button type="submit" disabled={isBusy}>
+
+      <Button type="submit" disabled={isBusy} width="100%">
         Log In
-      </button>
+      </Button>
+
       {error && <p>Error:{error}</p>}
+
       <p>
-        Don't have an account?
-        <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>
+        Don't have an account? <Link to={ROUTE.AUTH_SIGNUP}>Sign Up</Link>
       </p>
       <p>
         <Link to={ROUTE.AUTH_RECOVER}>Forgot Password</Link>
       </p>
-    </form>
+    </Form>
   );
 }

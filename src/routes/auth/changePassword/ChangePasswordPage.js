@@ -5,7 +5,7 @@ import type { Location } from 'react-router-dom';
 import queryString from 'query-string';
 import { useMutation } from '@apollo/react-hooks';
 import { ChangePasswordForm } from './ChangePasswordForm';
-import type { FormFields } from './ChangePasswordForm';
+import { CentrePage } from '../../../components/layouts/CentrePage';
 
 const CHANGE_PASSWORD_MUTATION = gql`
   mutation Web_ChangePassword($input: ChangePasswordInput!) {
@@ -87,7 +87,7 @@ export function ChangePasswordPage(props: Props) {
   }
 
   return (
-    <div style={{ width: '400px' }}>
+    <CentrePage>
       <ChangePasswordForm
         isBusy={loading}
         clearError={() => setErrorMessage(null)}
@@ -129,6 +129,6 @@ export function ChangePasswordPage(props: Props) {
         }}
         {...formState}
       />
-    </div>
+    </CentrePage>
   );
 }

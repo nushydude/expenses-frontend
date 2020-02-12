@@ -35,5 +35,6 @@ module.exports = {
     'react/jsx-one-expression-per-line': 0,
     'react/jsx-props-no-spreading': 0,
     'react/no-unescaped-entities': 0,
+    'no-else-return': 0,
   },
 };

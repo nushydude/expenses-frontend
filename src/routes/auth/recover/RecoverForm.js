@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
+import { Form } from '../common/Form';
+import { Button } from '../../../components/forms/Button';
 
 export type FormFields = 'email';
 
@@ -25,10 +27,7 @@ export function RecoverForm({
   email,
 }: Props) {
   return (
-    <form
-      onSubmit={submit}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
+    <Form onSubmit={submit}>
       <input
         onChange={handleInputChange('email')}
         onFocus={clearError}
@@ -36,14 +35,16 @@ export function RecoverForm({
         type="text"
         value={email}
       />
-      <button type="submit" disabled={isBusy}>
+
+      <Button type="submit" disabled={isBusy}>
         Send Password Reset Email
-      </button>
+      </Button>
+
       {error && <p>Error:{error}</p>}
       <p>
         Don't want to recover password?
         <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
       </p>
-    </form>
+    </Form>
   );
 }

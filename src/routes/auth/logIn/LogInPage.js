@@ -10,6 +10,7 @@ import { ROUTE } from '../../../configs/route';
 import { isAuthed } from '../../../redux/selectors/auth';
 import type { AppState } from '../../../redux/types';
 import type { FormFields } from './LogInForm';
+import { CentrePage } from '../../../components/layouts/CentrePage';
 
 const LOGIN_WITH_EMAIL_MUTATION = gql`
   mutation Web_LogInWithEmail($input: LogInWithEmailInput!) {
@@ -92,7 +93,7 @@ export class LogInPageComp extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(logIn, { loading }) => (
-          <div style={{ width: '400px' }}>
+          <CentrePage>
             <LogInForm
               isBusy={loading}
               clearError={this.clearError}
@@ -110,7 +111,7 @@ export class LogInPageComp extends React.Component<Props, State> {
               email={email}
               password={password}
             />
-          </div>
+          </CentrePage>
         )}
       </Mutation>
     );

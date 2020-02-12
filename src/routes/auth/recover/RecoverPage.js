@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { RecoverForm } from './RecoverForm';
 import type { FormFields } from './RecoverForm';
+import { CentrePage } from '../../../components/layouts/CentrePage';
 
 const SEND_RESET_PASSWORD_LINK_MUTATION = gql`
   mutation Web_SendResetPasswordLink($input: SendResetPasswordLinkInput!) {
@@ -85,7 +86,7 @@ export class RecoverPage extends React.Component<Props, State> {
         onError={this.onError}
       >
         {(logIn, { loading }) => (
-          <div style={{ width: '400px' }}>
+          <CentrePage>
             <RecoverForm
               isBusy={loading}
               clearError={this.clearError}
@@ -100,7 +101,7 @@ export class RecoverPage extends React.Component<Props, State> {
               handleInputChange={this.handleInputChange}
               email={email}
             />
-          </div>
+          </CentrePage>
         )}
       </Mutation>
     );

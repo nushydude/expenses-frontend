@@ -2,6 +2,9 @@
 import * as React from 'react';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
+import { Button } from '../../../components/forms/Button';
+import { TextInput } from '../../../components/forms/TextInput';
+import { Form } from '../common/Form';
 
 export type FormFields = 'email' | 'password' | 'name' | 'confirmPassword';
 
@@ -31,46 +34,54 @@ export function SignUpForm({
   confirmPassword,
 }: Props) {
   return (
-    <form
-      onSubmit={submit}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
-      <input
-        onChange={handleInputChange('email')}
+    <Form onSubmit={submit}>
+      <TextInput
+        id="email"
+        label="Email"
+        handleInputChange={handleInputChange('email')}
         onFocus={clearError}
-        placeholder="Email"
-        type="text"
+        placeholder="john@company.com"
         value={email}
+        type="email"
       />
-      <input
-        onChange={handleInputChange('name')}
+
+      <TextInput
+        id="name"
+        label="Name"
+        handleInputChange={handleInputChange('name')}
         onFocus={clearError}
-        placeholder="Name"
-        type="text"
+        placeholder="john@company.com"
         value={name}
+        type="text"
       />
-      <input
-        onChange={handleInputChange('password')}
+
+      <TextInput
+        id="password"
+        label="Password"
+        handleInputChange={handleInputChange('password')}
         onFocus={clearError}
-        placeholder="Password"
-        type="password"
         value={password}
-      />
-      <input
-        onChange={handleInputChange('confirmPassword')}
-        onFocus={clearError}
-        placeholder="Confirm Password"
         type="password"
-        value={confirmPassword}
       />
-      <button type="submit" disabled={isBusy || error}>
+
+      <TextInput
+        id="confirmPassword"
+        label="Confirm Password"
+        handleInputChange={handleInputChange('confirmPassword')}
+        onFocus={clearError}
+        value={confirmPassword}
+        type="password"
+      />
+
+      <Button type="submit" disabled={isBusy || error} width="100%">
         Sign Up
-      </button>
+      </Button>
+
       {error && <p>Error:{error}</p>}
+
       <p>
-        Have an account?
-        <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
+        Have an account? <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
       </p>
-    </form>
+    </Form>
   );
 }

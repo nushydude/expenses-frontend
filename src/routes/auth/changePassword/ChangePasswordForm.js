@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
+import { Form } from '../common/Form';
+import { Button } from '../../../components/forms/Button';
 
 export type FormFields = 'password' | 'confirmPassword';
 
@@ -25,10 +27,7 @@ export function ChangePasswordForm({
   confirmPassword,
 }: Props) {
   return (
-    <form
-      onSubmit={submit}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
+    <Form onSubmit={submit}>
       <input
         name="password"
         onChange={handleInputChange}
@@ -37,6 +36,7 @@ export function ChangePasswordForm({
         type="password"
         value={password}
       />
+
       <input
         name="confirmPassword"
         onChange={handleInputChange}
@@ -45,14 +45,17 @@ export function ChangePasswordForm({
         type="password"
         value={confirmPassword}
       />
-      <button type="submit" disabled={isBusy || error}>
+
+      <Button type="submit" disabled={isBusy || error}>
         Change Password
-      </button>
+      </Button>
+
       {error && <p>Error:{error}</p>}
+
       <p>
         Don't want to change password?
         <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
       </p>
-    </form>
+    </Form>
   );
 }
