@@ -10,10 +10,11 @@ import { Incomes } from './incomes/Incomes';
 import { ManageAccount } from './manageAccount/ManageAccount';
 import { Dashboard } from './dashboard/Dashboard';
 import { ROUTE } from '../../configs/route';
+import { ContentWrapper } from '../../components/layouts/ContentWrapper';
 
 export function HomePage() {
   return (
-    <>
+    <ContentWrapper>
       <Switch>
         <Route exact path={ROUTE.DASHBOARD} component={Dashboard} />
 
@@ -29,6 +30,6 @@ export function HomePage() {
 
         <Redirect to={ROUTE.DASHBOARD} />
       </Switch>
-    </>
+    </ContentWrapper>
   );
 }
