@@ -4,6 +4,7 @@ import { Link } from '../../../components/Link';
 import { ROUTE } from '../../../configs/route';
 import { Form } from '../common/Form';
 import { Button } from '../../../components/forms/Button';
+import { TextInput } from '../../../components/forms/TextInput';
 
 export type FormFields = 'email';
 
@@ -28,21 +29,22 @@ export function RecoverForm({
 }: Props) {
   return (
     <Form onSubmit={submit}>
-      <input
+      <TextInput
+        id="email"
         onChange={handleInputChange('email')}
         onFocus={clearError}
-        placeholder="Email"
-        type="text"
+        type="email"
         value={email}
       />
 
       <Button type="submit" disabled={isBusy}>
-        Send Password Reset Email
+        Submit
       </Button>
 
       {error && <p>Error:{error}</p>}
+
       <p>
-        Don't want to recover password?
+        Don't want to recover password?{' '}
         <Link to={ROUTE.AUTH_LOGIN}>Log In</Link>
       </p>
     </Form>
