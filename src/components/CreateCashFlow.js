@@ -116,7 +116,7 @@ export function CreateCashFlow(props: Props) {
 
         return createCashFlow({ variables });
       }}
-      handleInputChange={(e: SyntheticInputEvent<HTMLInputElement>) => {
+      onChange={(e: SyntheticInputEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
         setFormState({ ...formState, [name]: value });

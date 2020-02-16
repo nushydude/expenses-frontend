@@ -11,7 +11,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  onChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   password: string,
   confirmPassword: string,
@@ -21,7 +21,7 @@ export function ChangePasswordForm({
   clearError,
   error,
   isBusy,
-  handleInputChange,
+  onChange,
   submit,
   password,
   confirmPassword,
@@ -30,7 +30,7 @@ export function ChangePasswordForm({
     <Form onSubmit={submit}>
       <input
         name="password"
-        onChange={handleInputChange}
+        onChange={onChange}
         onFocus={clearError}
         placeholder="Password"
         type="password"
@@ -39,7 +39,7 @@ export function ChangePasswordForm({
 
       <input
         name="confirmPassword"
-        onChange={handleInputChange}
+        onChange={onChange}
         onFocus={clearError}
         placeholder="Confirm Password"
         type="password"

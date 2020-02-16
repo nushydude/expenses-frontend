@@ -75,7 +75,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  onChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
   cancel: () => void,
   category: string,
@@ -92,7 +92,7 @@ export function CreateCashFlowForm({
   clearError,
   error,
   isBusy,
-  handleInputChange,
+  onChange,
   submit,
   category,
   categories,
@@ -122,7 +122,7 @@ export function CreateCashFlowForm({
           <Label>Date</Label>
           <Input
             name="date"
-            onChange={handleInputChange}
+            onChange={onChange}
             onFocus={clearError}
             type="date"
             value={date}
@@ -133,7 +133,7 @@ export function CreateCashFlowForm({
           <Label>Category</Label>
           <Input
             name="category"
-            onChange={handleInputChange}
+            onChange={onChange}
             onFocus={clearError}
             type="text"
             value={category}
@@ -151,7 +151,7 @@ export function CreateCashFlowForm({
           <Label>Amount</Label>
           <Input
             name="amount"
-            onChange={handleInputChange}
+            onChange={onChange}
             onFocus={clearError}
             type="number"
             step="0.01"
@@ -163,7 +163,7 @@ export function CreateCashFlowForm({
           <Label>Source</Label>
           <Input
             name="source"
-            onChange={handleInputChange}
+            onChange={onChange}
             onFocus={clearError}
             type="text"
             value={source}
@@ -181,7 +181,7 @@ export function CreateCashFlowForm({
           <Label>Notes</Label>
           <TextArea
             name="notes"
-            onChange={handleInputChange}
+            onChange={onChange}
             onFocus={clearError}
             value={notes}
             rows="4"

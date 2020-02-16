@@ -12,7 +12,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (
+  onChange: (
     name: FormFields,
   ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
@@ -24,7 +24,7 @@ export function LogInForm({
   clearError,
   error,
   isBusy,
-  handleInputChange,
+  onChange,
   submit,
   email,
   password,
@@ -34,7 +34,7 @@ export function LogInForm({
       <TextInput
         id="email"
         label="Email"
-        handleInputChange={handleInputChange('email')}
+        onChange={onChange('email')}
         onFocus={clearError}
         placeholder="john@company.com"
         value={email}
@@ -44,7 +44,7 @@ export function LogInForm({
       <TextInput
         id="password"
         label="Password"
-        handleInputChange={handleInputChange('password')}
+        onChange={onChange('password')}
         onFocus={clearError}
         value={password}
         type="password"

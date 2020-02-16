@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import MUButton from '@material-ui/core/Button';
 
-const ButtonBase = styled.button`
+const ButtonBase = styled(MUButton)`
   margin-right: 8px;
-  padding: 8px;
-  font: 14px roboto, sans-serif;
 
   ${({ width }) =>
     width &&
@@ -24,18 +23,16 @@ type Props = {
   disabled?: boolean,
   type?: 'button' | 'submit' | 'reset',
   width?: number | string | null,
+  variant?: 'contained' | 'outlined' | 'text',
 };
 
-export function Button({ children, disabled, onClick, type, width }: Props) {
-  return (
-    <ButtonBase disabled={disabled} onClick={onClick} type={type} width={width}>
-      {children}
-    </ButtonBase>
-  );
+export function Button({ children, ...restProps }: Props) {
+  return <ButtonBase {...restProps}>{children}</ButtonBase>;
 }
 
 Button.defaultProps = {
   disabled: false,
   type: 'button',
   width: null,
+  variant: 'outlined',
 };

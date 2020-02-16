@@ -90,7 +90,7 @@ export function SignUpPage() {
     name: '',
   });
 
-  const handleInputChange = (name: FormFields) => (
+  const onChange = (name: FormFields) => (
     e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
     setFormState({
@@ -136,7 +136,7 @@ export function SignUpPage() {
 
           return signUp({ variables });
         }}
-        handleInputChange={handleInputChange}
+        onChange={onChange}
         {...formState}
       />
     </CentrePage>

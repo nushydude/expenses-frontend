@@ -49,7 +49,7 @@ export class RecoverPage extends React.Component<Props, State> {
     this.setState({ error: null });
   };
 
-  handleInputChange = (name: FormFields) => (
+  onChange = (name: FormFields) => (
     e: SyntheticInputEvent<HTMLInputElement>,
   ) => {
     this.setState({ [name]: e.target.value });
@@ -98,7 +98,7 @@ export class RecoverPage extends React.Component<Props, State> {
 
                 return logIn({ variables });
               }}
-              handleInputChange={this.handleInputChange}
+              onChange={this.onChange}
               email={email}
             />
           </CentrePage>

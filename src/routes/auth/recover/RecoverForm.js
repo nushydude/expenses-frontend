@@ -12,7 +12,7 @@ type Props = {
   clearError: () => void,
   error: ?string,
   isBusy: boolean,
-  handleInputChange: (
+  onChange: (
     name: FormFields,
   ) => (e: SyntheticInputEvent<HTMLInputElement>) => void,
   submit: (e: SyntheticInputEvent<any>) => Promise<void>,
@@ -23,7 +23,7 @@ export function RecoverForm({
   clearError,
   error,
   isBusy,
-  handleInputChange,
+  onChange,
   submit,
   email,
 }: Props) {
@@ -31,7 +31,7 @@ export function RecoverForm({
     <Form onSubmit={submit}>
       <TextInput
         id="email"
-        onChange={handleInputChange('email')}
+        onChange={onChange('email')}
         onFocus={clearError}
         type="email"
         value={email}

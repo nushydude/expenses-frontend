@@ -122,7 +122,7 @@ export function ChangePasswordPage(props: Props) {
 
           return changePassword({ variables });
         }}
-        handleInputChange={(e: SyntheticInputEvent<HTMLInputElement>) => {
+        onChange={(e: SyntheticInputEvent<HTMLInputElement>) => {
           const { name, value } = e.target;
 
           setFormState({ ...formState, [name]: value });

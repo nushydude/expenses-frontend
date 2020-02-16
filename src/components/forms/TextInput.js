@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
 
 type InputType = 'email' | 'text' | 'password';
 
@@ -20,42 +21,25 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Label = styled.label`
-  margin-bottom: 8px;
-`;
-
 type Props = {
   id: string,
   label: string,
-  handleInputChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
+  onChange: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   onFocus: () => void,
   placeholder?: string,
   value: string,
   type?: InputType,
+  variant?: 'standard' | 'outlined' | 'filled',
 };
 
-export function TextInput({
-  id,
-  label,
-  handleInputChange,
-  onFocus,
-  placeholder,
-  value,
-  type,
-}: Props) {
+export function TextInput({ placeholder, ...restProps }: Props) {
   return (
     <Container>
-      <Label htmlFor={id}>{label}</Label>
-
-      <input
-        id={id}
-        onChange={handleInputChange}
-        onFocus={onFocus}
-        placeholder={placeholder || getPlaceholder(type)}
-        type={type}
-        value={value}
-        style={{
-          padding: '8px',
+      <TextField
+        {...restProps}
+        placeholder={placeholder || getPlaceholder(restProps.type)}
+        InputLabelProps={{
+          shrink: true,
         }}
       />
     </Container>
@@ -65,4 +49,5 @@ export function TextInput({
 TextInput.defaultProps = {
   placeholder: '',
   type: 'text',
+  variant: 'outlined',
 };
